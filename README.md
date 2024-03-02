@@ -4,6 +4,14 @@
 
 后端项目：https://github.com/DDDDanny/ExamOnline-Server
 
+---
+
+#### 功能点
+
+功能模块有4大模块：`用户管理模块`、`试题管理模块`、`试卷管理模块`和`考试管理模块`
+
+系统角色有3类：系统管理员、学生用户和教师用户
+
 #### 技术栈
 
 Node16、Vue3，Lucide Icons、ElementUI PLUS
