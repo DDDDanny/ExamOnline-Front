@@ -5,19 +5,19 @@
         <div class="login-left-box">Part One</div>
         <div class="login-right-box">
           <div class="login-right-common login-right-logo-box">
-            <div style="display: flex;align-items: center">
+            <div class="logo-content">
               <el-image style="width: 70px; " src="src/images/ExamOnlineLogo.svg" fit="cover" />
               <div style="display: flex;flex-direction: column">
-                <span style="font-size: 20px;color: #3E3E3E;letter-spacing: 2px">在线考试系统</span>
-                <span style="font-size: 13px;color: #3E3E3E;letter-spacing: 2px">ExamOnline</span>
+                <span class="logo-wording-item">在线考试系统</span>
+                <span class="logo-wording-item-en">ExamOnline</span>
               </div>
             </div>
           </div>
           <div class="login-right-common login-right-form-box">
             <span class="form-title-wording">欢迎登录</span>
-            <div style="display: flex; margin-top: 24px;letter-spacing: 3px">
-              <div style="padding: 0 15px 13px 15px;color: #3E3E3E;font-size: 18px;">学生</div>
-              <div style="padding: 0 15px 13px 17px;color: #3E3E3E;font-size: 18px;">教师</div>
+            <div class="login-select-role-group" >
+              <div class="select-role-item">学生</div>
+              <div class="select-role-item" style="padding-left:17px;">教师</div>
             </div>
           </div>
           <div class="login-right-common login-right-end"></div>
@@ -69,6 +69,20 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
     display: block;
     content: "";
   }
+  .logo-content {
+    display: flex;
+    align-items: center;
+    .logo-wording-item {
+      font-size: 20px;
+      color: #3E3E3E;
+      letter-spacing: 2px;
+    }
+    .logo-wording-item-en {
+      font-size: 13px;
+      color: #3E3E3E;
+      letter-spacing: 2px;
+    }
+  }
 }
 .login-right-form-box {
   height: 550px;
@@ -81,6 +95,16 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
     color: #2F725D;
     letter-spacing: 3px;
     font-weight: bolder
+  }
+  .login-select-role-group {
+    display: flex;
+    margin-top: 24px;
+    letter-spacing: 3px;
+    .select-role-item {
+      color: #3E3E3E;
+      font-size: 18px;
+      padding: 0 15px 13px 15px;
+    }
   }
 }
 .login-right-end {
