@@ -15,4 +15,12 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  build: {
+    rollupOptions: {
+      input: {
+        index: './index.html',
+        login: './login.html'
+      }
+    }
+  }
 })

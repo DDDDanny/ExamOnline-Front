@@ -2,6 +2,7 @@
   <el-config-provider :locale="zhCn">
     <div id="app">
       <router-view></router-view>
+      <div>Main Page</div>
     </div>
   </el-config-provider>
 </template>
