@@ -6,8 +6,8 @@
         <div class="login-right-box">
           <div class="login-right-common login-right-logo-box">
             <div class="logo-content">
-              <el-image style="width: 70px; " src="src/images/ExamOnlineLogo.svg" fit="cover" />
-              <div style="display: flex;flex-direction: column">
+              <el-image style="width: 70px; " src="src/images/ExamOnlineLogo.png" fit="cover" />
+              <div style="display: flex;flex-direction: column;margin-left: 5px">
                 <span class="logo-wording-item">在线考试系统</span>
                 <span class="logo-wording-item-en">ExamOnline</span>
               </div>
@@ -17,7 +17,7 @@
             <span class="form-title-wording">欢迎登录</span>
             <div class="login-select-role-group" >
               <div class="select-role-item select-active-item" @click="handleActiveStudent">学生</div>
-              <div class="select-role-item" style="padding-left:17px;" @click="handleActiveTeacher">教师</div>
+              <div class="select-role-item" style="padding-left:20px;" @click="handleActiveTeacher">教师</div>
             </div>
             <div style="width: 85%; margin-top: 20px;">
               <el-form label-position="top" label-width="auto" :model="formLogin">
@@ -35,7 +35,14 @@
                     </template>
                   </el-input>
                 </el-form-item>
+                <el-form-item>
+                  <el-checkbox v-model="formLogin.rememberPass">记住密码</el-checkbox>
+                </el-form-item>
               </el-form>
+              <el-button type="primary" style="width: 100%;margin-top: 15px;" size="large">
+                <LogIn style="width: 16px; padding-right: 10px"/>
+                登 录
+              </el-button>
             </div>
           </div>
           <div class="login-right-common login-right-end"></div>
@@ -47,7 +54,7 @@
 
 <script setup>
 import { reactive } from "vue";
-import { LockKeyhole, UserRound } from 'lucide-vue-next';
+import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 
 // 处理激活的登录角色
@@ -74,7 +81,8 @@ const handleActiveTeacher = () => {
 // 登录信息Form表单
 const formLogin = reactive({
   username: '',
-  password: ''
+  password: '',
+  rememberPass: false
 })
 
 </script>
@@ -88,13 +96,13 @@ const formLogin = reactive({
 .login-left-box {
   width: 100%;
   height: 100%;
-  background-color: #e6e6e6;
+  background-color: #fff;
 }
 .login-right-box {
   width: 35%;
   min-width: 580px;
   flex: 0 0 auto;
-  background-color: #c5dcd5;
+  background-color: #d9ecff;
   display: flex;
   flex-direction: column;
   padding: 0 50px;
@@ -140,18 +148,18 @@ const formLogin = reactive({
   align-items: center;
   .form-title-wording {
     font-size: 18px;
-    color: #2F725D;
+    color: #337ecc;
     letter-spacing: 3px;
     font-weight: bolder
   }
   .login-select-role-group {
     display: flex;
-    margin-top: 24px;
+    margin-top: 28px;
     letter-spacing: 3px;
     .select-role-item {
       color: #3E3E3E;
       font-size: 18px;
-      padding: 0 15px 8px 15px;
+      padding: 0 18px 8px 18px;
       position: relative;
       cursor: pointer;
     }
@@ -169,7 +177,7 @@ const formLogin = reactive({
     content: "";
     width: 50px;
     height: 3px;
-    background: #2F725D;
+    background: #79bbff;
     left: calc(50% - 27px);
     bottom: 0;
     border-radius: 4px;
