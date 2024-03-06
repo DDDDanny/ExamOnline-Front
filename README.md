@@ -1,5 +1,5 @@
 <div>
-  <p align="center"><img src="READMELogo.png" style="zoom:20%;width:20%;" /></p>
+  <p align="center"><img src="src/images/ExamOnlineLogo.png" style="zoom:20%;width:20%;" /></p>
 </div>
 
 # 在线考试系统（前端）
