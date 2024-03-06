@@ -19,6 +19,24 @@
               <div class="select-role-item select-active-item" @click="handleActiveStudent">学生</div>
               <div class="select-role-item" style="padding-left:17px;" @click="handleActiveTeacher">教师</div>
             </div>
+            <div style="width: 85%; margin-top: 20px;">
+              <el-form label-position="top" label-width="auto" :model="formLogin">
+                <el-form-item label="用户名">
+                  <el-input v-model="formLogin.username" size="large">
+                    <template #prefix>
+                      <UserRound style="width: 16px"/>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                  <el-input v-model="formLogin.password" show-password size="large">
+                    <template #prefix>
+                      <LockKeyhole style="width: 16px"/>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
           <div class="login-right-common login-right-end"></div>
         </div>
@@ -28,7 +46,9 @@
 </template>
 
 <script setup>
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { reactive } from "vue";
+import { LockKeyhole, UserRound } from 'lucide-vue-next';
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 
 // 处理激活的登录角色
 const handleActiveRole = (index) => {
@@ -50,6 +70,12 @@ const handleActiveStudent = () => {
 const handleActiveTeacher = () => {
   handleActiveRole(1); // 角色类型索引为 1 表示老师
 };
+
+// 登录信息Form表单
+const formLogin = reactive({
+  username: '',
+  password: ''
+})
 
 </script>
 
