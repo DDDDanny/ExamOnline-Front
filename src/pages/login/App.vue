@@ -16,8 +16,8 @@
           <div class="login-right-common login-right-form-box">
             <span class="form-title-wording">欢迎登录</span>
             <div class="login-select-role-group" >
-              <div class="select-role-item">学生</div>
-              <div class="select-role-item" style="padding-left:17px;">教师</div>
+              <div class="select-role-item select-active-item" @click="handleActiveStudent">学生</div>
+              <div class="select-role-item" style="padding-left:17px;" @click="handleActiveTeacher">教师</div>
             </div>
           </div>
           <div class="login-right-common login-right-end"></div>
@@ -29,6 +29,28 @@
 
 <script setup>
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+
+// 处理激活的登录角色
+const handleActiveRole = (index) => {
+  const roleItems = document.getElementsByClassName('select-role-item');
+  const activeItemClass = 'select-active-item';
+  // 添加 select-active-item 类到指定索引的元素
+  roleItems[index].classList.add(activeItemClass);
+  // 移除 select-active-item 类从另一个元素
+  const otherIndex = index === 0 ? 1 : 0;
+  roleItems[otherIndex].classList.remove(activeItemClass);
+};
+
+// 处理学生角色
+const handleActiveStudent = () => {
+  handleActiveRole(0); // 角色类型索引为 0 表示学生
+};
+
+// 处理老师角色
+const handleActiveTeacher = () => {
+  handleActiveRole(1); // 角色类型索引为 1 表示老师
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -103,7 +125,9 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
     .select-role-item {
       color: #3E3E3E;
       font-size: 18px;
-      padding: 0 15px 13px 15px;
+      padding: 0 15px 8px 15px;
+      position: relative;
+      cursor: pointer;
     }
   }
 }
@@ -112,5 +136,17 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+.select-active-item {
+  &::after {
+    position: absolute;
+    content: "";
+    width: 50px;
+    height: 3px;
+    background: #2F725D;
+    left: calc(50% - 27px);
+    bottom: 0;
+    border-radius: 4px;
+  }
 }
 </style>
