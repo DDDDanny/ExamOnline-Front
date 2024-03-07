@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Login from '../views/Login/index.vue'
 
 const routers: any = [
   {
     path: '/login',
-    component: () => import('../views/Login/index.vue'),
+    component: Login,
     meta: {
-      title: 'CoursiPay',
+      title: 'ExamOnline Login',
     },
   },
 ]
