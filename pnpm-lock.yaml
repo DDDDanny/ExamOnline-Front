@@ -5,6 +5,7 @@ specifiers:
   axios: ^1.6.7
   element-plus: ^2.5.6
   lucide-vue-next: ^0.343.0
+  path: ^0.12.7
   sass: ^1.71.1
   typescript: ^5.2.2
   unplugin-auto-import: ^0.17.5
@@ -18,6 +19,7 @@ dependencies:
   axios: registry.npmmirror.com/axios/1.6.7
   element-plus: registry.npmmirror.com/element-plus/2.5.6_vue@3.4.21
   lucide-vue-next: registry.npmmirror.com/lucide-vue-next/0.343.0_vue@3.4.21
+  path: registry.npmmirror.com/path/0.12.7
   sass: registry.npmmirror.com/sass/1.71.1
   vue: registry.npmmirror.com/vue/3.4.21_typescript@5.3.3
   vue-router: registry.npmmirror.com/vue-router/4.3.0_vue@3.4.21
@@ -1089,6 +1091,12 @@ packages:
     name: immutable
     version: 4.3.5
 
+  registry.npmmirror.com/inherits/2.0.3:
+    resolution: {integrity: sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/inherits/-/inherits-2.0.3.tgz}
+    name: inherits
+    version: 2.0.3
+    dev: false
+
   registry.npmmirror.com/is-binary-path/2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-binary-path/-/is-binary-path-2.1.0.tgz}
     name: is-binary-path
@@ -1305,6 +1313,15 @@ packages:
     version: 1.0.7
     dev: true
 
+  registry.npmmirror.com/path/0.12.7:
+    resolution: {integrity: sha512-aXXC6s+1w7otVF9UletFkFcDsJeO7lSZBPUQhtb5O0xJe8LtYhj/GxldoL09bBj9+ZmE2hNoHqQSFMN5fikh4Q==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/path/-/path-0.12.7.tgz}
+    name: path
+    version: 0.12.7
+    dependencies:
+      process: registry.npmmirror.com/process/0.11.10
+      util: registry.npmmirror.com/util/0.10.4
+    dev: false
+
   registry.npmmirror.com/pathe/1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pathe/-/pathe-1.1.2.tgz}
     name: pathe
@@ -1341,6 +1358,13 @@ packages:
       nanoid: registry.npmmirror.com/nanoid/3.3.7
       picocolors: registry.npmmirror.com/picocolors/1.0.0
       source-map-js: registry.npmmirror.com/source-map-js/1.0.2
+
+  registry.npmmirror.com/process/0.11.10:
+    resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/process/-/process-0.11.10.tgz}
+    name: process
+    version: 0.11.10
+    engines: {node: '>= 0.6.0'}
+    dev: false
 
   registry.npmmirror.com/proxy-from-env/1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz}
@@ -1578,6 +1602,14 @@ packages:
       webpack-sources: registry.npmmirror.com/webpack-sources/3.2.3
       webpack-virtual-modules: registry.npmmirror.com/webpack-virtual-modules/0.6.1
     dev: true
+
+  registry.npmmirror.com/util/0.10.4:
+    resolution: {integrity: sha512-0Pm9hTQ3se5ll1XihRic3FDIku70C+iHUdT/W926rSgHV5QgXsYbKZN8MSC3tJtSkhuROzvsQjAaFENRXr+19A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/util/-/util-0.10.4.tgz}
+    name: util
+    version: 0.10.4
+    dependencies:
+      inherits: registry.npmmirror.com/inherits/2.0.3
+    dev: false
 
   registry.npmmirror.com/vite/5.1.4_sass@1.71.1:
     resolution: {integrity: sha512-n+MPqzq+d9nMVTKyewqw6kSt+R3CkvF9QAKY8obiQn8g1fwTscKxyfaYnC632HtBXAQGc1Yjomphwn1dtwGAHg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-5.1.4.tgz}

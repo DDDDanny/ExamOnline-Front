@@ -12,6 +12,7 @@
     "axios": "^1.6.7",
     "element-plus": "^2.5.6",
     "lucide-vue-next": "^0.343.0",
+    "path": "^0.12.7",
     "sass": "^1.71.1",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
