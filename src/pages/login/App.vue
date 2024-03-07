@@ -2,7 +2,19 @@
   <el-config-provider :locale="zhCn">
     <div id="app">
       <div class="login-main-box">
-        <div class="login-left-box">Part One</div>
+        <div class="login-left-box">
+          <el-carousel height="calc(100vh - 200px)" style="width: 100%; ">
+            <el-carousel-item v-for="item in carouseGroup" :key="item.id">
+              <div class="carousel-item-box">
+                <div class="carousel-item-desc-box">
+                  <span class="carousel-item-desc-title">{{ item.title }}</span>
+                  <span class="carousel-item-desc-content">{{ item.content }}</span>
+                </div>
+                <el-image style="width: 60%; " :src="item.imagePath" fit="cover" />
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
         <div class="login-right-box">
           <div class="login-right-common login-right-logo-box">
             <div class="logo-content">
@@ -57,6 +69,31 @@ import { reactive } from "vue";
 import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 
+// 轮播图信息组
+const carouseGroup = [
+  {
+    id: 0,
+    imagePath: 'src/images/CarouselImg1.png',
+    title: '灵活性与便利性',
+    content: '在线考试系统允许学生根据自己的时间表和地点参加考试，' +
+        '不再受限于特定的考试时间和地点。这种灵活性使得学生可以根据自己的学习进度和个人时间安排进行考试，增加了便利性和可及性。'
+  },
+  {
+    id: 1,
+    imagePath: 'src/images/CarouselImg2.png',
+    title: '自动化和即时反馈',
+    content: '在线考试系统可以自动评分并提供即时反馈，减少了教师在评分和反馈方面的工作量，同时使学生能够立即了解他们的成绩和表现。' +
+        '这种即时反馈对于学生改进学习策略和弥补知识漏洞非常重要。'
+  },
+  {
+    id: 2,
+    imagePath: 'src/images/CarouselImg3.png',
+    title: '数据统计和分析功能',
+    content: '在线考试系统具有强大的数据统计和分析功能，能够收集和分析大量的考试数据，包括学生的答题情况、得分分布、常见错误模式等。' +
+        '通过这些数据，教师和教育管理者可以深入了解学生的学习情况和考试表现，发现学生的学习需求和问题，从而采取针对性的教学和干预措施。'
+  }
+]
+
 // 处理激活的登录角色
 const handleActiveRole = (index) => {
   const roleItems = document.getElementsByClassName('select-role-item');
@@ -97,6 +134,30 @@ const formLogin = reactive({
   width: 100%;
   height: 100%;
   background-color: #fff;
+  display: flex;
+  align-items: center;
+  .carousel-item-box {
+    width: 100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .carousel-item-desc-box {
+      width: 80%;
+      display: flex;
+      color: #3E3E3E;
+      flex-direction: column;
+      letter-spacing: 3px;
+      .carousel-item-desc-title {
+        font-size: 36px;
+        margin-bottom: 8px;
+      }
+      .carousel-item-desc-content {
+        font-size: 18px;
+      }
+    }
+  }
 }
 .login-right-box {
   width: 35%;
