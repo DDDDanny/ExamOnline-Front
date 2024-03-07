@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/index.vue'
+import Container from '../components/container.vue'
 
 const routers: any = [
   {
     path: '/login',
     component: Login,
-    meta: {
-      title: 'ExamOnline Login',
-    },
   },
+  {
+    path: '/',
+    component:Container
+  }
 ]
 
 export const router = createRouter({
