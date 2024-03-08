@@ -33,7 +33,11 @@
         </el-menu-item>
         <el-menu-item index="7">
           <el-icon style="margin-left: 10px"><Users /></el-icon>
-          用户管理
+          教师管理
+        </el-menu-item>
+        <el-menu-item index="7">
+          <el-icon style="margin-left: 10px"><GraduationCap /></el-icon>
+          学生管理
         </el-menu-item>
         <el-menu-item index="8">
           <el-icon style="margin-left: 10px"><Laptop2 /></el-icon>
@@ -51,7 +55,7 @@
 <script setup lang="ts">
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
-  BookOpenCheck, Users, Laptop2
+  BookOpenCheck, Users, Laptop2, GraduationCap
 } from 'lucide-vue-next'
 </script>
 
