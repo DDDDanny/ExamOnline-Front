@@ -11,36 +11,32 @@
           default-active="2"
           text-color="#fff"
       >
-        <el-menu-item index="1">
-          <el-icon><BookMarked /></el-icon>
+        <el-menu-item index="1" style="margin-top: 20px">
+          <el-icon style="margin-left: 10px"><BookMarked /></el-icon>
           试题管理
         </el-menu-item>
         <el-menu-item index="2">
-          <el-icon><Notebook /></el-icon>
+          <el-icon style="margin-left: 10px"><Notebook /></el-icon>
           错题集
         </el-menu-item>
         <el-menu-item index="3">
-          <el-icon><ScrollText /></el-icon>
+          <el-icon style="margin-left: 10px"><ScrollText /></el-icon>
           试卷管理
         </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon><Notebook /></el-icon>
-          试题管理
-        </el-menu-item>
         <el-menu-item index="5">
-          <el-icon><Notebook /></el-icon>
+          <el-icon style="margin-left: 10px"><BookOpenCheck /></el-icon>
           考试管理
         </el-menu-item>
         <el-menu-item index="6">
-          <el-icon><Notebook /></el-icon>
+          <el-icon style="margin-left: 10px"><FileCheck /></el-icon>
           成绩管理
         </el-menu-item>
         <el-menu-item index="7">
-          <el-icon><Notebook /></el-icon>
+          <el-icon style="margin-left: 10px"><Users /></el-icon>
           用户管理
         </el-menu-item>
         <el-menu-item index="8">
-          <el-icon><Notebook /></el-icon>
+          <el-icon style="margin-left: 10px"><Laptop2 /></el-icon>
           在线考试
         </el-menu-item>
       </el-menu>
@@ -53,7 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { BookMarked, Notebook, ScrollText } from 'lucide-vue-next'
+import {
+  BookMarked, Notebook, ScrollText, FileCheck,
+  BookOpenCheck, Users, Laptop2
+} from 'lucide-vue-next'
 </script>
 
 <style scoped lang="scss">
@@ -63,12 +62,12 @@ import { BookMarked, Notebook, ScrollText } from 'lucide-vue-next'
   display: flex;
 }
 .container-main-left-box {
-  width: 240px;
+  width: 200px;
   height: 100%;
   display: flex;
   flex-direction: column;
   .logo-box {
-    width:239px;
+    width:199px;
     height: 60px;
     background-color: #337ecc;
     display: flex;
@@ -78,7 +77,7 @@ import { BookMarked, Notebook, ScrollText } from 'lucide-vue-next'
 }
 .container-main-right-box {
   height: 100%;
-  width: calc(100% - 240px);
+  width: calc(100% - 200px);
   display: flex;
   flex-direction: column;
   .container-top-box {
