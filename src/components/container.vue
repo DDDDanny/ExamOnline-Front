@@ -62,12 +62,12 @@ import {
   display: flex;
 }
 .container-main-left-box {
-  width: 200px;
+  width: 236px;
   height: 100%;
   display: flex;
   flex-direction: column;
   .logo-box {
-    width:199px;
+    width:235px;
     height: 60px;
     background-color: #337ecc;
     display: flex;
@@ -77,7 +77,7 @@ import {
 }
 .container-main-right-box {
   height: 100%;
-  width: calc(100% - 200px);
+  width: calc(100% - 236px);
   display: flex;
   flex-direction: column;
   .container-top-box {
