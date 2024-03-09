@@ -46,7 +46,10 @@
       </el-menu>
     </div>
     <div class="container-main-right-box">
-      <div class="container-top-box">123</div>
+      <div class="container-top-box">
+        <Bell style="margin-right: 30px;"/>
+        <CircleUserRound />
+      </div>
       <div class="container-main-content-box">456</div>
     </div>
   </div>
@@ -55,7 +58,8 @@
 <script setup lang="ts">
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
-  BookOpenCheck, Users, Laptop2, GraduationCap
+  BookOpenCheck, Users, Laptop2, GraduationCap,
+  CircleUserRound, Bell
 } from 'lucide-vue-next'
 </script>
 
@@ -88,8 +92,12 @@ import {
     height: 50px;
     position: relative;
     background-color: #fff;
+    color: #3E3E3E;
     box-shadow: 0 0 8px 0 rgba(0,0,0,0.20);
-    padding: 5px 20px;
+    padding: 5px 50px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
   }
   .container-main-content-box {
     height: calc(100% - 50px);
