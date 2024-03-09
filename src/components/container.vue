@@ -8,7 +8,7 @@
           active-text-color="#ffd04b"
           background-color="#337ecc"
           style="height: 100%;"
-          default-active="2"
+          default-active="/homepage"
           text-color="#fff"
           router
       >
