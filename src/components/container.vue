@@ -11,7 +11,11 @@
           default-active="2"
           text-color="#fff"
       >
-        <el-menu-item index="1" style="margin-top: 20px">
+        <el-menu-item index="0" style="margin-top: 20px">
+          <el-icon style="margin-left: 10px"><LayoutTemplate /></el-icon>
+          首页
+        </el-menu-item>
+        <el-menu-item index="1">
           <el-icon style="margin-left: 10px"><BookMarked /></el-icon>
           试题管理
         </el-menu-item>
@@ -61,7 +65,7 @@
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
   BookOpenCheck, Users, Laptop2, GraduationCap,
-  CircleUserRound, Bell
+  CircleUserRound, Bell, LayoutTemplate
 } from 'lucide-vue-next'
 </script>
 
