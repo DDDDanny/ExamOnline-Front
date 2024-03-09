@@ -10,8 +10,9 @@
           style="height: 100%;"
           default-active="2"
           text-color="#fff"
+          router
       >
-        <el-menu-item index="0" style="margin-top: 20px">
+        <el-menu-item index="/homepage" style="margin-top: 20px">
           <el-icon style="margin-left: 10px"><LayoutTemplate /></el-icon>
           首页
         </el-menu-item>

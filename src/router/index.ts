@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/index.vue'
 import Container from '../components/container.vue'
+import HomePage from  '../views/HomePage/index.vue'
 
 const routers: any = [
   {
@@ -9,7 +10,13 @@ const routers: any = [
   },
   {
     path: '/',
-    component:Container
+    component:Container,
+    children: [
+      {
+        path: '/homepage',
+        component: HomePage,
+      }
+    ]
   }
 ]
 
