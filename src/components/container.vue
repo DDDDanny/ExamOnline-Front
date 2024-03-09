@@ -35,11 +35,11 @@
           <el-icon style="margin-left: 10px"><Users /></el-icon>
           教师管理
         </el-menu-item>
-        <el-menu-item index="7">
+        <el-menu-item index="8">
           <el-icon style="margin-left: 10px"><GraduationCap /></el-icon>
           学生管理
         </el-menu-item>
-        <el-menu-item index="8">
+        <el-menu-item index="9">
           <el-icon style="margin-left: 10px"><Laptop2 /></el-icon>
           在线考试
         </el-menu-item>
@@ -50,7 +50,9 @@
         <Bell style="margin-right: 30px;"/>
         <CircleUserRound />
       </div>
-      <div class="container-main-content-box">456</div>
+      <div class="container-main-content-box">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
