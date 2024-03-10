@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/index.vue'
 import Container from '../components/container.vue'
 import HomePage from  '../views/HomePage/index.vue'
+import QuestionManagement from '../views/QuestionManagement/index.vue'
 
 const routers: any = [
   {
@@ -15,6 +16,10 @@ const routers: any = [
       {
         path: '/homepage',
         component: HomePage,
+      },
+      {
+        path: '/questionManagement',
+        component: QuestionManagement,
       }
     ]
   }
