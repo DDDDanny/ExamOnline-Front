@@ -16,7 +16,7 @@
           <el-icon style="margin-left: 10px"><LayoutTemplate /></el-icon>
           首页
         </el-menu-item>
-        <el-menu-item index="1">
+        <el-menu-item index="/questionManagement">
           <el-icon style="margin-left: 10px"><BookMarked /></el-icon>
           试题管理
         </el-menu-item>
