@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/index.vue'
-import Container from '../components/container.vue'
+import Container from '../components/Container.vue'
 import HomePage from  '../views/HomePage/index.vue'
 import QuestionManagement from '../views/QuestionManagement/index.vue'
 
