@@ -1,15 +1,25 @@
 <template>
   <div class="questions-main-box">
-    <div class="module-header-box">
+    <div class="common-module-header-box">
       <el-icon><BookMarked /></el-icon>
       <span style="margin-left: 10px">试题管理</span>
     </div>
-    <div></div>
+    <div class="common-module-query-box"></div>
+    <div class="common-module-opts-box">
+      <el-button type="primary">
+        <Plus class="common-btn-icon-style"/>
+        新 增
+      </el-button>
+      <el-button type="danger">
+        <Trash2 class="common-btn-icon-style" />
+        批量删除
+      </el-button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {BookMarked} from "lucide-vue-next";
+import { BookMarked, Plus, Trash2 } from "lucide-vue-next";
 </script>
 
 <style scoped lang="scss">
@@ -18,16 +28,5 @@ import {BookMarked} from "lucide-vue-next";
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-.module-header-box {
-  height: 30px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  color: #5e5e5e;
-  border-radius: 5px;
-  background-color: #efefef;
-  margin-bottom: 20px;
 }
 </style>
