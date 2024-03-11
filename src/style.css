@@ -5,3 +5,45 @@ body {
   height: 100%;
   background-color: #e6e6e6;
 }
+/*公共样式 - 按钮上的ICON*/
+.common-btn-icon-style {
+  width: 16px;
+  padding-right: 10px
+}
+/*公共样式 - 模块顶部区域*/
+.common-module-header-box {
+  height: 30px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #5e5e5e;
+  border-radius: 5px;
+  background-color: #efefef;
+  margin-bottom: 20px;
+}
+/*公共样式 - 模块查询区域*/
+.common-module-query-box {
+  min-height: 80px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #5e5e5e;
+  border-radius: 5px;
+  background-color: #efefef;
+  margin-bottom: 20px;
+}
+/*公共样式 - 功能操作区域*/
+.common-module-opts-box {
+  height: 60px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 13px;
+  color: #5e5e5e;
+  border-radius: 5px;
+  background-color: #efefef;
+  margin-bottom: 20px;
+}
