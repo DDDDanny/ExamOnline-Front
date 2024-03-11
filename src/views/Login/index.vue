@@ -51,7 +51,7 @@
               </el-form-item>
             </el-form>
             <el-button type="primary" style="width: 100%;margin-top: 15px;" size="large" @click="handleLogin">
-              <LogIn style="width: 16px; padding-right: 10px"/>
+              <LogIn class="common-btn-icon-style"/>
               登 录
             </el-button>
           </div>
