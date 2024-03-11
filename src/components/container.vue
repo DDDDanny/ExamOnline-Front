@@ -2,8 +2,10 @@
   <div class="app-container-main">
     <div class="container-main-left-box">
       <div class="logo-box ">
-        <el-image style="width: 40px; " src="src/images/ExamOnlineLogo.png" fit="cover" />
+        <el-image style="width: 35px;margin-right: 5px " src="src/images/ExamOnlineLogo.png" fit="cover" />
+        <el-image style="width: 125px; " src="src/images/ExamOnline.png" fit="cover" />
       </div>
+      <el-divider style="margin: 0;background: #79b0eb;width: 235px;border-color: #7ea4cd" />
       <el-menu
           active-text-color="#ffd04b"
           background-color="#337ecc"
