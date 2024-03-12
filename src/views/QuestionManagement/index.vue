@@ -17,18 +17,29 @@
     </div>
     <div class="questions-main-table-box" style="">
       <el-table
-          border
-          stripe
-          :data="tableData"
-          size="small"
-          class="common-table-base-style"
-          header-cell-class-name="table-header-row-style"
+        border
+        stripe
+        size="small"
+        :data="tableData"
+        class="common-table-base-style"
+        header-cell-class-name="table-header-row-style"
       >
-        <el-table-column type="index" align="center" width="60" label="序号" />
+        <el-table-column fixed type="index" align="center" width="60" label="序号" />
         <el-table-column prop="date" label="Date" width="180" />
         <el-table-column prop="name" label="Name" width="180" />
         <el-table-column prop="address" label="Address" />
       </el-table>
+      <div class="questions-main-pagination-box">
+        <el-pagination
+          small
+          background
+          :total="55"
+          class="mt-4"
+          style="margin-top: 20px"
+          :default-page-size="50"
+          layout="total, prev, pager, next"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +84,12 @@ const tableData = [
 }
 .questions-main-table-box {
   display: flex;
+  flex-direction: column;
   height: calc(100vh - 380px);
+}
+.questions-main-pagination-box {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end
 }
 </style>
