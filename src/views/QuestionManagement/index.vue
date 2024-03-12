@@ -15,15 +15,16 @@
         批量删除
       </el-button>
     </div>
-    <div>
+    <div class="questions-main-table-box" style="">
       <el-table
           border
           stripe
           :data="tableData"
-          highlight-current-row
+          size="small"
           class="common-table-base-style"
           header-cell-class-name="table-header-row-style"
       >
+        <el-table-column type="index" align="center" width="60" label="序号" />
         <el-table-column prop="date" label="Date" width="180" />
         <el-table-column prop="name" label="Name" width="180" />
         <el-table-column prop="address" label="Address" />
@@ -69,5 +70,9 @@ const tableData = [
 :deep(.table-header-row-style) {
   background-color: #A8ABB2 !important;;
   color: #ffffff !important;;
+}
+.questions-main-table-box {
+  display: flex;
+  height: calc(100vh - 380px);
 }
 </style>
