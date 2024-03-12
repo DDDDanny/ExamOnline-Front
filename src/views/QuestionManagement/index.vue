@@ -35,10 +35,6 @@
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
-      <el-button type="danger">
-        <Trash2 class="common-btn-icon-style" />
-        批量删除
-      </el-button>
     </div>
     <div class="questions-main-table-box" style="">
       <el-table
@@ -53,6 +49,9 @@
         <el-table-column prop="date" label="Date" width="180" />
         <el-table-column prop="name" label="Name" width="180" />
         <el-table-column prop="address" label="Address" />
+        <template #empty>
+          <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover" />
+        </template>
       </el-table>
       <div class="questions-main-pagination-box">
         <el-pagination
@@ -71,7 +70,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { BookMarked, Plus, Trash2, Search } from "lucide-vue-next";
+import { BookMarked, Plus, Search } from "lucide-vue-next";
 
 const queryInfo = reactive({
   topic: '',
@@ -79,28 +78,7 @@ const queryInfo = reactive({
   status: '',
 })
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+const tableData: any = []
 </script>
 
 <style scoped lang="scss">
@@ -111,7 +89,7 @@ const tableData = [
   flex-direction: column;
 }
 :deep(.table-header-row-style) {
-  background-color: #A8ABB2 !important;;
+  background-color: #3375b9 !important;;
   color: #ffffff !important;;
 }
 .questions-main-table-box {
