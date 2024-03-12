@@ -33,6 +33,21 @@ body {
   border-radius: 5px;
   background-color: #efefef;
   margin-bottom: 20px;
+  .module-query-item {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    .module-query-item-title {
+      color: #3E3E3E;
+      margin-right: 10px
+    }
+  }
+  .module-query-item-btn {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    font-size: 13px;
+  }
 }
 /*公共样式 - 功能操作区域*/
 .common-module-opts-box {
