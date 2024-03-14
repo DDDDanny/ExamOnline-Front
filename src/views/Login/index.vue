@@ -104,10 +104,10 @@ const loginRole = ref('student')
 
 // 处理记住密码时的数据回写
 const handleRemember = () => {
-  const { ROLE, LOGININFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGININFO 属性
-  if (ROLE && LOGININFO) { // 如果 ROLE 和 LOGININFO 存在
+  const { ROLE, LOGIN_INFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGIN_INFO 属性
+  if (ROLE && LOGIN_INFO) { // 如果 ROLE 和 LOGIN_INFO 存在
     const role = ROLE; // 读取 ROLE
-    const loginInfo = JSON.parse(LOGININFO); // 解析 LOGININFO 字符串为对象
+    const loginInfo = JSON.parse(LOGIN_INFO); // 解析 LOGIN_INFO 字符串为对象
     if (role === 'student') {
       handleActiveStudent();
     } else {
@@ -158,12 +158,14 @@ const handleLogin = () => {
     }
     // 显示登录成功的消息
     ElMessage.success('登录成功');
+    localStorage.setItem('TOKEN', response.data['access'])
     // 如果用户选择了记住密码，则将角色和登录信息存储到localStorage中，否则清空localStorage
     if (formLogin.rememberPass) {
       localStorage.setItem('ROLE', loginRole.value);
-      localStorage.setItem('LOGININFO', JSON.stringify(formLogin));
+      localStorage.setItem('LOGIN_INFO', JSON.stringify(formLogin));
     } else {
-      localStorage.clear();
+      localStorage.removeItem('ROLE');
+      localStorage.removeItem('LOGIN_INFO');
     }
   });
 };
