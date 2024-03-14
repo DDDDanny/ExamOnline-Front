@@ -63,9 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
+import { UserLogin } from "../../api/index.ts";
 import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
-import {ElMessage} from "element-plus";
 
 // 轮播图信息组
 const carouseGroup = [
@@ -92,6 +93,15 @@ const carouseGroup = [
   }
 ]
 
+// 登录信息Form表单
+const formLogin = reactive({
+  username: '',
+  password: '',
+  rememberPass: false
+})
+
+const loginRole = ref('student')
+
 // 处理激活的登录角色
 const handleActiveRole = (index: any) => {
   const roleItems = document.getElementsByClassName('select-role-item');
@@ -106,23 +116,34 @@ const handleActiveRole = (index: any) => {
 // 处理学生角色
 const handleActiveStudent = () => {
   handleActiveRole(0); // 角色类型索引为 0 表示学生
+  loginRole.value = 'student'
 };
 
 // 处理老师角色
 const handleActiveTeacher = () => {
   handleActiveRole(1); // 角色类型索引为 1 表示老师
+  loginRole.value = 'teacher'
 };
-
-// 登录信息Form表单
-const formLogin = reactive({
-  username: '',
-  password: '',
-  rememberPass: false
-})
 
 // 处理用户登录逻辑
 const handleLogin = () => {
-  ElMessage.success('登录成功')
+  if (loginRole.value === 'student') {
+    UserLogin.studentLogin(formLogin).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('登录成功')
+    })
+  } else {
+    UserLogin.teacherLogin(formLogin).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('登录成功')
+    })
+  }
 }
 </script>
 
