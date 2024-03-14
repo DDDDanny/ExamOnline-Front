@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button type="primary">
+      <el-button color="#42b883" style="color: #fff">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -89,7 +89,7 @@ const tableData: any = []
   flex-direction: column;
 }
 :deep(.table-header-row-style) {
-  background-color: #3375b9 !important;;
+  background-color: #409eff !important;;
   color: #ffffff !important;;
 }
 .questions-main-table-box {
