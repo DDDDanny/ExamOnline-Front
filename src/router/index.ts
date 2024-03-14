@@ -12,6 +12,7 @@ const routers: any = [
   {
     path: '/',
     component:Container,
+    redirect: '/homepage',
     children: [
       {
         path: '/homepage',
