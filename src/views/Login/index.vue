@@ -63,10 +63,12 @@
 </template>
 
 <script setup lang="ts">
+import { router } from '../../router'
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { UserLogin } from "../../api/index.ts";
 import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
+import {setCookie} from "../../utils/cookie.ts";
 
 // 轮播图信息组
 const carouseGroup = [
@@ -158,7 +160,11 @@ const handleLogin = () => {
     }
     // 显示登录成功的消息
     ElMessage.success('登录成功');
+    // 存储Access Token
     localStorage.setItem('TOKEN', response.data['access'])
+    // 存储登录信息（登录人的姓名）
+    const userInfo = { userId: response.data['userId'], username: response.data['name'] }
+    setCookie('UserInfo', JSON.stringify(userInfo))
     // 如果用户选择了记住密码，则将角色和登录信息存储到localStorage中，否则清空localStorage
     if (formLogin.rememberPass) {
       localStorage.setItem('ROLE', loginRole.value);
@@ -167,6 +173,7 @@ const handleLogin = () => {
       localStorage.removeItem('ROLE');
       localStorage.removeItem('LOGIN_INFO');
     }
+    router.replace('/homepage')
   });
 };
 
