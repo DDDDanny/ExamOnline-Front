@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { UserLogin } from "../../api/index.ts";
 import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
@@ -102,6 +102,25 @@ const formLogin = reactive({
 
 const loginRole = ref('student')
 
+// 处理记住密码时的数据回写
+const handleRemember = () => {
+  const { ROLE, LOGININFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGININFO 属性
+  if (ROLE && LOGININFO) { // 如果 ROLE 和 LOGININFO 存在
+    const role = ROLE; // 读取 ROLE
+    const loginInfo = JSON.parse(LOGININFO); // 解析 LOGININFO 字符串为对象
+    if (role === 'student') {
+      handleActiveStudent();
+    } else {
+      handleActiveTeacher();
+    }
+    Object.assign(formLogin, loginInfo); // 将解析后的登录信息合并到 formLogin 对象中
+  }
+};
+
+onMounted(() => {
+  handleRemember()
+})
+
 // 处理激活的登录角色
 const handleActiveRole = (index: any) => {
   const roleItems = document.getElementsByClassName('select-role-item');
@@ -125,26 +144,30 @@ const handleActiveTeacher = () => {
   loginRole.value = 'teacher'
 };
 
-// 处理用户登录逻辑
+// 处理登录的函数
 const handleLogin = () => {
-  if (loginRole.value === 'student') {
-    UserLogin.studentLogin(formLogin).then(response => {
-      if (response.code !== 200) {
-        ElMessage.error(response.msg)
-        return
-      }
-      ElMessage.success('登录成功')
-    })
-  } else {
-    UserLogin.teacherLogin(formLogin).then(response => {
-      if (response.code !== 200) {
-        ElMessage.error(response.msg)
-        return
-      }
-      ElMessage.success('登录成功')
-    })
-  }
-}
+  // 根据用户选择的角色确定调用的登录函数
+  const loginFunction = loginRole.value === 'student' ? UserLogin.studentLogin : UserLogin.teacherLogin;
+
+  // 调用相应的登录函数
+  loginFunction(formLogin).then(response => {
+    // 如果返回的响应状态码不是200，则显示错误信息并结束函数
+    if (response.code !== 200) {
+      ElMessage.error(response.msg);
+      return;
+    }
+    // 显示登录成功的消息
+    ElMessage.success('登录成功');
+    // 如果用户选择了记住密码，则将角色和登录信息存储到localStorage中，否则清空localStorage
+    if (formLogin.rememberPass) {
+      localStorage.setItem('ROLE', loginRole.value);
+      localStorage.setItem('LOGININFO', JSON.stringify(formLogin));
+    } else {
+      localStorage.clear();
+    }
+  });
+};
+
 </script>
 
 <style scoped lang="scss">
