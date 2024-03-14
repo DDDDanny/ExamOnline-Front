@@ -3,10 +3,10 @@
     <div class="homepage-left-box">
       <div class="homepage-login-info-box">
         <span class="homepage-login-info-zh">
-          欢迎 xxx 登录！今天是{{ currentDate }}，今天您有x场考试需要参加！
+          欢迎 {{ userInfo.username }} 登录！今天是{{ currentDate }}，今天您有x场考试需要参加！
         </span>
         <span style="font-size: 15px">
-          Welcome xxx to log in! Today is {{ currentDate }}. You have x exams to take today!
+          May each day bring you closer to your dreams and fill your life with beautiful moments.
         </span>
       </div>
       <div class="homepage-left-main-box">
@@ -30,9 +30,12 @@
 <script setup lang="ts">
 import moment from 'moment'
 import {BookOpenCheck, Notebook} from 'lucide-vue-next'
+import {getCookie} from "../../utils/cookie.ts";
 
 // 获取当前日期
 const currentDate = moment().format('YYYY-MM-DD');
+// 获取当前登录人姓名
+const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
 
 </script>
 
