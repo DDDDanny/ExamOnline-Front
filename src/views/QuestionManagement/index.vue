@@ -46,9 +46,22 @@
         header-cell-class-name="table-header-row-style"
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号" />
-        <el-table-column prop="date" label="Date" width="180" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" />
+        <el-table-column prop="topic" label="试题标题" align="center" width="200" />
+        <el-table-column prop="qType" label="试题类型" align="center" width="120" />
+        <el-table-column prop="trialType" label="所属题库类型" align="center" width="120" />
+        <el-table-column prop="status" label="试题状态" align="center" width="120" />
+        <el-table-column prop="createdUser" label="创建人" align="center" width="120" />
+        <el-table-column prop="createAt" label="创建时间" align="center" width="120" />
+        <el-table-column prop="updatedUser" label="更新人" align="center" width="120" />
+        <el-table-column prop="updatedAt" label="更新时间" align="center" width="120" />
+        <el-table-column/>
+        <el-table-column fixed="right" label="操 作" align="center" width="200">
+          <template #default>
+            <el-button>查看详情</el-button>
+            <el-button>编辑</el-button>
+            <el-button>删除</el-button>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover" />
         </template>
@@ -89,7 +102,7 @@ const tableData: any = []
   flex-direction: column;
 }
 :deep(.table-header-row-style) {
-  background-color: #409eff !important;;
+  background-color: #3483d1 !important;;
   color: #ffffff !important;;
 }
 .questions-main-table-box {
