@@ -18,38 +18,28 @@
           <el-icon style="margin-left: 10px"><LayoutTemplate /></el-icon>
           首页
         </el-menu-item>
-        <el-menu-item index="/questionManagement">
-          <el-icon style="margin-left: 10px"><BookMarked /></el-icon>
-          试题管理
-        </el-menu-item>
-        <el-menu-item index="2">
-          <el-icon style="margin-left: 10px"><Notebook /></el-icon>
-          错题集
-        </el-menu-item>
-        <el-menu-item index="3">
-          <el-icon style="margin-left: 10px"><ScrollText /></el-icon>
-          试卷管理
-        </el-menu-item>
-        <el-menu-item index="5">
-          <el-icon style="margin-left: 10px"><BookOpenCheck /></el-icon>
-          考试管理
-        </el-menu-item>
-        <el-menu-item index="6">
-          <el-icon style="margin-left: 10px"><FileCheck /></el-icon>
-          成绩管理
-        </el-menu-item>
-        <el-menu-item index="7">
-          <el-icon style="margin-left: 10px"><Users /></el-icon>
-          教师管理
-        </el-menu-item>
-        <el-menu-item index="8">
-          <el-icon style="margin-left: 10px"><GraduationCap /></el-icon>
-          学生管理
-        </el-menu-item>
-        <el-menu-item index="9">
-          <el-icon style="margin-left: 10px"><Laptop2 /></el-icon>
-          在线考试
-        </el-menu-item>
+        <template v-for="menuItem in menuInfo" :key="menuItem.id">
+          <el-menu-item :index="menuItem.path" v-if="menuItem.child_menu.length === 0">
+            <el-icon style="margin-left: 10px" >
+              <component :is="menuIconEnum[menuItem.code]"/>
+            </el-icon>
+            {{ menuItem.name }}
+          </el-menu-item>
+          <el-sub-menu :index="menuItem.code" v-else>
+            <template #title>
+              <el-icon style="margin-left: 10px">
+                <component :is="menuIconEnum[menuItem.code]"/>
+              </el-icon>
+              <span>{{ menuItem.name }}</span>
+            </template>
+            <el-menu-item :index="item.path" v-for="item in menuItem.child_menu">
+              <el-icon style="margin-left: 10px">
+                <component :is="menuIconEnum[item.code]"/>
+              </el-icon>
+              {{ item.name }}
+            </el-menu-item>
+          </el-sub-menu>
+        </template>
       </el-menu>
     </div>
     <div class="container-main-right-box">
@@ -66,22 +56,39 @@
 
 <script setup lang="ts">
 import { Menu } from '../api';
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
   BookOpenCheck, Users, Laptop2, GraduationCap,
-  CircleUserRound, Bell, LayoutTemplate
+  CircleUserRound, Bell, LayoutTemplate, BookHeart,
+  BookCheck
 } from 'lucide-vue-next'
+import {ElMessage} from "element-plus";
+
+// 菜单对应的ICON
+const menuIconEnum: any = {
+  '10001': BookMarked, '10002': Notebook, '10003': ScrollText,
+  '10004': BookOpenCheck, '10005': FileCheck, '10006': GraduationCap,
+  '10007': Users, '10008': Laptop2,
+  '10001_1': BookHeart, '10001_2': BookCheck,
+}
+
+// 存放菜单信息
+const menuInfo: any = ref([])
 
 // 获取菜单信息
 const getMenu = () => {
   const role: any = localStorage.getItem('ROLE')
   Menu.getMenu(role).then(response => {
-    console.log(response.data)
+    if (response.code !== 200) {
+      ElMessage.error('获取菜单失败！')
+      return
+    }
+    menuInfo.value = response.data.data
   })
 }
 
-onMounted(() => {
+onMounted( () => {
   getMenu()
 })
 
