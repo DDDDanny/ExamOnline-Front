@@ -102,7 +102,7 @@ const formLogin = reactive({
   rememberPass: false
 })
 
-const loginRole = ref('student')
+const loginRole = ref('Student')
 
 // 处理记住密码时的数据回写
 const handleRemember = () => {
@@ -110,7 +110,7 @@ const handleRemember = () => {
   if (ROLE && LOGIN_INFO) { // 如果 ROLE 和 LOGIN_INFO 存在
     const role = ROLE; // 读取 ROLE
     const loginInfo = JSON.parse(LOGIN_INFO); // 解析 LOGIN_INFO 字符串为对象
-    if (role === 'student') {
+    if (role === 'Student') {
       handleActiveStudent();
     } else {
       handleActiveTeacher();
@@ -137,19 +137,19 @@ const handleActiveRole = (index: any) => {
 // 处理学生角色
 const handleActiveStudent = () => {
   handleActiveRole(0); // 角色类型索引为 0 表示学生
-  loginRole.value = 'student'
+  loginRole.value = 'Student'
 };
 
 // 处理老师角色
 const handleActiveTeacher = () => {
   handleActiveRole(1); // 角色类型索引为 1 表示老师
-  loginRole.value = 'teacher'
+  loginRole.value = 'Teacher'
 };
 
 // 处理登录的函数
 const handleLogin = () => {
   // 根据用户选择的角色确定调用的登录函数
-  const loginFunction = loginRole.value === 'student' ? UserLogin.studentLogin : UserLogin.teacherLogin;
+  const loginFunction = loginRole.value === 'Student' ? UserLogin.studentLogin : UserLogin.teacherLogin;
 
   // 调用相应的登录函数
   loginFunction(formLogin).then(response => {
