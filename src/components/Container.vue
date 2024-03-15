@@ -65,11 +65,26 @@
 </template>
 
 <script setup lang="ts">
+import { Menu } from '../api';
+import {onMounted} from "vue";
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
   BookOpenCheck, Users, Laptop2, GraduationCap,
   CircleUserRound, Bell, LayoutTemplate
 } from 'lucide-vue-next'
+
+// 获取菜单信息
+const getMenu = () => {
+  const role: any = localStorage.getItem('ROLE')
+  Menu.getMenu(role).then(response => {
+    console.log(response.data)
+  })
+}
+
+onMounted(() => {
+  getMenu()
+})
+
 </script>
 
 <style scoped lang="scss">
