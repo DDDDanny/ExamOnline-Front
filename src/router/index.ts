@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/index.vue'
 import Container from '../components/Container.vue'
 import HomePage from  '../views/HomePage/index.vue'
-import QuestionManagement from '../views/QuestionManagement/index.vue'
+import PersonalWarehouse from '../views/QuestionManagement/PersonalWarehouse.vue'
 
 const routers: any = [
   {
@@ -19,8 +19,8 @@ const routers: any = [
         component: HomePage,
       },
       {
-        path: '/questionManagement',
-        component: QuestionManagement,
+        path: '/personalWarehouse',
+        component: PersonalWarehouse,
       }
     ]
   }
