@@ -2,7 +2,7 @@
   <div class="questions-main-box">
     <div class="common-module-header-box">
       <el-icon><BookMarked /></el-icon>
-      <span style="margin-left: 10px">试题管理</span>
+      <span style="margin-left: 10px">个人题库管理</span>
     </div>
     <div class="common-module-query-box">
       <div class="module-query-item">
@@ -19,8 +19,8 @@
       <div class="module-query-item">
         <span class="module-query-item-title">试题状态: </span>
         <el-select v-model="queryInfo.status" placeholder="请选择题目状态" style="width: 240px" clearable>
-          <el-option key="1" label="有效" :value="1" />
-          <el-option key="2" label="无效" :value="0" />
+          <el-option key="1" label="有效" :value="true" />
+          <el-option key="2" label="无效" :value="false" />
         </el-select>
       </div>
       <div class="module-query-item-btn">
@@ -50,9 +50,7 @@
         <el-table-column prop="qType" label="试题类型" align="center" width="120" />
         <el-table-column prop="trialType" label="所属题库类型" align="center" width="120" />
         <el-table-column prop="status" label="试题状态" align="center" width="120" />
-        <el-table-column prop="createdUser" label="创建人" align="center" width="120" />
         <el-table-column prop="createAt" label="创建时间" align="center" width="120" />
-        <el-table-column prop="updatedUser" label="更新人" align="center" width="120" />
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="120" />
         <el-table-column/>
         <el-table-column fixed="right" label="操 作" align="center" width="200">
@@ -82,16 +80,35 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import {onMounted, reactive, ref} from 'vue';
+import {Questions} from "../../api";
+import {getCookie} from "../../utils/cookie.ts";
 import { BookMarked, Plus, Search } from "lucide-vue-next";
 
-const queryInfo = reactive({
-  topic: '',
-  type: '',
-  status: '',
-})
+// 获取UserID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
-const tableData: any = []
+// 查询条件
+const queryInfo = reactive({
+  topic: null,
+  type: null,
+  status: null,
+  is_deleted: false,
+  created_user: userId,
+})
+// 存储表格数据
+const tableData: any = ref([])
+
+// 处理获取个人题库列表数据
+const handleGetPersonalWarehouseData = () => {
+  Questions.getQuestions(queryInfo).then(response => {
+    console.log(response.data)
+  })
+}
+
+onMounted(() => {
+  handleGetPersonalWarehouseData()
+})
 </script>
 
 <style scoped lang="scss">
