@@ -45,19 +45,21 @@
         class="common-table-base-style"
         header-cell-class-name="table-header-row-style"
       >
-        <el-table-column fixed type="index" align="center" width="60" label="序号" />
-        <el-table-column prop="topic" label="试题标题" align="center" width="200" />
+        <el-table-column fixed type="index" align="center" width="60" label="序号"/>
+        <el-table-column fixed prop="topic" label="试题标题" align="center" width="200" />
         <el-table-column prop="qType" label="试题类型" align="center" width="120" />
         <el-table-column prop="trialType" label="所属题库类型" align="center" width="120" />
         <el-table-column prop="status" label="试题状态" align="center" width="120" />
-        <el-table-column prop="createAt" label="创建时间" align="center" width="120" />
-        <el-table-column prop="updatedAt" label="更新时间" align="center" width="120" />
-        <el-table-column/>
-        <el-table-column fixed="right" label="操 作" align="center" width="200">
+        <el-table-column prop="createdAt" label="创建时间" align="center" width="180" />
+        <el-table-column prop="updatedAt" label="更新时间" align="center" width="180" />
+        <el-table-column :resizable="false"/>
+        <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
           <template #default>
-            <el-button>查看详情</el-button>
-            <el-button>编辑</el-button>
-            <el-button>删除</el-button>
+            <el-button link size="small" type="primary" :icon="Info">详情</el-button>
+            <el-divider direction="vertical" />
+            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-divider direction="vertical" />
+            <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -83,7 +85,8 @@
 import {onMounted, reactive, ref} from 'vue';
 import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
-import { BookMarked, Plus, Search } from "lucide-vue-next";
+import {ElMessage} from "element-plus";
+import { BookMarked, Plus, Search, Info, SquarePen, Trash2 } from "lucide-vue-next";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -102,7 +105,24 @@ const tableData: any = ref([])
 // 处理获取个人题库列表数据
 const handleGetPersonalWarehouseData = () => {
   Questions.getQuestions(queryInfo).then(response => {
-    console.log(response.data)
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any[] = []
+      response.data.data.map((item: any) => {
+        tempData.push({
+          id: item.id,
+          topic: item.topic,
+          qType: item.type,
+          trialType: item['trial_type'],
+          status: item.status,
+          createdAt: item['created_at'],
+          updatedAt: item['updated_at'],
+        })
+      })
+      tableData.value = tempData
+    }
   })
 }
 
