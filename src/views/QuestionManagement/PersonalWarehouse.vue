@@ -1,7 +1,7 @@
 <template>
   <div class="questions-main-box">
     <div class="common-module-header-box">
-      <el-icon><BookMarked /></el-icon>
+      <el-icon><BookHeart /></el-icon>
       <span style="margin-left: 10px">个人题库管理</span>
     </div>
     <div class="common-module-query-box">
@@ -49,7 +49,18 @@
         <el-table-column fixed prop="topic" label="试题标题" align="center" width="200" />
         <el-table-column prop="qType" label="试题类型" align="center" width="120" />
         <el-table-column prop="trialType" label="所属题库类型" align="center" width="120" />
-        <el-table-column prop="status" label="试题状态" align="center" width="120" />
+        <el-table-column prop="status" label="试题状态" align="center" width="120">
+          <template #default="scope">
+            <el-tag size="small" v-if="scope['row']['status'] === '有效'" type="success">
+              <el-icon><Check /></el-icon>
+              {{ scope['row']['status'] }}
+            </el-tag>
+            <el-tag size="small" v-else type="danger">
+              <el-icon><X /></el-icon>
+              {{ scope['row']['status'] }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="createdAt" label="创建时间" align="center" width="180" />
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="180" />
         <el-table-column :resizable="false"/>
@@ -86,7 +97,10 @@ import {onMounted, reactive, ref} from 'vue';
 import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
 import {ElMessage} from "element-plus";
-import { BookMarked, Plus, Search, Info, SquarePen, Trash2 } from "lucide-vue-next";
+import {
+  BookHeart, Plus, Search, Info, SquarePen,
+  Trash2, Check, X
+} from "lucide-vue-next";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -114,9 +128,9 @@ const handleGetPersonalWarehouseData = () => {
         tempData.push({
           id: item.id,
           topic: item.topic,
-          qType: item.type,
-          trialType: item['trial_type'],
-          status: item.status,
+          qType: item.type === 'select' ? '选择题' : '判断题',
+          trialType: item['trial_type'] === 'public' ? '公共' : '个人',
+          status: item.status ? '有效' : '无效',
           createdAt: item['created_at'],
           updatedAt: item['updated_at'],
         })
