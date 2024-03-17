@@ -133,7 +133,7 @@ const tablePageTotal = ref(0)
 
 // 处理获取个人题库列表数据
 const handleGetPersonalWarehouseData = () => {
-  Questions.getQuestions(queryInfo, currentPage.value, pageSize.value).then(response => {
+  Questions.getQuestionsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
@@ -174,9 +174,14 @@ const handleDelete = (rowId: string) => {
       center: true,
     }
   ).then(() => {
-    console.log(rowId)
-    ElMessage.success('删除试题成功！')
-    handleGetPersonalWarehouseData()
+    Questions.delQuestionApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除试题成功！')
+      handleGetPersonalWarehouseData()
+    })
   }).catch(() => {
     ElMessage.info('取消删除')
   })
