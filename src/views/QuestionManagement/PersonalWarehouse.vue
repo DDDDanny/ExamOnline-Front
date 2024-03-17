@@ -81,11 +81,12 @@
         <el-pagination
           small
           background
-          :total="55"
+          :total="tablePageTotal"
           class="mt-4"
           style="margin-top: 20px"
-          :default-page-size="50"
+          :default-page-size="pageSize"
           layout="total, prev, pager, next"
+          @current-change="handleCurrentChange"
         />
       </div>
     </div>
@@ -115,10 +116,16 @@ const queryInfo = reactive({
 })
 // 存储表格数据
 const tableData: any = ref([])
+// 当前页
+const currentPage = ref(1)
+// 每页数量
+const pageSize = ref(50)
+// 数据总数
+const tablePageTotal = ref(0)
 
 // 处理获取个人题库列表数据
 const handleGetPersonalWarehouseData = () => {
-  Questions.getQuestions(queryInfo).then(response => {
+  Questions.getQuestions(queryInfo, currentPage.value, pageSize.value).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
@@ -136,11 +143,18 @@ const handleGetPersonalWarehouseData = () => {
         })
       })
       tableData.value = tempData
+      tablePageTotal.value = response.data.total
     }
   })
 }
 
+const handleCurrentChange = (val: number) => {
+  currentPage.value = val
+  handleGetPersonalWarehouseData()
+}
+
 onMounted(() => {
+  currentPage.value = 1
   handleGetPersonalWarehouseData()
 })
 </script>
