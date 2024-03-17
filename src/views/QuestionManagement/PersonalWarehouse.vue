@@ -65,12 +65,20 @@
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="180" />
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
-          <template #default>
+          <template #default="scope">
             <el-button link size="small" type="primary" :icon="Info">详情</el-button>
             <el-divider direction="vertical" />
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical" />
-            <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
+            <el-button
+              link
+              size="small"
+              type="danger"
+              :icon="Trash2"
+              @click="handleDelete(scope['row']['id'])"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -97,7 +105,7 @@
 import {onMounted, reactive, ref} from 'vue';
 import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {
   BookHeart, Plus, Search, Info, SquarePen,
   Trash2, Check, X
@@ -148,9 +156,30 @@ const handleGetPersonalWarehouseData = () => {
   })
 }
 
+// 处理分页时当前页的变更事件
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
   handleGetPersonalWarehouseData()
+}
+
+// 处理删除试题逻辑
+const handleDelete = (rowId: string) => {
+  ElMessageBox.confirm(
+    '您确定要删除吗？',
+    '警告',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      center: true,
+    }
+  ).then(() => {
+    console.log(rowId)
+    ElMessage.success('删除试题成功！')
+    handleGetPersonalWarehouseData()
+  }).catch(() => {
+    ElMessage.info('取消删除')
+  })
 }
 
 onMounted(() => {
