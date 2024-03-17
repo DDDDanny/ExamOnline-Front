@@ -12,8 +12,8 @@
       <div class="module-query-item">
         <span class="module-query-item-title">试题类型: </span>
         <el-select v-model="queryInfo.type" placeholder="请选择题目类型" style="width: 240px" clearable>
-          <el-option key="1" label="选择题" value="Select" />
-          <el-option key="2" label="判断题" value="Judge" />
+          <el-option key="1" label="选择题" value="select" />
+          <el-option key="2" label="判断题" value="judge" />
         </el-select>
       </div>
       <div class="module-query-item">
@@ -24,7 +24,7 @@
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary">
+        <el-button type="primary" @click="handleGetPersonalWarehouseData">
           <Search class="common-btn-icon-style"/>
           查 询
         </el-button>
