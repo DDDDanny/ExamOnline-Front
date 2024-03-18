@@ -149,7 +149,7 @@ const handleActiveTeacher = () => {
 // 处理登录的函数
 const handleLogin = () => {
   // 根据用户选择的角色确定调用的登录函数
-  const loginFunction = loginRole.value === 'Student' ? UserLogin.studentLogin : UserLogin.teacherLogin;
+  const loginFunction = loginRole.value === 'Student' ? UserLogin.studentLoginApi : UserLogin.teacherLoginApi;
 
   // 调用相应的登录函数
   loginFunction(formLogin).then(response => {

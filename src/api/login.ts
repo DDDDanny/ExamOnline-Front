@@ -2,12 +2,12 @@ import axios from '../utils/request'
 
 
 export class UserLogin {
-  async studentLogin(studentInfo: any) {
+  async studentLoginApi(studentInfo: any) {
     const { data } = await axios.post('/studentLogin', studentInfo)
     return data
   }
 
-  async teacherLogin(teacherInfo: any) {
+  async teacherLoginApi(teacherInfo: any) {
     const { data } = await axios.post('/teacherLogin', teacherInfo)
     return data
   }

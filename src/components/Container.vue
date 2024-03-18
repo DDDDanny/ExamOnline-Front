@@ -79,7 +79,7 @@ const menuInfo: any = ref([])
 // 获取菜单信息
 const getMenu = () => {
   const role: any = localStorage.getItem('ROLE')
-  Menu.getMenu(role).then(response => {
+  Menu.getMenuApi(role).then(response => {
     if (response.code !== 200) {
       ElMessage.error('获取菜单失败！')
       return
