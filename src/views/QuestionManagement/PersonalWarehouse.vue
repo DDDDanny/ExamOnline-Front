@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff">
+      <el-button color="#42b883" style="color: #fff" @click="creatDialogFormVisible = true">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -98,6 +98,47 @@
         />
       </div>
     </div>
+    <el-dialog
+      width="800"
+      title="新增试题"
+      draggable
+      destroy-on-close
+      v-model="creatDialogFormVisible"
+      :close-on-click-modal="false"
+    >
+      <el-form :model="createForm" ref="formRef">
+        <el-form-item label="试题题目" :label-width="formLabelWidth" required placeholder="请输入题目">
+          <el-input v-model="createForm.topic" autocomplete="off" clearable />
+        </el-form-item>
+        <el-form-item label="试题类型" :label-width="formLabelWidth" required>
+          <el-select v-model="createForm.type" placeholder="请选择类型">
+            <el-option label="选择题" value="select" />
+            <el-option label="判断题" value="judge" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="参考答案" :label-width="formLabelWidth" required>
+          <el-input v-model="createForm.answer" autocomplete="off" clearable />
+        </el-form-item>
+        <el-form-item label="所属题库" :label-width="formLabelWidth" required>
+          <el-select v-model="createForm.trial_type" placeholder="请选择所属题库">
+            <el-option label="个人题库" value="private" />
+            <el-option label="公共题库" value="public" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="试题状态" :label-width="formLabelWidth" required>
+          <el-select v-model="createForm.status" placeholder="请选择题目状态">
+            <el-option label="有效" :value="true" />
+            <el-option label="无效" :value="false" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="creatDialogFormVisible = false" :icon="Ban">取 消</el-button>
+          <el-button type="primary" @click="creatDialogFormVisible = false" :icon="Send">提 交</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,7 +149,7 @@ import {getCookie} from "../../utils/cookie.ts";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {
   BookHeart, Plus, Search, Info, SquarePen,
-  Trash2, Check, X
+  Trash2, Check, X, Ban, Send
 } from "lucide-vue-next";
 
 // 获取UserID
@@ -190,6 +231,19 @@ const handleDelete = (rowId: string) => {
 onMounted(() => {
   currentPage.value = 1
   handleGetPersonalWarehouseData()
+})
+
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '100px'
+// 控制新增Dialog是否显示
+const creatDialogFormVisible = ref(false)
+// 新增试题Form
+const createForm = reactive({
+  topic: '',
+  answer: '',
+  type: 'select',
+  trial_type: 'private',
+  status: true
 })
 </script>
 
