@@ -24,7 +24,7 @@
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary" @click="handleGetPersonalWarehouseData">
+        <el-button type="primary" @click="getPersonalWarehouseData">
           <Search class="common-btn-icon-style"/>
           查 询
         </el-button>
@@ -105,27 +105,28 @@
       destroy-on-close
       v-model="creatDialogFormVisible"
       :close-on-click-modal="false"
+      @close="handleClose(createFormRef)"
     >
-      <el-form :model="createForm" ref="formRef">
-        <el-form-item label="试题题目" :label-width="formLabelWidth" required placeholder="请输入题目">
-          <el-input v-model="createForm.topic" autocomplete="off" clearable />
+      <el-form :model="createForm" ref="createFormRef">
+        <el-form-item label="试题题目" :label-width="formLabelWidth" prop="topic" required >
+          <el-input v-model="createForm.topic" placeholder="请输入题目" clearable />
         </el-form-item>
-        <el-form-item label="试题类型" :label-width="formLabelWidth" required>
+        <el-form-item label="试题类型" :label-width="formLabelWidth" prop="type" required>
           <el-select v-model="createForm.type" placeholder="请选择类型">
             <el-option label="选择题" value="select" />
             <el-option label="判断题" value="judge" />
           </el-select>
         </el-form-item>
-        <el-form-item label="参考答案" :label-width="formLabelWidth" required>
-          <el-input v-model="createForm.answer" autocomplete="off" clearable />
+        <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
+          <el-input v-model="createForm.answer" placeholder="请输入参考答案" clearable />
         </el-form-item>
-        <el-form-item label="所属题库" :label-width="formLabelWidth" required>
+        <el-form-item label="所属题库" :label-width="formLabelWidth" prop="trial_type" required>
           <el-select v-model="createForm.trial_type" placeholder="请选择所属题库">
             <el-option label="个人题库" value="private" />
             <el-option label="公共题库" value="public" />
           </el-select>
         </el-form-item>
-        <el-form-item label="试题状态" :label-width="formLabelWidth" required>
+        <el-form-item label="试题状态" :label-width="formLabelWidth" prop="status" required>
           <el-select v-model="createForm.status" placeholder="请选择题目状态">
             <el-option label="有效" :value="true" />
             <el-option label="无效" :value="false" />
@@ -135,7 +136,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="creatDialogFormVisible = false" :icon="Ban">取 消</el-button>
-          <el-button type="primary" @click="creatDialogFormVisible = false" :icon="Send">提 交</el-button>
+          <el-button type="primary" @click="handleSubmit(createFormRef)" :icon="Send">提 交</el-button>
         </div>
       </template>
     </el-dialog>
@@ -143,10 +144,11 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive, ref} from 'vue';
-import {Questions} from "../../api";
-import {getCookie} from "../../utils/cookie.ts";
-import {ElMessage, ElMessageBox} from "element-plus";
+import { onMounted, reactive, ref } from 'vue';
+import { Questions } from "../../api";
+import { getCookie } from "../../utils/cookie.ts";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from 'element-plus'
 import {
   BookHeart, Plus, Search, Info, SquarePen,
   Trash2, Check, X, Ban, Send
@@ -173,7 +175,7 @@ const pageSize = ref(50)
 const tablePageTotal = ref(0)
 
 // 处理获取个人题库列表数据
-const handleGetPersonalWarehouseData = () => {
+const getPersonalWarehouseData = () => {
   Questions.getQuestionsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
@@ -200,7 +202,7 @@ const handleGetPersonalWarehouseData = () => {
 // 处理分页时当前页的变更事件
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
-  handleGetPersonalWarehouseData()
+  getPersonalWarehouseData()
 }
 
 // 处理删除试题逻辑
@@ -221,7 +223,7 @@ const handleDelete = (rowId: string) => {
         return
       }
       ElMessage.success('删除试题成功！')
-      handleGetPersonalWarehouseData()
+      getPersonalWarehouseData()
     })
   }).catch(() => {
     ElMessage.info('取消删除')
@@ -230,21 +232,48 @@ const handleDelete = (rowId: string) => {
 
 onMounted(() => {
   currentPage.value = 1
-  handleGetPersonalWarehouseData()
+  getPersonalWarehouseData()
 })
 
 // Dialog中Form Label的通用宽度
 const formLabelWidth = '100px'
 // 控制新增Dialog是否显示
 const creatDialogFormVisible = ref(false)
+// 新增试题表单的Ref
+const createFormRef = ref<FormInstance>()
 // 新增试题Form
 const createForm = reactive({
   topic: '',
   answer: '',
   type: 'select',
   trial_type: 'private',
-  status: true
+  status: true,
+  created_user: userId
 })
+// 处理关闭Dialog回调函数
+const handleClose = (createFormEl: any) => {
+  createFormEl.resetFields()
+  creatDialogFormVisible.value = false
+}
+// 处理提交试题信息
+const handleSubmit = (createFormEl: any) => {
+  createFormEl.validate((result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的试题信息后重新提交！')
+      return
+    } else {
+      Questions.createQuestionApi(createForm).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.msg)
+          return
+        }
+        creatDialogFormVisible.value = false
+        ElMessage.success('新增试题成功！')
+        getPersonalWarehouseData()
+      })
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
