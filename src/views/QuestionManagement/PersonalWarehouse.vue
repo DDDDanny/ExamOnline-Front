@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff" @click="creatDialogFormVisible = true">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog('C')">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -47,17 +47,27 @@
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="topic" label="试题标题" align="center" width="200" />
-        <el-table-column prop="qType" label="试题类型" align="center" width="120" />
-        <el-table-column prop="trialType" label="所属题库类型" align="center" width="120" />
+        <el-table-column prop="type" label="试题类型" align="center" width="120">
+          <template #default="scope">
+            <span v-if="scope['row']['type'] === 'select'">选择题</span>
+            <span v-else>判断题</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="trial_type" label="所属题库类型" align="center" width="120">
+          <template #default="scope">
+            <span v-if="scope['row']['trial_type'] === 'public'">公共</span>
+            <span v-else>个人</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="试题状态" align="center" width="120">
           <template #default="scope">
-            <el-tag size="small" v-if="scope['row']['status'] === '有效'" type="success">
+            <el-tag size="small" v-if="scope['row']['status'] === true" type="success">
               <el-icon><Check /></el-icon>
-              {{ scope['row']['status'] }}
+              有 效
             </el-tag>
             <el-tag size="small" v-else type="danger">
               <el-icon><X /></el-icon>
-              {{ scope['row']['status'] }}
+              无 效
             </el-tag>
           </template>
         </el-table-column>
@@ -68,7 +78,15 @@
           <template #default="scope">
             <el-button link size="small" type="primary" :icon="Info">详情</el-button>
             <el-divider direction="vertical" />
-            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-button
+              link
+              size="small"
+              type="warning"
+              :icon="SquarePen"
+              @click="handleOpenDialog('E', scope['row'])"
+            >
+              编辑
+            </el-button>
             <el-divider direction="vertical" />
             <el-button
               link
@@ -100,34 +118,34 @@
     </div>
     <el-dialog
       width="800"
-      title="新增试题"
+      :title="optType === 'C' ? '新增试题' : '编辑试题'"
       draggable
       destroy-on-close
-      v-model="creatDialogFormVisible"
+      v-model="dialogVisible"
       :close-on-click-modal="false"
-      @close="handleClose(createFormRef)"
+      @close="handleClose(formRef)"
     >
-      <el-form :model="createForm" ref="createFormRef">
+      <el-form :model="formData" ref="formRef">
         <el-form-item label="试题题目" :label-width="formLabelWidth" prop="topic" required >
-          <el-input v-model="createForm.topic" placeholder="请输入题目" clearable />
+          <el-input v-model="formData.topic" placeholder="请输入题目" clearable />
         </el-form-item>
         <el-form-item label="试题类型" :label-width="formLabelWidth" prop="type" required>
-          <el-select v-model="createForm.type" placeholder="请选择类型">
+          <el-select v-model="formData.type" placeholder="请选择类型">
             <el-option label="选择题" value="select" />
             <el-option label="判断题" value="judge" />
           </el-select>
         </el-form-item>
         <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
-          <el-input v-model="createForm.answer" placeholder="请输入参考答案" clearable />
+          <el-input v-model="formData.answer" placeholder="请输入参考答案" clearable />
         </el-form-item>
         <el-form-item label="所属题库" :label-width="formLabelWidth" prop="trial_type" required>
-          <el-select v-model="createForm.trial_type" placeholder="请选择所属题库">
+          <el-select v-model="formData.trial_type" placeholder="请选择所属题库">
             <el-option label="个人题库" value="private" />
             <el-option label="公共题库" value="public" />
           </el-select>
         </el-form-item>
         <el-form-item label="试题状态" :label-width="formLabelWidth" prop="status" required>
-          <el-select v-model="createForm.status" placeholder="请选择题目状态">
+          <el-select v-model="formData.status" placeholder="请选择题目状态">
             <el-option label="有效" :value="true" />
             <el-option label="无效" :value="false" />
           </el-select>
@@ -135,8 +153,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="creatDialogFormVisible = false" :icon="Ban">取 消</el-button>
-          <el-button type="primary" @click="handleSubmit(createFormRef)" :icon="Send">提 交</el-button>
+          <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit(formRef)" :icon="Send">提 交</el-button>
         </div>
       </template>
     </el-dialog>
@@ -186,9 +204,10 @@ const getPersonalWarehouseData = () => {
         tempData.push({
           id: item.id,
           topic: item.topic,
-          qType: item.type === 'select' ? '选择题' : '判断题',
-          trialType: item['trial_type'] === 'public' ? '公共' : '个人',
-          status: item.status ? '有效' : '无效',
+          type: item.type,
+          trial_type: item['trial_type'],
+          answer: item['answer'],
+          status: item.status,
           createdAt: item['created_at'],
           updatedAt: item['updated_at'],
         })
@@ -237,23 +256,35 @@ onMounted(() => {
 
 // Dialog中Form Label的通用宽度
 const formLabelWidth = '100px'
-// 控制新增Dialog是否显示
-const creatDialogFormVisible = ref(false)
+// 控制Dialog是否显示
+const dialogVisible = ref(false)
 // 新增试题表单的Ref
-const createFormRef = ref<FormInstance>()
-// 新增试题Form
-const createForm = reactive({
+const formRef = ref<FormInstance>()
+// FormData 初始化
+const initFormData = {
   topic: '',
   answer: '',
   type: 'select',
   trial_type: 'private',
   status: true,
   created_user: userId
-})
+}
+// 试题 FormData
+const formData = ref(initFormData)
+
+const optType = ref('C')
+const handleOpenDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    formData.value = itemData
+  }
+  optType.value = opt
+  dialogVisible.value = true
+}
 // 处理关闭Dialog回调函数
 const handleClose = (createFormEl: any) => {
+  formData.value = initFormData
   createFormEl.resetFields()
-  creatDialogFormVisible.value = false
+  dialogVisible.value = false
 }
 // 处理提交试题信息
 const handleSubmit = (createFormEl: any) => {
@@ -262,12 +293,12 @@ const handleSubmit = (createFormEl: any) => {
       ElMessage.warning('请输入完整的试题信息后重新提交！')
       return
     } else {
-      Questions.createQuestionApi(createForm).then(response => {
+      Questions.createQuestionApi(formData.value).then(response => {
         if (response.code !== 200) {
           ElMessage.error(response.msg)
           return
         }
-        creatDialogFormVisible.value = false
+        dialogVisible.value = false
         ElMessage.success('新增试题成功！')
         getPersonalWarehouseData()
       })
