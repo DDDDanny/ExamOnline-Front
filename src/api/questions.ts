@@ -10,6 +10,12 @@ export class Question {
     return data
   }
 
+  // 创建试题接口
+  async createQuestionApi(questionInfo: object) {
+    const { data } = await axios.post('/question', { ...questionInfo })
+    return data
+  }
+
   // 删除试题接口
   async delQuestionApi(questionId: string) {
     const { data } = await axios.delete('/question/' + questionId)
