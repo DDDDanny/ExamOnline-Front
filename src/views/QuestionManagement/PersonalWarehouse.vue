@@ -64,15 +64,11 @@
         <el-table-column prop="status" label="试题状态" align="center" width="120">
           <template #default="scope">
             <el-tag size="small" v-if="scope['row']['status'] === true" type="success">
-              <el-icon>
-                <Check/>
-              </el-icon>
+              <el-icon><Check/></el-icon>
               有 效
             </el-tag>
             <el-tag size="small" v-else type="danger">
-              <el-icon>
-                <X/>
-              </el-icon>
+              <el-icon><X/></el-icon>
               无 效
             </el-tag>
           </template>
@@ -140,6 +136,9 @@
             <el-option label="选择题" value="select"/>
             <el-option label="判断题" value="judge"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="试题选项" :label-width="formLabelWidth" prop="options" required v-show="formData.type === 'select'">
+          <el-input v-model="formData.options" placeholder="请输入试题选项" clearable/>
         </el-form-item>
         <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
           <el-input v-model="formData.answer" placeholder="请输入参考答案" clearable/>
@@ -209,6 +208,7 @@ const getPersonalWarehouseData = () => {
           topic: item.topic,
           type: item.type,
           trial_type: item['trial_type'],
+          options: item['options'],
           answer: item['answer'],
           status: item.status,
           createdAt: item['created_at'],
@@ -270,6 +270,7 @@ const initFormData = {
   answer: '',
   type: 'select',
   trial_type: 'private',
+  options: '',
   status: true,
   created_user: userId,
   updated_user: userId
@@ -293,6 +294,11 @@ const handleClose = (createFormEl: any) => {
 }
 // 处理提交试题信息
 const handleSubmit = async (createFormEl: any) => {
+  // 判断题预处理
+  if (formData.value.type === 'judge') {
+    formData.value.options = 'T&F'
+  }
+  // 数据校验
   createFormEl.validate(async (result: boolean) => {
     if (!result) {
       ElMessage.warning('请输入完整的试题信息后重新提交！')
