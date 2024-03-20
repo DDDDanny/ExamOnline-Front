@@ -21,6 +21,12 @@ export class Question {
     const { data } = await axios.delete('/question/' + questionId)
     return data
   }
+
+  // 编辑试题接口
+  async editQuestionApi(questionInfo: any) {
+    const { data } = await axios.put('/question/' + questionInfo['id'], { ...questionInfo })
+    return data
+  }
 }
 
 export default new Question()
