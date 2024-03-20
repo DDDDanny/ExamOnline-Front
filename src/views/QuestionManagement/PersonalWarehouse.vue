@@ -125,6 +125,7 @@
         destroy-on-close
         v-model="dialogVisible"
         :close-on-click-modal="false"
+        :close-on-press-escape="false"
         @close="handleClose(formRef)"
     >
       <el-form :model="formData" ref="formRef">
