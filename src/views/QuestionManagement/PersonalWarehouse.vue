@@ -137,11 +137,15 @@
             <el-option label="判断题" value="judge"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="试题选项" :label-width="formLabelWidth" prop="options" required v-show="formData.type === 'select'">
+        <el-form-item label="试题选项" :label-width="formLabelWidth" prop="options" required v-if="formData.type === 'select'">
           <el-input v-model="formData.options" placeholder="请输入试题选项" clearable/>
         </el-form-item>
         <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
-          <el-input v-model="formData.answer" placeholder="请输入参考答案" clearable/>
+          <el-input v-if="formData.type == 'select'" v-model="formData.answer" placeholder="请输入参考答案" clearable/>
+          <el-radio-group v-else v-model="formData.answer">
+            <el-radio value="T">对</el-radio>
+            <el-radio value="F">错</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="所属题库" :label-width="formLabelWidth" prop="trial_type" required>
           <el-select v-model="formData.trial_type" placeholder="请选择所属题库">
@@ -167,7 +171,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive, ref} from 'vue';
+import {onMounted, reactive, ref, watch} from 'vue';
 import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
@@ -277,6 +281,14 @@ const initFormData = {
 }
 // 试题 FormData
 const formData = ref(initFormData)
+
+// 监听试题类型的变化
+watch(() => formData.value.type, (newQuestion) => {
+  if (newQuestion !== 'judge') {
+    formData.value.answer = '';
+    formData.value.options = '';
+  }
+})
 
 const optType = ref('C')
 const handleOpenDialog = (opt: string, itemData?: any) => {
