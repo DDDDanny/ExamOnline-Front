@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@vitejs/plugin-vue': ^5.0.4
   axios: ^1.6.7
-  element-plus: ^2.5.6
+  element-plus: 2.6.1
   lucide-vue-next: ^0.343.0
   moment: ^2.30.1
   path: ^0.12.7
@@ -18,7 +18,7 @@ specifiers:
 
 dependencies:
   axios: registry.npmmirror.com/axios/1.6.7
-  element-plus: registry.npmmirror.com/element-plus/2.5.6_vue@3.4.21
+  element-plus: registry.npmmirror.com/element-plus/2.6.1_vue@3.4.21
   lucide-vue-next: registry.npmmirror.com/lucide-vue-next/0.343.0_vue@3.4.21
   moment: registry.npmmirror.com/moment/2.30.1
   path: registry.npmmirror.com/path/0.12.7
@@ -904,11 +904,11 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
-  registry.npmmirror.com/element-plus/2.5.6_vue@3.4.21:
-    resolution: {integrity: sha512-zctKTiyIDmcnMp3K5WG1hglgraW9EbiCLiIDVtaMCS5mPMl2fRKdS0vOFGnECIq9taFoxnyoDwxHD81nv0B4RA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.5.6.tgz}
-    id: registry.npmmirror.com/element-plus/2.5.6
+  registry.npmmirror.com/element-plus/2.6.1_vue@3.4.21:
+    resolution: {integrity: sha512-6VRpLjwtIVdtUuITJPPKtpOH1NM6nuAkRE3q5O4Lrx0N1bYMhTkiqb2Jy7zfQuDPbOIkkF2OABTzegpNnzgsnQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.6.1.tgz}
+    id: registry.npmmirror.com/element-plus/2.6.1
     name: element-plus
-    version: 2.5.6
+    version: 2.6.1
     peerDependencies:
       vue: ^3.2.0
     dependencies:
