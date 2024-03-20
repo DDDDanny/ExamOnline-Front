@@ -1,26 +1,28 @@
 <template>
   <div class="questions-main-box">
     <div class="common-module-header-box">
-      <el-icon><BookHeart /></el-icon>
+      <el-icon>
+        <BookHeart/>
+      </el-icon>
       <span style="margin-left: 10px">个人题库管理</span>
     </div>
     <div class="common-module-query-box">
       <div class="module-query-item">
         <span class="module-query-item-title">试题标题: </span>
-        <el-input v-model="queryInfo.topic" placeholder="请输入试题标题" style="width: 220px" clearable />
+        <el-input v-model="queryInfo.topic" placeholder="请输入试题标题" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item">
         <span class="module-query-item-title">试题类型: </span>
         <el-select v-model="queryInfo.type" placeholder="请选择题目类型" style="width: 240px" clearable>
-          <el-option key="1" label="选择题" value="select" />
-          <el-option key="2" label="判断题" value="judge" />
+          <el-option key="1" label="选择题" value="select"/>
+          <el-option key="2" label="判断题" value="judge"/>
         </el-select>
       </div>
       <div class="module-query-item">
         <span class="module-query-item-title">试题状态: </span>
         <el-select v-model="queryInfo.status" placeholder="请选择题目状态" style="width: 240px" clearable>
-          <el-option key="1" label="有效" :value="true" />
-          <el-option key="2" label="无效" :value="false" />
+          <el-option key="1" label="有效" :value="true"/>
+          <el-option key="2" label="无效" :value="false"/>
         </el-select>
       </div>
       <div class="module-query-item-btn">
@@ -38,15 +40,15 @@
     </div>
     <div class="questions-main-table-box" style="">
       <el-table
-        border
-        stripe
-        size="small"
-        :data="tableData"
-        class="common-table-base-style"
-        header-cell-class-name="table-header-row-style"
+          border
+          stripe
+          size="small"
+          :data="tableData"
+          class="common-table-base-style"
+          header-cell-class-name="table-header-row-style"
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="topic" label="试题标题" align="center" width="200" />
+        <el-table-column fixed prop="topic" label="试题标题" align="center" width="200"/>
         <el-table-column prop="type" label="试题类型" align="center" width="120">
           <template #default="scope">
             <span v-if="scope['row']['type'] === 'select'">选择题</span>
@@ -62,92 +64,96 @@
         <el-table-column prop="status" label="试题状态" align="center" width="120">
           <template #default="scope">
             <el-tag size="small" v-if="scope['row']['status'] === true" type="success">
-              <el-icon><Check /></el-icon>
+              <el-icon>
+                <Check/>
+              </el-icon>
               有 效
             </el-tag>
             <el-tag size="small" v-else type="danger">
-              <el-icon><X /></el-icon>
+              <el-icon>
+                <X/>
+              </el-icon>
               无 效
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="创建时间" align="center" width="180" />
-        <el-table-column prop="updatedAt" label="更新时间" align="center" width="180" />
+        <el-table-column prop="createdAt" label="创建时间" align="center" width="180"/>
+        <el-table-column prop="updatedAt" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
           <template #default="scope">
             <el-button link size="small" type="primary" :icon="Info">详情</el-button>
-            <el-divider direction="vertical" />
+            <el-divider direction="vertical"/>
             <el-button
-              link
-              size="small"
-              type="warning"
-              :icon="SquarePen"
-              @click="handleOpenDialog('E', scope['row'])"
+                link
+                size="small"
+                type="warning"
+                :icon="SquarePen"
+                @click="handleOpenDialog('E', scope['row'])"
             >
               编辑
             </el-button>
-            <el-divider direction="vertical" />
+            <el-divider direction="vertical"/>
             <el-button
-              link
-              size="small"
-              type="danger"
-              :icon="Trash2"
-              @click="handleDelete(scope['row']['id'])"
+                link
+                size="small"
+                type="danger"
+                :icon="Trash2"
+                @click="handleDelete(scope['row']['id'])"
             >
               删除
             </el-button>
           </template>
         </el-table-column>
         <template #empty>
-          <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover" />
+          <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
       <div class="questions-main-pagination-box">
         <el-pagination
-          small
-          background
-          :total="tablePageTotal"
-          class="mt-4"
-          style="margin-top: 20px"
-          :default-page-size="pageSize"
-          layout="total, prev, pager, next"
-          @current-change="handleCurrentChange"
+            small
+            background
+            :total="tablePageTotal"
+            class="mt-4"
+            style="margin-top: 20px"
+            :default-page-size="pageSize"
+            layout="total, prev, pager, next"
+            @current-change="handleCurrentChange"
         />
       </div>
     </div>
     <el-dialog
-      width="800"
-      :title="optType === 'C' ? '新增试题' : '编辑试题'"
-      draggable
-      destroy-on-close
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      @close="handleClose(formRef)"
+        width="800"
+        :title="optType === 'C' ? '新增试题' : '编辑试题'"
+        draggable
+        destroy-on-close
+        v-model="dialogVisible"
+        :close-on-click-modal="false"
+        @close="handleClose(formRef)"
     >
       <el-form :model="formData" ref="formRef">
-        <el-form-item label="试题题目" :label-width="formLabelWidth" prop="topic" required >
-          <el-input v-model="formData.topic" placeholder="请输入题目" clearable />
+        <el-form-item label="试题题目" :label-width="formLabelWidth" prop="topic" required>
+          <el-input v-model="formData.topic" placeholder="请输入题目" clearable/>
         </el-form-item>
         <el-form-item label="试题类型" :label-width="formLabelWidth" prop="type" required>
           <el-select v-model="formData.type" placeholder="请选择类型">
-            <el-option label="选择题" value="select" />
-            <el-option label="判断题" value="judge" />
+            <el-option label="选择题" value="select"/>
+            <el-option label="判断题" value="judge"/>
           </el-select>
         </el-form-item>
         <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
-          <el-input v-model="formData.answer" placeholder="请输入参考答案" clearable />
+          <el-input v-model="formData.answer" placeholder="请输入参考答案" clearable/>
         </el-form-item>
         <el-form-item label="所属题库" :label-width="formLabelWidth" prop="trial_type" required>
           <el-select v-model="formData.trial_type" placeholder="请选择所属题库">
-            <el-option label="个人题库" value="private" />
-            <el-option label="公共题库" value="public" />
+            <el-option label="个人题库" value="private"/>
+            <el-option label="公共题库" value="public"/>
           </el-select>
         </el-form-item>
         <el-form-item label="试题状态" :label-width="formLabelWidth" prop="status" required>
           <el-select v-model="formData.status" placeholder="请选择题目状态">
-            <el-option label="有效" :value="true" />
-            <el-option label="无效" :value="false" />
+            <el-option label="有效" :value="true"/>
+            <el-option label="无效" :value="false"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -162,15 +168,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { Questions } from "../../api";
-import { getCookie } from "../../utils/cookie.ts";
-import { ElMessage, ElMessageBox } from "element-plus";
-import type { FormInstance } from 'element-plus'
-import {
-  BookHeart, Plus, Search, Info, SquarePen,
-  Trash2, Check, X, Ban, Send
-} from "lucide-vue-next";
+import {onMounted, reactive, ref} from 'vue';
+import {Questions} from "../../api";
+import {getCookie} from "../../utils/cookie.ts";
+import type {FormInstance} from 'element-plus'
+import {ElMessage, ElMessageBox} from "element-plus";
+import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Trash2, X} from "lucide-vue-next";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -209,6 +212,7 @@ const getPersonalWarehouseData = () => {
           answer: item['answer'],
           status: item.status,
           createdAt: item['created_at'],
+          created_user: item['created_user'],
           updatedAt: item['updated_at'],
         })
       })
@@ -227,14 +231,14 @@ const handleCurrentChange = (val: number) => {
 // 处理删除试题逻辑
 const handleDelete = (rowId: string) => {
   ElMessageBox.confirm(
-    '您确定要删除吗？',
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-      center: true,
-    }
+      '您确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
   ).then(() => {
     Questions.delQuestionApi(rowId).then(response => {
       if (response.code !== 200) {
@@ -267,7 +271,8 @@ const initFormData = {
   type: 'select',
   trial_type: 'private',
   status: true,
-  created_user: userId
+  created_user: userId,
+  updated_user: userId
 }
 // 试题 FormData
 const formData = ref(initFormData)
@@ -287,24 +292,29 @@ const handleClose = (createFormEl: any) => {
   dialogVisible.value = false
 }
 // 处理提交试题信息
-const handleSubmit = (createFormEl: any) => {
-  createFormEl.validate((result: boolean) => {
+const handleSubmit = async (createFormEl: any) => {
+  createFormEl.validate(async (result: boolean) => {
     if (!result) {
       ElMessage.warning('请输入完整的试题信息后重新提交！')
       return
-    } else {
-      Questions.createQuestionApi(formData.value).then(response => {
-        if (response.code !== 200) {
-          ElMessage.error(response.msg)
-          return
-        }
-        dialogVisible.value = false
-        ElMessage.success('新增试题成功！')
-        getPersonalWarehouseData()
-      })
+    }
+    try {
+      const response = optType.value === 'C'
+          ? await Questions.createQuestionApi(formData.value)
+          : await Questions.editQuestionApi({...formData.value, updated_user: userId})
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      dialogVisible.value = false
+      ElMessage.success(optType.value === 'C' ? '新增试题成功！' : '编辑试题成功！')
+      getPersonalWarehouseData()
+    } catch (error) {
+      console.error('An error occurred:', error)
     }
   })
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -314,15 +324,18 @@ const handleSubmit = (createFormEl: any) => {
   display: flex;
   flex-direction: column;
 }
+
 :deep(.table-header-row-style) {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
 }
+
 .questions-main-table-box {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 380px);
 }
+
 .questions-main-pagination-box {
   width: 100%;
   display: flex;
