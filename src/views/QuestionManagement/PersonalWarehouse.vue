@@ -44,6 +44,7 @@
           stripe
           size="small"
           :data="tableData"
+          show-overflow-tooltip
           class="common-table-base-style"
           header-cell-class-name="table-header-row-style"
       >
@@ -78,7 +79,15 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="Info">详情</el-button>
+            <el-button
+                link
+                size="small"
+                type="primary"
+                :icon="Info"
+                @click="handleOpenDetailDialog(scope['row'])"
+            >
+              详情
+            </el-button>
             <el-divider direction="vertical"/>
             <el-button
                 link
@@ -168,6 +177,62 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog
+        width="800"
+        title="试题详情"
+        draggable
+        destroy-on-close
+        v-model="detailDialogVisible"
+        :close-on-click-modal="false"
+    >
+      <div class="question-detail-box">
+        <div class="detail-tag-box detail-common">
+          <el-tag style="margin-right: 10px" :icon="Bookmark">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['type'] === 'select' ? '选择题' : '判断题' }}
+          </el-tag>
+          <el-tag style="margin-right: 10px" :icon="Bookmark">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['trial_type'] === 'public' ? '公共题库' : '个人题库' }}
+          </el-tag>
+          <el-tag style="margin-right: 10px" :type="detailData['status'] ? 'success' : 'danger'">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['status'] ? '有效' : '无效' }}
+          </el-tag>
+        </div>
+        <div class="detail-common detail-topic-box">
+          <span style="font-weight: bolder;">题目：</span>
+          <span style="margin-top: 10px; letter-spacing: 1px;">{{ detailData['topic'] }}</span>
+        </div>
+        <div class="detail-options-box detail-common" v-if="detailData['type'] === 'select'">
+          <span style="font-weight: bolder;">选项：</span>
+          <div v-for="(value, key) in detailData['optionsJson']" :key="key" style="margin-top: 10px">
+            <span>{{ key }}: {{ value }}</span>
+          </div>
+        </div>
+        <div class="detail-common detail-answer-box">
+          <span style="font-weight: bolder;">参考答案：</span>
+          <span v-if="detailData['type'] === 'select'">{{ detailData['answer'] }}</span>
+          <span v-else style="display: flex;align-items: center;">
+            <Check v-if="detailData['answer'] == 'T'" style="height: 16px"/>
+            <X v-else style="height: 15px"/>
+          </span>
+        </div>
+        <el-divider style="margin: 0"/>
+        <div class="detail-base-info-box">
+          <div class="base-info">
+            <div class="base-info-item">
+              <span style="margin-right: 10px">创建时间：</span>
+              <span>{{ detailData['createdAt'] }}</span>
+            </div>
+            <div class="base-info-item">
+              <span style="margin-right: 10px">更新时间: </span>
+              <span>{{ detailData['updatedAt'] }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -177,7 +242,7 @@ import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
-import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Trash2, X} from "lucide-vue-next";
+import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Trash2, X, Tag} from "lucide-vue-next";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -334,6 +399,18 @@ const handleSubmit = async (createFormEl: any) => {
   })
 }
 
+// 控制详情Dialog是否展示
+const detailDialogVisible = ref(false)
+// 存储详情数据信息
+const detailData: any = ref(null)
+// 处理打开详情Dialog
+const handleOpenDetailDialog = (itemData: any) => {
+  if (itemData.type === 'select') {
+    itemData['optionsJson'] = JSON.parse(itemData['options'])
+  }
+  detailData.value = itemData
+  detailDialogVisible.value = true
+}
 </script>
 
 <style scoped lang="scss">
@@ -359,5 +436,37 @@ const handleSubmit = async (createFormEl: any) => {
   width: 100%;
   display: flex;
   justify-content: flex-end
+}
+
+.question-detail-box {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  .detail-common {
+    margin-bottom: 20px;
+  }
+  .detail-tag-box {
+    width: 100%;
+    display: flex;
+  }
+  .detail-options-box, .detail-topic-box  {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-answer-box {
+    display: flex;
+  }
+  .detail-base-info-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    .base-info{
+      display: flex;
+      .base-info-item {
+        display: flex;
+        margin-right: 50px;
+      }
+    }
+  }
 }
 </style>
