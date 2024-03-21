@@ -44,8 +44,23 @@
     </div>
     <div class="container-main-right-box">
       <div class="container-top-box">
-        <Bell style="margin-right: 30px;"/>
-        <CircleUserRound />
+        <Bell class="header-item" style="margin-right: 30px;" />
+        <el-popover placement="bottom" :width="180" trigger="hover">
+          <template #reference>
+            <el-icon size="25" class="header-item"><CircleUserRound /></el-icon>
+          </template>
+          <div style="width:100%;display: flex;flex-direction: column;align-items: center;">
+            <el-button link>
+              <el-icon size="18" style="margin-right: 18px"><Lock /></el-icon>
+              修改密码
+            </el-button>
+            <el-divider style="margin: 10px"/>
+            <el-button link>
+              <el-icon size="18" style="margin-right: 18px"><LogOut/></el-icon>
+              退出登录
+            </el-button>
+          </div>
+        </el-popover>
       </div>
       <div class="container-main-content-box">
         <router-view/>
@@ -61,7 +76,7 @@ import {
   BookMarked, Notebook, ScrollText, FileCheck,
   BookOpenCheck, Users, Laptop2, GraduationCap,
   CircleUserRound, Bell, LayoutTemplate, BookHeart,
-  BookCheck
+  BookCheck, Lock, LogOut
 } from 'lucide-vue-next'
 import {ElMessage} from "element-plus";
 
@@ -136,5 +151,9 @@ onMounted( () => {
     padding: 20px;
   }
 }
-
+.header-item {
+  &:hover {
+    cursor: pointer; // hover后鼠标变手指
+  }
+}
 </style>
