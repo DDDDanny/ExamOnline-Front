@@ -28,6 +28,18 @@ export class Question {
     const { data } = await axios.put('/question/' + questionInfo['id'], { ...questionInfo })
     return data
   }
+
+  // 试题收藏接口
+  async collectQuestionApi(collector: string, question_id: string): Promise<Result> {
+    const { data } = await axios.post('/qFavorite', { collector, question_id })
+    return data
+  }
+
+  // 根据收藏者ID获取收藏的试题列表
+  async getCollectQuestionsApi(collector: string): Promise<Result> {
+    const { data } = await axios.get('/qFavorite/' + collector)
+    return data
+  }
 }
 
 export default new Question()
