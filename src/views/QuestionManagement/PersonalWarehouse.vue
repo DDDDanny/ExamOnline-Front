@@ -242,7 +242,7 @@ import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
-import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Trash2, X, Tag} from "lucide-vue-next";
+import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Bookmark, Trash2, X, Tag} from "lucide-vue-next";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
