@@ -80,10 +80,19 @@
               <el-table-column prop="updated_user" label="更新人" align="center" width="120"/>
               <el-table-column :resizable="false"/>
               <el-table-column fixed="right" label="操 作" align="center" width="180" :resizable="false">
-                <template #default>
+                <template #default="scope">
                   <el-button link size="small" type="primary" :icon="Info">详情</el-button>
                   <el-divider direction="vertical"/>
-                  <el-button v-if="isFavorite" link size="small" type="info" :icon="HeartOff">未收藏</el-button>
+                  <el-button
+                      link
+                      v-if="scope['row']['favorite'] === false"
+                      size="small"
+                      type="info"
+                      :icon="HeartOff"
+                      @click="handleCollectQuestion(scope['row'])"
+                  >
+                    未收藏
+                  </el-button>
                   <el-button v-else link size="small" type="danger" :icon="Heart">已收藏</el-button>
                 </template>
               </el-table-column>
@@ -124,6 +133,10 @@ import {onMounted, reactive, ref} from "vue";
 import {Questions} from "../../api";
 import {ElMessage} from "element-plus";
 import {BookCheck, Check, Heart, HeartOff, Info, Search, X} from "lucide-vue-next";
+import {getCookie} from "../../utils/cookie.ts";
+
+// 获取用户ID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 // 查询条件
 const queryInfo = reactive({
@@ -132,6 +145,8 @@ const queryInfo = reactive({
   status: true,
   is_deleted: false,
   created_user: null,
+  trial_type: 'public',
+  collector: userId
 })
 // 控制被激活的页签
 const activeTab = ref('public')
@@ -144,8 +159,6 @@ const currentPage = ref(1)
 const pageSize = ref(50)
 // 数据总数
 const tablePageTotal = ref(0)
-
-const isFavorite = ref(true)
 
 // 处理获取公共题库列表数据
 const getPublicWarehouseData = () => {
@@ -164,6 +177,7 @@ const getPublicWarehouseData = () => {
           options: item['options'],
           answer: item['answer'],
           status: item.status,
+          favorite: item.favorite,
           created_at: item['created_at'],
           created_user: item['created_user_info']['name'],
           updated_at: item['updated_at'],
@@ -185,6 +199,18 @@ const handleCurrentChange = (val: number) => {
 onMounted(() => {
   getPublicWarehouseData()
 })
+
+// 处理收藏试题
+const handleCollectQuestion = (itemData: any) => {
+  Questions.collectQuestionApi(userId, itemData.id).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+    } else {
+      ElMessage.success('试题收藏成功！')
+      getPublicWarehouseData()
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
