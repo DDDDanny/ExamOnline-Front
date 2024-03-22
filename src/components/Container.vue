@@ -55,7 +55,7 @@
               修改密码
             </el-button>
             <el-divider style="margin: 10px"/>
-            <el-button link>
+            <el-button link @click="handleLogout">
               <el-icon size="18" style="margin-right: 18px"><LogOut/></el-icon>
               退出登录
             </el-button>
@@ -71,6 +71,7 @@
 
 <script setup lang="ts">
 import { Menu } from '../api';
+import { router } from '../router'
 import {onMounted, ref} from "vue";
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
@@ -79,6 +80,7 @@ import {
   BookCheck, Lock, LogOut
 } from 'lucide-vue-next'
 import {ElMessage} from "element-plus";
+import {delCookie} from "../utils/cookie.ts";
 
 // 菜单对应的ICON
 const menuIconEnum: any = {
@@ -106,6 +108,13 @@ const getMenu = () => {
 onMounted( () => {
   getMenu()
 })
+
+// 处理登出逻辑
+const handleLogout = () => {
+  delCookie()
+  localStorage.removeItem('TOKEN')
+  router.replace('/login')
+}
 
 </script>
 
