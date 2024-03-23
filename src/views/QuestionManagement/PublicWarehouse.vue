@@ -93,7 +93,16 @@
                   >
                     未收藏
                   </el-button>
-                  <el-button v-else link size="small" type="danger" :icon="Heart">已收藏</el-button>
+                  <el-button
+                      link
+                      v-else
+                      size="small"
+                      type="danger"
+                      :icon="Heart"
+                      @click="handleCancelCollectQuestion(scope['row'])"
+                  >
+                    已收藏
+                  </el-button>
                 </template>
               </el-table-column>
               <template #empty>
@@ -207,6 +216,18 @@ const handleCollectQuestion = (itemData: any) => {
       ElMessage.error(response.msg)
     } else {
       ElMessage.success('试题收藏成功！')
+      getPublicWarehouseData()
+    }
+  })
+}
+
+// 处理取消收藏试题
+const handleCancelCollectQuestion = (itemData: any) => {
+  Questions.cancelCollectQuestionApi(userId, itemData.id).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+    } else {
+      ElMessage.success('取消收藏成功！')
       getPublicWarehouseData()
     }
   })
