@@ -35,6 +35,12 @@ export class Question {
     return data
   }
 
+  // 取消收藏接口
+  async cancelCollectQuestionApi(collector: string, question_id: string): Promise<Result> {
+    const { data } = await axios.delete('/qFavorite', { data: {collector, question_id} })
+    return data
+  }
+
   // 根据收藏者ID获取收藏的试题列表
   async getCollectQuestionsApi(collector: string): Promise<Result> {
     const { data } = await axios.get('/qFavorite/' + collector)
