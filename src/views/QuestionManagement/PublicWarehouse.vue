@@ -74,10 +74,9 @@
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
               <el-table-column prop="created_user" label="创建人" align="center" width="120"/>
+              <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
               <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
-              <el-table-column prop="updated_user" label="更新人" align="center" width="120"/>
               <el-table-column :resizable="false"/>
               <el-table-column fixed="right" label="操 作" align="center" width="180" :resizable="false">
                 <template #default="scope">
