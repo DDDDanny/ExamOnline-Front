@@ -19,7 +19,7 @@
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary">
+        <el-button type="primary" @click="handleQuery">
           <Search class="common-btn-icon-style"/>
           查 询
         </el-button>
@@ -313,6 +313,12 @@ const queryInfo = reactive({
 // 控制被激活的页签
 const activeTab = ref('public')
 
+// 处理查询逻辑
+const handleQuery = () => {
+  const fetchData = activeTab.value === 'public' ? getPublicWarehouseData : getFavoriteData;
+  fetchData();
+}
+
 /**
  * 「 公共题库 」页签
  */
@@ -419,7 +425,7 @@ const collectTablePageTotal = ref(0)
 
 // 处理获取我的收藏数据
 const getFavoriteData = () => {
-  Questions.getCollectQuestionsApi(userId, collectCurrentPage.value, collectPageSize.value).then(response => {
+  Questions.getCollectQuestionsApi(userId, queryInfo, collectCurrentPage.value, collectPageSize.value).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
