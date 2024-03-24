@@ -74,8 +74,8 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="创建时间" align="center" width="180"/>
-        <el-table-column prop="updatedAt" label="更新时间" align="center" width="180"/>
+        <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
+        <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
           <template #default="scope">
@@ -223,11 +223,11 @@
           <div class="base-info">
             <div class="base-info-item">
               <span style="margin-right: 10px">创建时间：</span>
-              <span>{{ detailData['createdAt'] }}</span>
+              <span>{{ detailData['created_at'] }}</span>
             </div>
             <div class="base-info-item">
               <span style="margin-right: 10px">更新时间: </span>
-              <span>{{ detailData['updatedAt'] }}</span>
+              <span>{{ detailData['updated_at'] }}</span>
             </div>
           </div>
         </div>
@@ -237,6 +237,7 @@
 </template>
 
 <script setup lang="ts">
+import './common.scss';
 import {onMounted, reactive, ref, watch} from 'vue';
 import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
@@ -281,9 +282,9 @@ const getPersonalWarehouseData = () => {
           options: item['options'],
           answer: item['answer'],
           status: item.status,
-          createdAt: item['created_at'],
+          created_at: item['created_at'],
           created_user: item['created_user'],
-          updatedAt: item['updated_at'],
+          updated_at: item['updated_at'],
         })
       })
       tableData.value = tempData
@@ -436,37 +437,5 @@ const handleOpenDetailDialog = (itemData: any) => {
   width: 100%;
   display: flex;
   justify-content: flex-end
-}
-
-.question-detail-box {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  .detail-common {
-    margin-bottom: 20px;
-  }
-  .detail-tag-box {
-    width: 100%;
-    display: flex;
-  }
-  .detail-options-box, .detail-topic-box  {
-    display: flex;
-    flex-direction: column;
-  }
-  .detail-answer-box {
-    display: flex;
-  }
-  .detail-base-info-box {
-    display: flex;
-    flex-direction: column;
-    margin-top: 15px;
-    .base-info{
-      display: flex;
-      .base-info-item {
-        display: flex;
-        margin-right: 50px;
-      }
-    }
-  }
 }
 </style>
