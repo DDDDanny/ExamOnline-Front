@@ -80,7 +80,15 @@
               <el-table-column :resizable="false"/>
               <el-table-column fixed="right" label="操 作" align="center" width="180" :resizable="false">
                 <template #default="scope">
-                  <el-button link size="small" type="primary" :icon="Info">详情</el-button>
+                  <el-button
+                      link
+                      size="small"
+                      type="primary"
+                      :icon="Info"
+                      @click="handleOpenDetailDialog(scope['row'])"
+                  >
+                    详情
+                  </el-button>
                   <el-divider direction="vertical"/>
                   <el-button
                       link
@@ -133,14 +141,71 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+    <el-dialog
+        width="800"
+        title="试题详情"
+        draggable
+        destroy-on-close
+        v-model="detailDialogVisible"
+        :close-on-click-modal="false"
+    >
+      <div class="question-detail-box">
+        <div class="detail-tag-box detail-common">
+          <el-tag style="margin-right: 10px" :icon="Bookmark">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['type'] === 'select' ? '选择题' : '判断题' }}
+          </el-tag>
+          <el-tag style="margin-right: 10px" :icon="Bookmark">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['trial_type'] === 'public' ? '公共题库' : '个人题库' }}
+          </el-tag>
+          <el-tag style="margin-right: 10px" :type="detailData['status'] ? 'success' : 'danger'">
+            <el-icon><Tag /></el-icon>
+            {{ detailData['status'] ? '有效' : '无效' }}
+          </el-tag>
+        </div>
+        <div class="detail-common detail-topic-box">
+          <span style="font-weight: bolder;">题目：</span>
+          <span style="margin-top: 10px; letter-spacing: 1px;">{{ detailData['topic'] }}</span>
+        </div>
+        <div class="detail-options-box detail-common" v-if="detailData['type'] === 'select'">
+          <span style="font-weight: bolder;">选项：</span>
+          <div v-for="(value, key) in detailData['optionsJson']" :key="key" style="margin-top: 10px">
+            <span>{{ key }}: {{ value }}</span>
+          </div>
+        </div>
+        <div class="detail-common detail-answer-box">
+          <span style="font-weight: bolder;">参考答案：</span>
+          <span v-if="detailData['type'] === 'select'">{{ detailData['answer'] }}</span>
+          <span v-else style="display: flex;align-items: center;">
+            <Check v-if="detailData['answer'] == 'T'" style="height: 16px"/>
+            <X v-else style="height: 15px"/>
+          </span>
+        </div>
+        <el-divider style="margin: 0"/>
+        <div class="detail-base-info-box">
+          <div class="base-info">
+            <div class="base-info-item">
+              <span style="margin-right: 10px">创建时间：</span>
+              <span>{{ detailData['created_at'] }}</span>
+            </div>
+            <div class="base-info-item">
+              <span style="margin-right: 10px">更新时间: </span>
+              <span>{{ detailData['updated_at'] }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import './common.scss';
 import {onMounted, reactive, ref} from "vue";
 import {Questions} from "../../api";
 import {ElMessage} from "element-plus";
-import {BookCheck, Check, Heart, HeartOff, Info, Search, X} from "lucide-vue-next";
+import {BookCheck, Bookmark, Check, Heart, HeartOff, Info, Search, Tag, X} from "lucide-vue-next";
 import {getCookie} from "../../utils/cookie.ts";
 
 // 获取用户ID
@@ -230,6 +295,19 @@ const handleCancelCollectQuestion = (itemData: any) => {
       getPublicWarehouseData()
     }
   })
+}
+
+// 控制详情Dialog是否可见
+const detailDialogVisible = ref(false)
+// 存储详情数据信息
+const detailData: any = ref(null)
+// 处理打开详情Dialog
+const handleOpenDetailDialog = (itemData: any) => {
+  if (itemData.type === 'select') {
+    itemData['optionsJson'] = JSON.parse(itemData['options'])
+  }
+  detailData.value = itemData
+  detailDialogVisible.value = true
 }
 </script>
 
