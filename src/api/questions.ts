@@ -42,8 +42,10 @@ export class Question {
   }
 
   // 根据收藏者ID获取收藏的试题列表
-  async getCollectQuestionsApi(collector: string): Promise<Result> {
-    const { data } = await axios.get('/qFavorite/' + collector)
+  async getCollectQuestionsApi(collector: string, currentPage: number, pageSize:number): Promise<Result> {
+    const { data } = await axios.get('/qFavorite/' + collector, {
+      params: { currentPage, pageSize }
+    })
     return data
   }
 }
