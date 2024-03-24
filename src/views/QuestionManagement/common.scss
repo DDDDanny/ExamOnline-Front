@@ -1,0 +1,31 @@
+.question-detail-box {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  .detail-common {
+    margin-bottom: 20px;
+  }
+  .detail-tag-box {
+    width: 100%;
+    display: flex;
+  }
+  .detail-options-box, .detail-topic-box  {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-answer-box {
+    display: flex;
+  }
+  .detail-base-info-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    .base-info{
+      display: flex;
+      .base-info-item {
+        display: flex;
+        margin-right: 50px;
+      }
+    }
+  }
+}
