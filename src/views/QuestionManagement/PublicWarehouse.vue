@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="public-main-box">
-      <el-tabs v-model="activeTab" class="demo-tabs">
+      <el-tabs v-model="activeTab" class="demo-tabs" @tab-change="handleTableChange">
         <el-tab-pane name="public">
           <template #label>
             <el-icon size="15" style="margin-right: 5px">
@@ -137,7 +137,90 @@
             </el-icon>
             <span>我的收藏</span>
           </template>
-          Config
+          <div class="public-box">
+            <el-table
+                border
+                stripe
+                size="small"
+                :data="collectTableData"
+                show-overflow-tooltip
+                class="common-table-base-style"
+                header-cell-class-name="table-header-row-style"
+            >
+              <el-table-column fixed type="index" align="center" width="60" label="序号"/>
+              <el-table-column fixed prop="topic" label="试题标题" align="center" width="200"/>
+              <el-table-column prop="type" label="试题类型" align="center" width="120">
+                <template #default="scope">
+                  <span v-if="scope['row']['type'] === 'select'">选择题</span>
+                  <span v-else>判断题</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="trial_type" label="所属题库类型" align="center" width="120">
+                <template #default="scope">
+                  <span v-if="scope['row']['trial_type'] === 'public'">公共</span>
+                  <span v-else>个人</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="status" label="试题状态" align="center" width="120">
+                <template #default="scope">
+                  <el-tag size="small" v-if="scope['row']['status'] === true" type="success">
+                    <el-icon>
+                      <Check/>
+                    </el-icon>
+                    有 效
+                  </el-tag>
+                  <el-tag size="small" v-else type="danger">
+                    <el-icon>
+                      <X/>
+                    </el-icon>
+                    无 效
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="created_user" label="创建人" align="center" width="120"/>
+              <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
+              <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
+              <el-table-column :resizable="false"/>
+              <el-table-column fixed="right" label="操 作" align="center" width="180" :resizable="false">
+                <template #default="scope">
+                  <el-button
+                      link
+                      size="small"
+                      type="primary"
+                      :icon="Info"
+                      @click="handleOpenDetailDialog(scope['row'])"
+                  >
+                    详情
+                  </el-button>
+                  <el-divider direction="vertical"/>
+                  <el-button
+                      link
+                      size="small"
+                      type="info"
+                      :icon="Heart"
+                      @click="handleCancelCollectQuestion(scope['row'])"
+                  >
+                    取消收藏
+                  </el-button>
+                </template>
+              </el-table-column>
+              <template #empty>
+                <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+              </template>
+            </el-table>
+            <div class="questions-main-pagination-box">
+              <el-pagination
+                  small
+                  background
+                  :total="collectTablePageTotal"
+                  class="mt-4"
+                  style="margin-top: 20px"
+                  :default-page-size="pageSize"
+                  layout="total, prev, pager, next"
+                  @current-change="handleCurrentChange"
+              />
+            </div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -211,6 +294,12 @@ import {getCookie} from "../../utils/cookie.ts";
 // 获取用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
 
+// 处理切换页签时的请求变化
+const handleTableChange = (tableName: string) => {
+  const fetchData = tableName === 'public' ? getPublicWarehouseData : getFavoriteData;
+  fetchData();
+}
+
 // 查询条件
 const queryInfo = reactive({
   topic: null,
@@ -223,6 +312,10 @@ const queryInfo = reactive({
 })
 // 控制被激活的页签
 const activeTab = ref('public')
+
+/**
+ * 「 公共题库 」页签
+ */
 
 // 存储表格数据
 const tableData: any = ref([])
@@ -293,6 +386,7 @@ const handleCancelCollectQuestion = (itemData: any) => {
     } else {
       ElMessage.success('取消收藏成功！')
       getPublicWarehouseData()
+      getFavoriteData()
     }
   })
 }
@@ -308,6 +402,48 @@ const handleOpenDetailDialog = (itemData: any) => {
   }
   detailData.value = itemData
   detailDialogVisible.value = true
+}
+
+/**
+ * 「 我的收藏 」页签
+ */
+
+// 存储表格数据
+const collectTableData: any = ref([])
+// 当前页
+const collectCurrentPage = ref(1)
+// 每页数量
+const collectPageSize = ref(50)
+// 数据总数
+const collectTablePageTotal = ref(0)
+
+// 处理获取我的收藏数据
+const getFavoriteData = () => {
+  Questions.getCollectQuestionsApi(userId, collectCurrentPage.value, collectPageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any[] = []
+      response.data.data.map((item: any) => {
+        tempData.push({
+          id: item['question_info'].id,
+          topic: item['question_info'].topic,
+          type: item['question_info'].type,
+          trial_type: item['question_info']['trial_type'],
+          options: item['question_info']['options'],
+          answer: item['question_info']['answer'],
+          status: item['question_info']['status'],
+          created_at: item['question_info']['created_at'],
+          created_user: item['question_info']['created_user_info']['name'],
+          updated_at: item['question_info']['updated_at'],
+          updated_user: item['question_info']['updated_user_info']['name'],
+        })
+      })
+      collectTableData.value = tempData
+      collectTablePageTotal.value = response.data.total
+    }
+  })
 }
 </script>
 
