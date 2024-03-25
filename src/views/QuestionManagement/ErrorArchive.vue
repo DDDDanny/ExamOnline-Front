@@ -2,7 +2,7 @@
   <div class="error-archive-main-box">
     <div class="common-module-header-box">
       <el-icon>
-        <BookHeart/>
+        <Notebook/>
       </el-icon>
       <span style="margin-left: 10px">错题集</span>
     </div>
@@ -83,7 +83,15 @@
             <el-divider direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
+            <el-button
+                link
+                size="small"
+                type="danger"
+                :icon="Trash2"
+                @click="handleDelete(scope['row']['id'])"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -169,11 +177,11 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import {
-  BookHeart, Sun, Info, Search, SquarePen, Trash2,
+  Notebook, Sun, Info, Search, SquarePen, Trash2,
   CloudSun, CloudRain, Check, X, Tag
 } from "lucide-vue-next";
 import {Questions} from "../../api";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import { getCookie } from "../../utils/cookie.ts";
 
 // 获取用户ID
@@ -248,6 +256,31 @@ const handleOpenDetailDialog = (itemData: any) => {
   }
   detailData.value = itemData
   detailDialogVisible.value = true
+}
+
+// 处理取消收藏（删除）错误试题
+const handleDelete = (questionsId: string) => {
+  ElMessageBox.confirm(
+      '您确定要把这道题从错题集中移除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    Questions.delErrorArchiveQuestionApi(userId, questionsId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除错题成功！')
+      getErrorArchive()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除!')
+  })
 }
 </script>
 
