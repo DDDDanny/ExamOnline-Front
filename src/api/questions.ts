@@ -56,6 +56,12 @@ export class Question {
     })
     return data
   }
+
+  // 取消收藏（删除）错题集的试题
+  async delErrorArchiveQuestionApi(collector: string, question_id: string): Promise<Result> {
+    const { data } = await axios.delete('/errorArchive', { data: {collector, question_id} })
+    return data
+  }
 }
 
 export default new Question()
