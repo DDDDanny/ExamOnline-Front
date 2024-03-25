@@ -48,6 +48,14 @@ export class Question {
     })
     return data
   }
+
+  // 根据收藏者ID获取错题集列表
+  async getErrorArchiveApi(collector: string, querySet: object, currentPage: number, pageSize:number): Promise<Result> {
+    const { data } = await axios.get('/errorArchive/' + collector, {
+      params: { ...querySet, currentPage, pageSize }
+    })
+    return data
+  }
 }
 
 export default new Question()
