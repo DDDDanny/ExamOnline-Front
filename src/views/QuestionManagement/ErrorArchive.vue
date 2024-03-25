@@ -20,14 +20,14 @@
       </div>
       <div class="module-query-item">
         <span class="module-query-item-title">试题难度: </span>
-        <el-select v-model="queryInfo.status" placeholder="请选择题目难度" style="width: 240px" clearable>
+        <el-select v-model="queryInfo.difficulty" placeholder="请选择题目难度" style="width: 240px" clearable>
           <el-option key="1" label="简单" value="E"/>
           <el-option key="2" label="中等" value="M"/>
           <el-option key="3" label="困难" value="H"/>
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary">
+        <el-button type="primary" @click="handleQuery">
           <Search class="common-btn-icon-style"/>
           查 询
         </el-button>
@@ -44,27 +44,30 @@
           header-cell-class-name="table-header-row-style"
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="topic" label="试题标题" align="center" width="200"/>
+        <el-table-column fixed prop="topic" label="试题标题" align="center" width="300"/>
         <el-table-column prop="type" label="试题类型" align="center" width="120">
           <template #default="scope">
             <span v-if="scope['row']['type'] === 'select'">选择题</span>
             <span v-else>判断题</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="试题状态" align="center" width="120">
+        <el-table-column prop="difficulty" label="试题难度" align="center" width="120">
           <template #default="scope">
-            <el-tag size="small" v-if="scope['row']['status'] === true" type="success">
-              <el-icon><Check/></el-icon>
-              有 效
+            <el-tag size="small" v-if="scope['row']['difficulty'] === 'E'" type="success">
+              <el-icon><Sun /></el-icon>
+              简 单
+            </el-tag>
+            <el-tag size="small" v-else-if="scope['row']['difficulty'] === 'M'" type="warning">
+              <el-icon><CloudSun /></el-icon>
+              中 等
             </el-tag>
             <el-tag size="small" v-else type="danger">
-              <el-icon><X/></el-icon>
-              无 效
+              <el-icon><CloudRain /></el-icon>
+              困 难
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="收藏时间" align="center" width="180"/>
-        <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="210" :resizable="false">
           <template #default>
@@ -96,16 +99,26 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import {BookHeart, Check, Info, Search, SquarePen, Trash2, X} from "lucide-vue-next";
+import {onMounted, reactive, ref} from "vue";
+import {BookHeart, Sun, Info, Search, SquarePen, Trash2, CloudSun, CloudRain} from "lucide-vue-next";
+import {Questions} from "../../api";
+import {ElMessage} from "element-plus";
+import { getCookie } from "../../utils/cookie.ts";
+
+// 获取用户ID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 // 查询条件
 const queryInfo = reactive({
   topic: null,
   type: null,
   status: null,
-  is_deleted: false,
+  difficulty: null
 })
+// 处理查询
+const handleQuery = () => {
+  getErrorArchive()
+}
 
 // 存储表格数据
 const tableData: any = ref([])
@@ -115,10 +128,42 @@ const currentPage = ref(1)
 const pageSize = ref(50)
 // 数据总数
 const tablePageTotal = ref(0)
+// 获取错题集数据
+const getErrorArchive = () => {
+  Questions.getErrorArchiveApi(userId, queryInfo, currentPage.value, pageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any[] = []
+      response.data.data.map((item: any) => {
+        tempData.push({
+          id: item['question_info'].id,
+          topic: item['question_info'].topic,
+          type: item['question_info'].type,
+          trial_type: item['question_info']['trial_type'],
+          options: item['question_info']['options'],
+          answer: item['question_info']['answer'],
+          status: item['question_info']['status'],
+          difficulty: item['difficulty'],
+          created_at: item['created_at'],
+        })
+      })
+      tableData.value = tempData
+      tablePageTotal.value = response.data.total
+    }
+  })
+}
+
 // 处理分页时当前页的变更事件
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
+  getErrorArchive()
 }
+
+onMounted(() => {
+  getErrorArchive()
+})
 </script>
 
 <style scoped lang="scss">
