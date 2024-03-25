@@ -7,10 +7,11 @@
       </div>
       <el-divider style="margin: 0;background: #79b0eb;width: 235px;border-color: #7ea4cd" />
       <el-menu
+          unique-opened
           active-text-color="#ffd04b"
           background-color="#337ecc"
           style="height: 100%;"
-          default-active="/homepage"
+          :default-active="activeMenuItem"
           text-color="#fff"
           router
       >
@@ -91,7 +92,7 @@
 <script setup lang="ts">
 import { Menu, UserLogin } from '../api';
 import { router } from '../router'
-import {onMounted, ref} from "vue";
+import {onMounted, onBeforeMount, ref} from "vue";
 import {
   BookMarked, Notebook, ScrollText, FileCheck,
   BookOpenCheck, Users, Laptop2, GraduationCap,
@@ -124,6 +125,15 @@ const getMenu = () => {
     menuInfo.value = response.data.data
   })
 }
+
+// 激活的菜单项
+const activeMenuItem = ref('/homepage')
+
+// 确保页面刷新后，激活的菜单不变
+onBeforeMount(() => {
+  const currentUrl = window.location.href
+  activeMenuItem.value = '/' + currentUrl.split('/')[3]
+})
 
 onMounted( () => {
   getMenu()
