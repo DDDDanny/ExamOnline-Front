@@ -38,7 +38,7 @@
         新 增
       </el-button>
     </div>
-    <div class="questions-main-table-box" style="">
+    <div class="questions-main-table-box">
       <el-table
           border
           stripe
