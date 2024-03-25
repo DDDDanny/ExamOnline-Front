@@ -4,7 +4,8 @@ import Login from '../views/Login/index.vue'
 import Container from '../components/Container.vue'
 import HomePage from  '../views/HomePage/index.vue'
 import PersonalWarehouse from '../views/QuestionManagement/PersonalWarehouse.vue'
-import PublicWarehouse from "../views/QuestionManagement/PublicWarehouse.vue";
+import PublicWarehouse from '../views/QuestionManagement/PublicWarehouse.vue';
+import ErrorArchive from '../views/QuestionManagement/ErrorArchive.vue'
 
 const routers: any = [
   {
@@ -27,6 +28,10 @@ const routers: any = [
       {
         path: '/publicQuestions',
         component: PublicWarehouse,
+      },
+      {
+        path: '/errorArchive',
+        component: ErrorArchive,
       }
     ]
   }
