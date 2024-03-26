@@ -19,7 +19,7 @@
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary">
+        <el-button type="primary" @click="handleQuery">
           <Search class="common-btn-icon-style"/>
           查 询
         </el-button>
@@ -135,6 +135,11 @@ const queryInfo = reactive({
   created_user: userId,
 })
 
+// 处理查询
+const handleQuery = () => {
+  getPaperTableData()
+}
+
 // 存储表格数据
 const tableData: any = ref([])
 // 当前页
@@ -169,9 +174,9 @@ const getPaperTableData = () => {
           created_at: item['created_at'],
           updated_at: item['updated_at'],
         })
-        tableData.value = tempData
-        tablePageTotal.value = response.data.total
       })
+      tableData.value = tempData
+      tablePageTotal.value = response.data.total
     }
   })
 }
