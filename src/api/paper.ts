@@ -10,6 +10,12 @@ export class Paper {
     })
     return data
   }
+
+  // 发布试卷
+  async paperPublishApi(id: string): Promise<Result> {
+    const { data } = await axios.post('/paperPublish', { id })
+    return data
+  }
 }
 
 export default new Paper()
