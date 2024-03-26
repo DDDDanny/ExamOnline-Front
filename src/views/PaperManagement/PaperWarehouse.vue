@@ -73,8 +73,25 @@
             <el-divider direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
-            <el-button  v-if="scope['row']['is_published']" link size="small" type="info" :icon="NavigationOff">取消发布</el-button>
-            <el-button v-else link size="small" type="success" :icon="Navigation">发布</el-button>
+            <el-button
+                link
+                v-if="scope['row']['is_published']"
+                size="small"
+                type="info"
+                :icon="NavigationOff"
+            >
+              取消发布
+            </el-button>
+            <el-button
+                link
+                v-else
+                size="small"
+                type="success"
+                :icon="Navigation"
+                @click="handlePublishPaper(scope['row']['id'])"
+            >
+              发布
+            </el-button>
             <el-divider v-if="!scope['row']['is_published']" direction="vertical"/>
             <el-button v-if="!scope['row']['is_published']" link size="small" type="danger" :icon="Trash2">删除</el-button>
           </template>
@@ -161,6 +178,19 @@ const getPaperTableData = () => {
 onMounted(() => {
   getPaperTableData()
 })
+
+// 处理发布试卷
+const handlePublishPaper = (id: string) => {
+  Paper.paperPublishApi(id).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      ElMessage.success('发布成功！')
+      getPaperTableData()
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
