@@ -79,6 +79,7 @@
                 size="small"
                 type="info"
                 :icon="NavigationOff"
+                @click="handleCancelPublishPaper(scope['row']['id'])"
             >
               取消发布
             </el-button>
@@ -187,6 +188,19 @@ const handlePublishPaper = (id: string) => {
       return
     } else {
       ElMessage.success('发布成功！')
+      getPaperTableData()
+    }
+  })
+}
+
+// 处理取消发布试卷
+const handleCancelPublishPaper = (id: string) => {
+  Paper.paperCancelPublishApi(id).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      ElMessage.success('取消发布成功！')
       getPaperTableData()
     }
   })
