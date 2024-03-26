@@ -45,7 +45,8 @@
         <el-table-column fixed prop="title" label="试卷标题" align="center" width="240"/>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
         <el-table-column prop="duration_minutes" label="答题建议时长（分钟）" align="center" width="140"/>
-        <el-table-column prop="total_marks" label="总分数" align="center" width="80"/>
+        <el-table-column prop="total_marks" label="计划总分" align="center" width="80"/>
+        <el-table-column prop="actual_total" label="实际总分" align="center" width="80"/>
         <el-table-column prop="is_published" label="发布状态" align="center" width="120">
           <template #default="scope">
             <el-tag size="small" v-if="scope['row']['is_published']" type="success">
@@ -173,6 +174,7 @@ const getPaperTableData = () => {
           publish_date: item['publish_date'],
           created_at: item['created_at'],
           updated_at: item['updated_at'],
+          actual_total: item['actual_total'] ? item['actual_total'] : 0
         })
       })
       tableData.value = tempData
