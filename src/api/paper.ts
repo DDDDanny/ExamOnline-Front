@@ -16,6 +16,12 @@ export class Paper {
     const { data } = await axios.post('/paperPublish', { id })
     return data
   }
+
+  // 取消发布试卷
+  async paperCancelPublishApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/paperPublish', { data: { id } })
+    return data
+  }
 }
 
 export default new Paper()
