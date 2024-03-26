@@ -44,16 +44,16 @@
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="试卷标题" align="center" width="240"/>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
-        <el-table-column prop="duration_minutes" label="答题建议时长" align="center" width="120"/>
+        <el-table-column prop="duration_minutes" label="答题建议时长（分钟）" align="center" width="140"/>
         <el-table-column prop="total_marks" label="总分数" align="center" width="80"/>
         <el-table-column prop="is_published" label="发布状态" align="center" width="120">
           <template #default="scope">
-            <el-tag size="small" v-if="scope['row']['difficulty']" type="success">
-              <el-icon><Sun /></el-icon>
+            <el-tag size="small" v-if="scope['row']['is_published']" type="success">
+              <el-icon><Check /></el-icon>
               已发布
             </el-tag>
             <el-tag size="small" v-else type="danger">
-              <el-icon><CloudRain /></el-icon>
+              <el-icon><X /></el-icon>
               未发布
             </el-tag>
           </template>
@@ -67,15 +67,16 @@
         <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
-        <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
-          <template #default>
+        <el-table-column fixed="right" label="操 作" align="center" width="280" :resizable="false">
+          <template #default="scope">
             <el-button link size="small" type="primary" :icon="Info">详情</el-button>
-            <el-divider direction="vertical"/>
-            <el-button link size="small" type="warning" :icon="SquarePen">发布</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
+            <el-button  v-if="scope['row']['is_published']" link size="small" type="info" :icon="NavigationOff">取消发布</el-button>
+            <el-button v-else link size="small" type="success" :icon="Navigation">发布</el-button>
+            <el-divider v-if="!scope['row']['is_published']" direction="vertical"/>
+            <el-button v-if="!scope['row']['is_published']" link size="small" type="danger" :icon="Trash2">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -99,14 +100,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import {Plus, Search, ScrollText, Info, SquarePen, Trash2, Sun, CloudRain} from "lucide-vue-next";
+import {onMounted, reactive, ref} from "vue";
+import {getCookie} from "../../utils/cookie.ts";
+import { Paper } from "../../api"
+import {ElMessage} from "element-plus";
+import {Plus, Search, ScrollText, Info, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
+
+// 获取登录用户ID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 // 查询条件
 const queryInfo = reactive({
   title: null,
   is_published: null,
   is_deleted: false,
+  created_user: userId,
 })
 
 // 存储表格数据
@@ -122,6 +130,37 @@ const tablePageTotal = ref(0)
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
 }
+
+// 获取试卷列表数据
+const getPaperTableData = () => {
+  Paper.getPapersApi(queryInfo, currentPage.value, pageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any[] = []
+      response.data.data.map((item: any) => {
+        tempData.push({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          duration_minutes: item['duration_minutes'],
+          total_marks: item['total_marks'],
+          is_published: item['is_published'],
+          publish_date: item['publish_date'],
+          created_at: item['created_at'],
+          updated_at: item['updated_at'],
+        })
+        tableData.value = tempData
+        tablePageTotal.value = response.data.total
+      })
+    }
+  })
+}
+
+onMounted(() => {
+  getPaperTableData()
+})
 </script>
 
 <style scoped lang="scss">
