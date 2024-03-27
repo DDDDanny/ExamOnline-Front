@@ -78,7 +78,7 @@
         <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
-        <el-table-column fixed="right" label="操 作" align="center" width="280" :resizable="false">
+        <el-table-column fixed="right" label="操 作" align="center" width="300" :resizable="false">
           <template #default="scope">
             <el-button link size="small" type="primary" :icon="Link">关联</el-button>
             <el-divider direction="vertical"/>
@@ -88,7 +88,7 @@
                 link
                 v-if="scope['row']['is_published']"
                 size="small"
-                type="info"
+                type="danger"
                 :icon="NavigationOff"
                 @click="handleCancelPublishPaper(scope['row']['id'])"
             >
@@ -104,17 +104,36 @@
             >
               发布
             </el-button>
-            <el-divider v-if="!scope['row']['is_published']" direction="vertical"/>
-            <el-button
-                link
-                v-if="!scope['row']['is_published']"
-                size="small"
-                type="danger"
-                :icon="Trash2"
-                @click="handleDelete(scope['row']['id'])"
-            >
-              删除
-            </el-button>
+            <el-divider direction="vertical"/>
+            <el-popover placement="bottom-start" :width="100" trigger="hover">
+              <template #reference>
+                <el-button link size="small" type="info" :icon="EllipsisVertical">更多</el-button>
+              </template>
+              <template #default>
+                <div style="display: flex; gap: 8px; flex-direction: column">
+                  <el-button
+                      link
+                      size="small"
+                      type="primary"
+                      :icon="ScanEye"
+                  >
+                    预览试卷
+                  </el-button>
+                  <el-divider v-if="!scope['row']['is_published']" style="margin: 0"/>
+                  <el-button
+                      link
+                      v-if="!scope['row']['is_published']"
+                      size="small"
+                      type="danger"
+                      :icon="Trash2"
+                      @click="handleDelete(scope['row']['id'])"
+                  >
+                    删除试卷
+                  </el-button>
+                </div>
+              </template>
+            </el-popover>
+
           </template>
         </el-table-column>
         <template #empty>
@@ -183,8 +202,8 @@ import { Paper } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import {
-  Plus, Search, FileHeart, Link, SquarePen, Trash2,
-  Check, NavigationOff, Navigation, X, Ban, Send
+  Plus, Search, FileHeart, Link, SquarePen, Trash2, ScanEye,
+  Check, NavigationOff, Navigation, X, Ban, Send, EllipsisVertical,
 } from "lucide-vue-next";
 
 // 获取登录用户ID
