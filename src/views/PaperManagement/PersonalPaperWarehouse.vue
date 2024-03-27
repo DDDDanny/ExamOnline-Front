@@ -42,7 +42,11 @@
           header-cell-class-name="table-header-row-style"
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="title" label="试卷标题" align="center" width="240"/>
+        <el-table-column fixed prop="title" label="试卷标题" align="center" width="240">
+          <template #default="scope">
+            <el-button link size="small" type="primary">{{ scope['row']['title'] }}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
         <el-table-column prop="trial_type" label="试卷库类型" align="center" width="120">
           <template #default="scope">
@@ -76,7 +80,7 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="280" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="Info">详情</el-button>
+            <el-button link size="small" type="primary" :icon="Link">关联试题</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
@@ -129,7 +133,7 @@ import {onMounted, reactive, ref} from "vue";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage} from "element-plus";
-import {Plus, Search, FileHeart, Info, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
+import {Plus, Search, FileHeart, Link, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
 
 // 获取登录用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
