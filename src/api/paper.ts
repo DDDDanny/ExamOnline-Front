@@ -34,6 +34,12 @@ export class Paper {
     const { data } = await axios.delete('/paper/' + paperId)
     return data
   }
+
+  // 编辑试卷接口
+  async editPaperApi(paperInfo: any): Promise<Result> {
+    const { data } = await axios.put('/paper/' + paperInfo['id'], { ...paperInfo })
+    return data
+  }
 }
 
 export default new Paper()
