@@ -215,9 +215,9 @@
                   :total="collectTablePageTotal"
                   class="mt-4"
                   style="margin-top: 20px"
-                  :default-page-size="pageSize"
+                  :default-page-size="collectPageSize"
                   layout="total, prev, pager, next"
-                  @current-change="handleCurrentChange"
+                  @current-change="handleCollectCurrentChange"
               />
             </div>
           </div>
@@ -362,7 +362,7 @@ const getPublicWarehouseData = () => {
   })
 }
 
-// 处理分页时当前页的变更事件
+// 处理分页时当前页的变更事件（公共题库页签）
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
   getPublicWarehouseData()
@@ -450,6 +450,12 @@ const getFavoriteData = () => {
       collectTablePageTotal.value = response.data.total
     }
   })
+}
+
+// 处理分页时当前页的变更事件（我的收藏页签）
+const handleCollectCurrentChange = (val) => {
+  collectCurrentPage.value = val
+  getFavoriteData()
 }
 </script>
 
