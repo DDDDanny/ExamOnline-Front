@@ -44,6 +44,12 @@
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="试卷标题" align="center" width="240"/>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
+        <el-table-column prop="trial_type" label="试卷库类型" align="center" width="120">
+          <template #default="scope">
+            <span v-if="scope['row']['is_public']">公共</span>
+            <span v-else>个人</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="duration_minutes" label="答题建议时长（分钟）" align="center" width="140"/>
         <el-table-column prop="total_marks" label="计划总分" align="center" width="80"/>
         <el-table-column prop="actual_total" label="实际总分" align="center" width="80"/>
@@ -133,6 +139,7 @@ const queryInfo = reactive({
   title: null,
   is_published: null,
   is_deleted: false,
+  is_public: null,
   created_user: userId,
 })
 
@@ -171,6 +178,7 @@ const getPaperTableData = () => {
           duration_minutes: item['duration_minutes'],
           total_marks: item['total_marks'],
           is_published: item['is_published'],
+          is_public: item['is_public'],
           publish_date: item['publish_date'],
           created_at: item['created_at'],
           updated_at: item['updated_at'],
