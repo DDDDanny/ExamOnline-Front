@@ -80,7 +80,15 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="300" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="Link">关联</el-button>
+            <el-button
+                link
+                size="small"
+                type="primary"
+                :icon="Link"
+                @click="openLinkDrawer"
+            >
+              关联
+            </el-button>
             <el-divider direction="vertical"/>
             <el-button
                 link
@@ -200,6 +208,10 @@
         </div>
       </template>
     </el-dialog>
+    <link-questions-drawer
+        v-model="linkDrawerVisible"
+        @close="handleCloseLinkDrawer"
+    />
   </div>
 </template>
 
@@ -209,6 +221,7 @@ import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
+import LinkQuestionsDrawer from "./LinkQuestionsDrawer.vue";
 import {
   Plus, Search, FileHeart, Link, SquarePen, Trash2, ScanEye,
   Check, NavigationOff, Navigation, X, Ban, Send, EllipsisVertical,
@@ -392,6 +405,18 @@ const handleDelete = (rowId: string) => {
     ElMessage.info('取消删除')
   })
 }
+
+// 控制关联试题Drawer是否显示
+const linkDrawerVisible = ref(false)
+// 打开关联试题Drawer
+const openLinkDrawer = () => {
+  linkDrawerVisible.value = true
+}
+// 关闭关联试题Drawer
+const handleCloseLinkDrawer = () => {
+  linkDrawerVisible.value = false
+}
+
 </script>
 
 <style scoped lang="scss">
