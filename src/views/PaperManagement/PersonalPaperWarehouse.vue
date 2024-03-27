@@ -105,7 +105,16 @@
               发布
             </el-button>
             <el-divider v-if="!scope['row']['is_published']" direction="vertical"/>
-            <el-button v-if="!scope['row']['is_published']" link size="small" type="danger" :icon="Trash2">删除</el-button>
+            <el-button
+                link
+                v-if="!scope['row']['is_published']"
+                size="small"
+                type="danger"
+                :icon="Trash2"
+                @click="handleDelete(scope['row']['id'])"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -171,7 +180,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import {
   Plus, Search, FileHeart, Link, SquarePen, Trash2,
@@ -239,6 +248,7 @@ const getPaperTableData = () => {
 }
 
 onMounted(() => {
+  currentPage.value = 1
   getPaperTableData()
 })
 
@@ -323,6 +333,31 @@ const handleSubmit = async (formEl: any) => {
         dialogVisible.value = false
       }
     })
+  })
+}
+
+// 处理删除试卷逻辑
+const handleDelete = (rowId: string) => {
+  ElMessageBox.confirm(
+      '您确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    Paper.delPaperApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除试卷成功！')
+      getPaperTableData()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
   })
 }
 </script>
