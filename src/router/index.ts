@@ -6,7 +6,7 @@ import HomePage from  '../views/HomePage/index.vue'
 import PersonalWarehouse from '../views/QuestionManagement/PersonalWarehouse.vue'
 import PublicWarehouse from '../views/QuestionManagement/PublicWarehouse.vue';
 import ErrorArchive from '../views/QuestionManagement/ErrorArchive.vue'
-import PaperWarehouse from '../views/PaperManagement/PaperWarehouse.vue'
+import PersonalPaperWarehouse from '../views/PaperManagement/PersonalPaperWarehouse.vue'
 
 const routers: any = [
   {
@@ -35,8 +35,8 @@ const routers: any = [
         component: ErrorArchive,
       },
       {
-        path: '/paperWarehouse',
-        component: PaperWarehouse,
+        path: '/personalPapers',
+        component: PersonalPaperWarehouse,
       }
     ]
   }

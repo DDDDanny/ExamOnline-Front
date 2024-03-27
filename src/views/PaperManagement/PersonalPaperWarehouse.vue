@@ -2,9 +2,9 @@
   <div class="papers-main-box">
     <div class="common-module-header-box">
       <el-icon>
-        <ScrollText/>
+        <FileHeart />
       </el-icon>
-      <span style="margin-left: 10px">试卷管理</span>
+      <span style="margin-left: 10px">个人试卷库</span>
     </div>
     <div class="common-module-query-box">
       <div class="module-query-item">
@@ -129,7 +129,7 @@ import {onMounted, reactive, ref} from "vue";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage} from "element-plus";
-import {Plus, Search, ScrollText, Info, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
+import {Plus, Search, FileHeart, Info, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
 
 // 获取登录用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
