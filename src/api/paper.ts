@@ -22,6 +22,12 @@ export class Paper {
     const { data } = await axios.delete('/paperPublish', { data: { id } })
     return data
   }
+
+  // 新增试卷
+  async createPaperApi(paperInfo: object): Promise<Result> {
+    const { data } = await axios.post('/paper', { ...paperInfo })
+    return data
+  }
 }
 
 export default new Paper()
