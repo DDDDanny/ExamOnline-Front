@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog('C')">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -80,7 +80,7 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="280" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="Link">关联试题</el-button>
+            <el-button link size="small" type="primary" :icon="Link">关联</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
@@ -125,6 +125,45 @@
         />
       </div>
     </div>
+    <el-dialog
+        width="800"
+        :title="optType === 'C' ? '新增试卷' : '编辑试卷'"
+        draggable
+        destroy-on-close
+        v-model="dialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        @close="handleClose(formRef)"
+    >
+      <el-form :model="formData" ref="formRef">
+        <el-form-item label="试卷标题" :label-width="formLabelWidth" prop="title" required>
+          <el-input v-model="formData.title" placeholder="请输入试卷标题" clearable/>
+        </el-form-item>
+        <el-form-item label="试卷描述" :label-width="formLabelWidth" prop="description" required>
+          <el-input v-model="formData.description" placeholder="请输入试卷描述" clearable/>
+        </el-form-item>
+        <el-form-item label="建议时长" :label-width="formLabelWidth" prop="duration_minutes" required>
+          <el-input v-model="formData.duration_minutes" placeholder="请输入考试时长" clearable>
+            <template #append>分钟</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="计划总分" :label-width="formLabelWidth" prop="total_marks" required>
+          <el-input v-model="formData.total_marks" placeholder="请输入计划总分（仅做参考使用）" clearable/>
+        </el-form-item>
+        <el-form-item label="试卷库类型" :label-width="formLabelWidth" prop="is_public" required>
+          <el-select v-model="formData.is_public" placeholder="请选择试卷库类型">
+            <el-option label="个人试卷库" :value="false"/>
+            <el-option label="公共试卷库" :value="true"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit(formRef)" :icon="Send">提 交</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -133,7 +172,11 @@ import {onMounted, reactive, ref} from "vue";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage} from "element-plus";
-import {Plus, Search, FileHeart, Link, SquarePen, Trash2, Check, NavigationOff, Navigation, X} from "lucide-vue-next";
+import type {FormInstance} from 'element-plus'
+import {
+  Plus, Search, FileHeart, Link, SquarePen, Trash2,
+  Check, NavigationOff, Navigation, X, Ban, Send
+} from "lucide-vue-next";
 
 // 获取登录用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -222,6 +265,64 @@ const handleCancelPublishPaper = (id: string) => {
       ElMessage.success('取消发布成功！')
       getPaperTableData()
     }
+  })
+}
+
+const optType = ref('C')
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '120px'
+// 控制Dialog是否显示
+const dialogVisible = ref(false)
+// 新增试卷表单的Ref
+const formRef = ref<FormInstance>()
+// FormData 初始化
+const initFormData = {
+  title: '',
+  description: '',
+  duration_minutes: '',
+  total_marks: '',
+  is_public: false,
+  is_publish: true,
+  created_user: userId,
+  updated_user: userId
+}
+// 试卷 FormData
+const formData = ref(initFormData)
+
+// 处理关闭Dialog回调函数
+const handleClose = (formEl: any) => {
+  formData.value = initFormData
+  formEl.resetFields()
+  dialogVisible.value = false
+}
+
+// 处理打开新增、编辑Dialog
+const handleOpenDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    formData.value = itemData
+  }
+  optType.value = opt
+  dialogVisible.value = true
+}
+
+// 处理提交试卷信息
+const handleSubmit = async (formEl: any) => {
+  // 数据校验
+  formEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的试卷信息后重新提交！')
+      return
+    }
+    Paper.createPaperApi(formData.value).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('新增试卷成功')
+        getPaperTableData()
+        dialogVisible.value = false
+      }
+    })
   })
 }
 </script>
