@@ -82,7 +82,15 @@
           <template #default="scope">
             <el-button link size="small" type="primary" :icon="Link">关联</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-button
+                link
+                size="small"
+                type="warning"
+                :icon="SquarePen"
+                @click="handleOpenDialog('E', scope['row'])"
+            >
+              编辑
+            </el-button>
             <el-divider direction="vertical"/>
             <el-button
                 link
@@ -257,7 +265,8 @@ const getPaperTableData = () => {
           publish_date: item['publish_date'],
           created_at: item['created_at'],
           updated_at: item['updated_at'],
-          actual_total: item['actual_total'] ? item['actual_total'] : 0
+          actual_total: item['actual_total'] ? item['actual_total'] : 0,
+          created_user: item['created_user']
         })
       })
       tableData.value = tempData
@@ -342,16 +351,20 @@ const handleSubmit = async (formEl: any) => {
       ElMessage.warning('请输入完整的试卷信息后重新提交！')
       return
     }
-    Paper.createPaperApi(formData.value).then(response => {
+    try {
+      const response = optType.value === 'C'
+          ? await Paper.createPaperApi(formData.value)
+          : await Paper.editPaperApi({...formData.value, updated_user: userId})
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
-      } else {
-        ElMessage.success('新增试卷成功')
-        getPaperTableData()
-        dialogVisible.value = false
       }
-    })
+      ElMessage.success(optType.value === 'C' ? '新增试卷成功！' : '编辑试卷成功！')
+      getPaperTableData()
+      dialogVisible.value = false
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 
