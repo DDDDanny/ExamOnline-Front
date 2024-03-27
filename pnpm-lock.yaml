@@ -4,7 +4,7 @@ specifiers:
   '@vitejs/plugin-vue': ^5.0.4
   axios: ^1.6.7
   element-plus: 2.6.1
-  lucide-vue-next: ^0.343.0
+  lucide-vue-next: 0.363.0
   moment: ^2.30.1
   path: ^0.12.7
   sass: ^1.71.1
@@ -19,7 +19,7 @@ specifiers:
 dependencies:
   axios: registry.npmmirror.com/axios/1.6.7
   element-plus: registry.npmmirror.com/element-plus/2.6.1_vue@3.4.21
-  lucide-vue-next: registry.npmmirror.com/lucide-vue-next/0.343.0_vue@3.4.21
+  lucide-vue-next: registry.npmmirror.com/lucide-vue-next/0.363.0_vue@3.4.21
   moment: registry.npmmirror.com/moment/2.30.1
   path: registry.npmmirror.com/path/0.12.7
   sass: registry.npmmirror.com/sass/1.71.1
@@ -1194,11 +1194,11 @@ packages:
       yallist: registry.npmmirror.com/yallist/4.0.0
     dev: true
 
-  registry.npmmirror.com/lucide-vue-next/0.343.0_vue@3.4.21:
-    resolution: {integrity: sha512-mDp/hL7HM5tGuoa8AcJMfbcpmJWxZT917RMeS4/dPTqiUS+fVxD0UT2qKuuYlEzvJedkJTApuDJ6N2ZbsJMAYA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lucide-vue-next/-/lucide-vue-next-0.343.0.tgz}
-    id: registry.npmmirror.com/lucide-vue-next/0.343.0
+  registry.npmmirror.com/lucide-vue-next/0.363.0_vue@3.4.21:
+    resolution: {integrity: sha512-dc5KgrXhCPMEzKz6voDVvxXkwEr7n+Q4b7qLyS2e3DTlH9GMFydS4fHoSvpZR/a5M7i1EOpFI8/BA8SPjAOwEQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lucide-vue-next/-/lucide-vue-next-0.363.0.tgz}
+    id: registry.npmmirror.com/lucide-vue-next/0.363.0
     name: lucide-vue-next
-    version: 0.343.0
+    version: 0.363.0
     peerDependencies:
       vue: '>=3.0.1'
     dependencies:
