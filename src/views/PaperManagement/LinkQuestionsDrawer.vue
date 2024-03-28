@@ -8,7 +8,7 @@
   >
     <div class="link-question-drawer-main">
       <el-divider content-position="left" style="margin: 0 0 20px 0">
-        <div style="color: #5e5e5e">
+        <div class="divider-box">
           <el-icon><Smile /></el-icon>
           <span style="margin-left: 10px">基础信息</span>
         </div>
@@ -24,26 +24,26 @@
         </div>
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
-        <div style="color: #5e5e5e">
+        <div class="divider-box">
           <el-icon><Package /></el-icon>
           <span style="margin-left: 10px">模块信息</span>
         </div>
       </el-divider>
       <div class="paper-module-box">
-        <span style="color: #b2b2b2;font-size: 13px; margin-bottom: 20px">暂无模块</span>
+        <span class="paper-module-empty">暂无模块</span>
         <el-button type="primary" size="small" style="width: 400px;border-radius: 5px;" >
           <el-icon ><PackagePlus /></el-icon>
           <span style="font-size: 13px;margin-left: 10px">新 增 模 块</span>
         </el-button>
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
-        <div style="color: #5e5e5e">
+        <div class="divider-box">
           <el-icon><Link /></el-icon>
           <span style="margin-left: 10px">关联试题</span>
         </div>
       </el-divider>
       <div class="paper-link-box">
-        <span style="color: #b2b2b2;font-size: 13px; margin-bottom: 20px">暂无关联试题</span>
+        <span class="paper-link-empty">暂无关联试题</span>
         <el-button type="primary" size="small" style="width: 400px;border-radius: 5px;" >
           <el-icon ><Link /></el-icon>
           <span style="font-size: 13px;margin-left: 10px">关 联 试 题</span>
@@ -100,31 +100,53 @@ onBeforeUpdate(() => {
   width: 100%;
   display: flex;
   flex-direction: column;
+
+  .divider-box {
+    display: flex;
+    align-items: center;
+    color: #5e5e5e;
+  }
+
   .paper-base-info-box {
     width: 100%;
     display: flex;
     flex-direction: column;
     color: #5e5e5e;
     font-size: 13px;
+
     .paper-base-info-item {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
     }
   }
+
   .paper-module-box {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .paper-module-empty {
+      color: #b2b2b2;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
   }
+
   .paper-link-box {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .paper-link-empty {
+      color: #b2b2b2;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
   }
 }
 </style>
