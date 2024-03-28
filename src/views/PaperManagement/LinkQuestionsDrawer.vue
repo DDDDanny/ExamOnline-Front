@@ -36,7 +36,9 @@
       <div class="paper-module-box">
         <div class="module-card-box">
           <div class="module-card-item" v-for="item in paperModules">
-            <span class="del-module-icon"><el-icon><X/></el-icon></span>
+            <span class="del-module-icon">
+              <el-icon><X class="x-animation"/></el-icon>
+            </span>
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
             <span>{{ item['description'] }}</span>
           </div>
@@ -48,10 +50,8 @@
           </div>
         </div>
         <el-button v-if="paperModules.length !== 0" type="primary" size="small" class="change-module-btn">
-          <el-icon>
-            <Combine/>
-          </el-icon>
-          <span style="font-size: 13px;margin-left: 10px">变 更 模 块</span>
+          <el-icon size="14"><Repeat/></el-icon>
+          <span style="font-size: 13px;margin-left: 10px;font-weight: normal">变 更 模 块</span>
         </el-button>
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
@@ -64,20 +64,12 @@
       </el-divider>
       <div class="paper-link-box">
         <span class="paper-link-empty">暂无关联试题</span>
-        <el-button type="primary" size="small" style="width: 400px;border-radius: 5px;">
-          <el-icon>
-            <Link/>
-          </el-icon>
-          <span style="font-size: 13px;margin-left: 10px">关 联 试 题</span>
+        <el-button type="primary" size="small" class="link-btn">
+          <el-icon size="14"><Link/></el-icon>
+          <span style="font-size: 13px;margin-left: 10px;font-weight: normal">关 联 试 题</span>
         </el-button>
       </div>
     </div>
-    <template #footer>
-      <div style="flex: auto">
-        <el-button @click="changeDrawerVisible">取消</el-button>
-        <el-button type="primary" @click="changeDrawerVisible">提交</el-button>
-      </div>
-    </template>
   </el-drawer>
 </template>
 
@@ -86,7 +78,7 @@ import {storeToRefs} from 'pinia'
 import {onBeforeUpdate, ref, watch} from 'vue'
 import {Paper} from '../../api';
 import {ElMessage} from "element-plus";
-import {Combine, Link, Package, PackagePlus, Smile, X} from "lucide-vue-next";
+import {Repeat, Link, Package, PackagePlus, Smile, X} from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
 const props = defineProps({
@@ -98,7 +90,6 @@ const props = defineProps({
 
 // 从Store中获取，控制关联试题Drawer是否显示
 const linkQuestionStore = useLinkQuestionStore()
-const {changeDrawerVisible} = linkQuestionStore
 const {drawerVisible} = storeToRefs(linkQuestionStore)
 
 // 试卷基础信息
@@ -173,14 +164,8 @@ watch(drawerVisible, (newValue) => {
     align-items: center;
 
     .change-module-btn {
-      width: 400px;
+      width: 150px;
       border-radius: 5px;
-    }
-
-    .paper-module-empty {
-      color: #b2b2b2;
-      font-size: 13px;
-      margin-bottom: 20px;
     }
 
     .module-card-box {
@@ -192,8 +177,9 @@ watch(drawerVisible, (newValue) => {
       grid-row-gap: 50px;
       grid-column-gap: 20px;
       justify-content: space-around;
+      align-items: center;
       grid-template-columns: repeat(auto-fill, 160px);
-      grid-template-rows: repeat(auto-fill, 60px);
+      grid-template-rows: repeat(auto-fill, 72px);
 
       .add-module-card {
         width: 160px;
@@ -204,11 +190,13 @@ watch(drawerVisible, (newValue) => {
         align-items: center;
         font-size: 13px;
         border-radius: 8px;
-        border: 2px dashed rgba(34, 149, 255, 0.75);
+        border: 2px dashed rgba(34, 149, 255);
         color: rgba(34, 149, 255);
 
         &:hover {
           cursor: pointer; // hover后鼠标变手指
+          border: 2px dashed rgb(116, 187, 255);
+          color: rgb(116, 187, 255);
         }
       }
 
@@ -221,9 +209,9 @@ watch(drawerVisible, (newValue) => {
         justify-content: center;
         align-items: center;
         font-size: 13px;
-        color: #fff;
+        color: #5e5e5e;
         border-radius: 8px;
-        background-color: rgba(34, 149, 255, 0.75);
+        box-shadow: #cccccc 0 0 5px;
 
         .del-module-icon {
           position: absolute;
@@ -249,6 +237,27 @@ watch(drawerVisible, (newValue) => {
       color: #b2b2b2;
       font-size: 13px;
       margin-bottom: 20px;
+    }
+
+    .link-btn {
+      width: 150px;
+      border-radius: 5px;
+    }
+  }
+}
+
+.x-animation {
+  &:hover {
+    animation: rotate 500ms linear;
+  }
+
+  /* 旋转动画 */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(90deg);
     }
   }
 }
