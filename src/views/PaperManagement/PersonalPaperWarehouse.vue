@@ -85,7 +85,7 @@
                 size="small"
                 type="primary"
                 :icon="Link"
-                @click="openLinkDrawer"
+                @click="openLinkDrawer(scope['row'])"
             >
               关联
             </el-button>
@@ -210,6 +210,7 @@
     </el-dialog>
     <link-questions-drawer
         v-model="linkDrawerVisible"
+        :paper-info="paperInfo"
         @close="handleCloseLinkDrawer"
     />
   </div>
@@ -408,9 +409,12 @@ const handleDelete = (rowId: string) => {
 
 // 控制关联试题Drawer是否显示
 const linkDrawerVisible = ref(false)
+// 试卷信息（用于LinkDrawer子组件）
+const paperInfo = ref({})
 // 打开关联试题Drawer
-const openLinkDrawer = () => {
+const openLinkDrawer = (itemData: any) => {
   linkDrawerVisible.value = true
+  paperInfo.value = itemData
 }
 // 关闭关联试题Drawer
 const handleCloseLinkDrawer = () => {
