@@ -30,7 +30,8 @@
           <el-icon>
             <Package/>
           </el-icon>
-          <span style="margin-left: 10px">模块信息</span>
+          <span style="margin-left: 10px;">模块信息</span>
+          <span style="font-size: 13px;color: #7d7d7d">（ 最多增加4个模块 ）</span>
         </div>
       </el-divider>
       <div class="paper-module-box">
