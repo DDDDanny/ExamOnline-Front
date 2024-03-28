@@ -135,6 +135,15 @@
                   >
                     预览试卷
                   </el-button>
+                  <el-divider style="margin: 0"/>
+                  <el-button
+                      link
+                      size="small"
+                      type="success"
+                      :icon="CopyPlus"
+                  >
+                    复制试卷
+                  </el-button>
                   <el-divider v-if="!scope['row']['is_published']" style="margin: 0"/>
                   <el-button
                       link
@@ -221,7 +230,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import LinkQuestionsDrawer from "./LinkQuestionsDrawer.vue";
 import {
-  Plus, Search, FileHeart, Link, SquarePen, Trash2, ScanEye,
+  Plus, Search, FileHeart, Link, SquarePen, Trash2, ScanEye, CopyPlus,
   Check, NavigationOff, Navigation, X, Ban, Send, EllipsisVertical,
 } from "lucide-vue-next";
 
