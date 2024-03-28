@@ -25,11 +25,17 @@
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
         <div style="color: #5e5e5e">
-          <el-icon><Blocks /></el-icon>
+          <el-icon><Package /></el-icon>
           <span style="margin-left: 10px">模块信息</span>
         </div>
       </el-divider>
-      <div>456</div>
+      <div class="paper-module-box">
+        <span style="color: #b2b2b2;font-size: 13px; margin-bottom: 20px">暂无模块</span>
+        <el-button type="primary" size="small" style="width: 400px;border-radius: 5px;" >
+          <el-icon ><PackagePlus /></el-icon>
+          <span style="font-size: 13px;margin-left: 10px">新 增 模 块</span>
+        </el-button>
+      </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
         <div style="color: #5e5e5e">
           <el-icon><Link /></el-icon>
@@ -49,7 +55,7 @@
 
 <script setup lang="ts">
 import {onBeforeUpdate, ref} from 'vue'
-import {Smile, Blocks, Link} from "lucide-vue-next";
+import {Smile, Package, Link, PackagePlus} from "lucide-vue-next";
 
 const props = defineProps({
   drawerVisible: Boolean,
@@ -71,12 +77,14 @@ const paperBaseInfo: any = ref([])
 // 试卷实际总分
 const actual_total = ref(0)
 onBeforeUpdate(() => {
+  // 更新试卷基础信息
   paperBaseInfo.value = [
     { key: '试卷标题：', value: props.paperInfo['title']},
     { key: '试卷描述：', value: props.paperInfo['description']},
     { key: '答题建议时长：', value: props.paperInfo['duration_minutes']},
     { key: '计划总分：', value: props.paperInfo['total_marks']},
   ]
+  // 初始化实际分数
   actual_total.value = props.paperInfo['actual_total']
 })
 </script>
@@ -97,6 +105,13 @@ onBeforeUpdate(() => {
       align-items: center;
       margin-bottom: 10px;
     }
+  }
+  .paper-module-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
