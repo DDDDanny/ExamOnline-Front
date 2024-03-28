@@ -42,7 +42,13 @@
           <span style="margin-left: 10px">关联试题</span>
         </div>
       </el-divider>
-      <div>789</div>
+      <div class="paper-link-box">
+        <span style="color: #b2b2b2;font-size: 13px; margin-bottom: 20px">暂无关联试题</span>
+        <el-button type="primary" size="small" style="width: 400px;border-radius: 5px;" >
+          <el-icon ><Link /></el-icon>
+          <span style="font-size: 13px;margin-left: 10px">关 联 试 题</span>
+        </el-button>
+      </div>
     </div>
     <template #footer>
       <div style="flex: auto">
@@ -107,6 +113,13 @@ onBeforeUpdate(() => {
     }
   }
   .paper-module-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .paper-link-box {
     width: 100%;
     display: flex;
     flex-direction: column;
