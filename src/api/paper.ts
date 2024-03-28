@@ -40,6 +40,12 @@ export class Paper {
     const { data } = await axios.put('/paper/' + paperInfo['id'], { ...paperInfo })
     return data
   }
+
+  // 根据试卷ID获取模块信息
+  async getPaperModuleApi(paperId: string): Promise<Result> {
+    const { data } = await axios.get('/paperModule/' + paperId)
+    return data
+  }
 }
 
 export default new Paper()
