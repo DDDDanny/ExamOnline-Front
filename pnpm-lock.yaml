@@ -7,6 +7,7 @@ specifiers:
   lucide-vue-next: 0.363.0
   moment: ^2.30.1
   path: ^0.12.7
+  pinia: ^2.1.7
   sass: ^1.71.1
   typescript: ^5.2.2
   unplugin-auto-import: ^0.17.5
@@ -22,6 +23,7 @@ dependencies:
   lucide-vue-next: registry.npmmirror.com/lucide-vue-next/0.363.0_vue@3.4.21
   moment: registry.npmmirror.com/moment/2.30.1
   path: registry.npmmirror.com/path/0.12.7
+  pinia: registry.npmmirror.com/pinia/2.1.7_4kz7whipk5c23xfbqgzv75whe4
   sass: registry.npmmirror.com/sass/1.71.1
   vue: registry.npmmirror.com/vue/3.4.21_typescript@5.3.3
   vue-router: registry.npmmirror.com/vue-router/4.3.0_vue@3.4.21
@@ -1346,6 +1348,27 @@ packages:
     name: picomatch
     version: 2.3.1
     engines: {node: '>=8.6'}
+
+  registry.npmmirror.com/pinia/2.1.7_4kz7whipk5c23xfbqgzv75whe4:
+    resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pinia/-/pinia-2.1.7.tgz}
+    id: registry.npmmirror.com/pinia/2.1.7
+    name: pinia
+    version: 2.1.7
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api/6.6.1
+      typescript: registry.npmmirror.com/typescript/5.3.3
+      vue: registry.npmmirror.com/vue/3.4.21_typescript@5.3.3
+      vue-demi: registry.npmmirror.com/vue-demi/0.14.7_vue@3.4.21
+    dev: false
 
   registry.npmmirror.com/pkg-types/1.0.3:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pkg-types/-/pkg-types-1.0.3.tgz}
