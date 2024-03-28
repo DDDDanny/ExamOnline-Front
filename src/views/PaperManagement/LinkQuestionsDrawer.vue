@@ -61,10 +61,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useLinkQuestionStore } from "../../stores/DrawerCommonStore.ts";
 import {onBeforeUpdate, ref, watch} from 'vue'
 import { Paper } from '../../api';
+import {ElMessage} from "element-plus";
 import {Smile, Package, Link, PackagePlus} from "lucide-vue-next";
+import { useLinkQuestionStore } from "../../stores/DrawerCommonStore.ts";
 
 const props = defineProps({
   paperInfo: {
@@ -94,10 +95,17 @@ onBeforeUpdate(() => {
   actual_total.value = props.paperInfo['actual_total']
 })
 
+// 试卷模块信息
+const paperModules = ref([])
+
 // 获取试卷模块信息
 const getPaperModule = () => {
   Paper.getPaperModuleApi(props.paperInfo['id']).then(response => {
-    console.log(response.data)
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+    } else {
+      paperModules.value = response.data
+    }
   })
 }
 
