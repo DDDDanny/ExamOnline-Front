@@ -2,7 +2,7 @@
   <el-drawer
       :size="800"
       title="关联试题"
-      v-model="props.drawerVisible"
+      v-model="drawerVisible"
       destroy-on-close
       :close-on-click-modal="false"
   >
@@ -52,31 +52,31 @@
     </div>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleClose">提交</el-button>
+        <el-button @click="changeDrawerVisible">取消</el-button>
+        <el-button type="primary" @click="changeDrawerVisible">提交</el-button>
       </div>
     </template>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import {onBeforeUpdate, ref} from 'vue'
+import { storeToRefs } from 'pinia'
+import { useLinkQuestionStore } from "../../stores/DrawerCommonStore.ts";
+import {onBeforeUpdate, ref, watch} from 'vue'
+import { Paper } from '../../api';
 import {Smile, Package, Link, PackagePlus} from "lucide-vue-next";
 
 const props = defineProps({
-  drawerVisible: Boolean,
   paperInfo: {
     type: Object,
     required: true
   },
 })
 
-const emits = defineEmits(['close'])
-
-// 处理关闭Drawer
-const handleClose = () => {
-  emits('close')
-}
+// 从Store中获取，控制关联试题Drawer是否显示
+const linkQuestionStore = useLinkQuestionStore()
+const { changeDrawerVisible } = linkQuestionStore
+const { drawerVisible } = storeToRefs(linkQuestionStore)
 
 // 试卷基础信息
 const paperBaseInfo: any = ref([])
@@ -92,6 +92,20 @@ onBeforeUpdate(() => {
   ]
   // 初始化实际分数
   actual_total.value = props.paperInfo['actual_total']
+})
+
+// 获取试卷模块信息
+const getPaperModule = () => {
+  Paper.getPaperModuleApi(props.paperInfo['id']).then(response => {
+    console.log(response.data)
+  })
+}
+
+// 监听drawerVisible，当drawerVisible为true时，获取其他数据
+watch(drawerVisible, (newValue) => {
+  if (newValue) {
+    getPaperModule()
+  }
 })
 </script>
 

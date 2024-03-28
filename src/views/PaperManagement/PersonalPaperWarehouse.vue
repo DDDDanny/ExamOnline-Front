@@ -208,16 +208,13 @@
         </div>
       </template>
     </el-dialog>
-    <link-questions-drawer
-        v-model="linkDrawerVisible"
-        :paper-info="paperInfo"
-        @close="handleCloseLinkDrawer"
-    />
+    <link-questions-drawer :paper-info="paperInfo"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
+import { useLinkQuestionStore } from "../../stores/DrawerCommonStore.ts";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -407,18 +404,15 @@ const handleDelete = (rowId: string) => {
   })
 }
 
-// 控制关联试题Drawer是否显示
-const linkDrawerVisible = ref(false)
 // 试卷信息（用于LinkDrawer子组件）
 const paperInfo = ref({})
+// 从Store中获取，控制关联试题Drawer是否显示
+const linkQuestion = useLinkQuestionStore()
+const { changeDrawerVisible } = linkQuestion
 // 打开关联试题Drawer
 const openLinkDrawer = (itemData: any) => {
-  linkDrawerVisible.value = true
+  changeDrawerVisible()
   paperInfo.value = itemData
-}
-// 关闭关联试题Drawer
-const handleCloseLinkDrawer = () => {
-  linkDrawerVisible.value = false
 }
 
 </script>
