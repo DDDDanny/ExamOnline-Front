@@ -40,6 +40,10 @@
             <span class="del-module-icon">
               <el-icon><X class="x-animation"/></el-icon>
             </span>
+            <span class="module-number" style="left: 8px;top: 8px;">
+              <el-image style="width: 15px; " src="src/images/Number.png" fit="cover" />
+              <span style="margin-left: 3px">{{ item['sequence_number'] }}</span>
+            </span>
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
             <span>{{ item['description'] }}</span>
           </div>
@@ -222,6 +226,13 @@ watch(drawerVisible, (newValue) => {
           &:hover {
             cursor: pointer; // hover后鼠标变手指
           }
+        }
+
+        .module-number {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          display: flex;
         }
       }
     }
