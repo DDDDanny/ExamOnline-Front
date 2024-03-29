@@ -41,9 +41,15 @@ export class Paper {
     return data
   }
 
-  // 根据试卷ID获取模块信息
+  // 根据试卷ID获取模块信息接口
   async getPaperModuleApi(paperId: string): Promise<Result> {
     const { data } = await axios.get('/paperModule/' + paperId)
+    return data
+  }
+
+  // 删除试卷模块接口
+  async delPaperModuleApi(moduleId: string, paperId: string): Promise<Result> {
+    const { data } = await axios.delete('/paperModule', { data: { id: moduleId, paper_id: paperId } })
     return data
   }
 }
