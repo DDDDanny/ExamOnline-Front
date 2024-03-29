@@ -37,7 +37,7 @@
       <div class="paper-module-box">
         <div class="module-card-box">
           <div class="module-card-item" v-for="item in paperModules">
-            <span class="del-module-icon">
+            <span class="del-module-icon" @click="handleDeleteModule(item)">
               <el-icon><X class="x-animation"/></el-icon>
             </span>
             <span class="module-number" style="left: 8px;top: 8px;">
@@ -82,7 +82,7 @@
 import {storeToRefs} from 'pinia'
 import {onBeforeUpdate, ref, watch} from 'vue'
 import {Paper} from '../../api';
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Repeat, Link, Package, PackagePlus, Smile, X} from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
@@ -133,6 +133,33 @@ watch(drawerVisible, (newValue) => {
     getPaperModule()
   }
 })
+
+// 处理删除模块逻辑
+const handleDeleteModule = (itemData: any) => {
+  ElMessageBox.confirm(
+      '您确定要删除模块吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    const { id, paper_id } = itemData
+    Paper.delPaperModuleApi(id, paper_id).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除模块成功！')
+      // 刷新模块数据
+      getPaperModule()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
+  })
+}
 </script>
 
 <style scoped lang="scss">
