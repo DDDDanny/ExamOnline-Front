@@ -47,7 +47,7 @@
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
             <span>{{ item['description'] }}</span>
           </div>
-          <div class="add-module-card" v-if="paperModules.length < 4">
+          <div class="add-module-card" v-if="paperModules.length < 4" @click="handleOpenModuleDialog">
             <el-icon size="16" style="margin-bottom: 5px">
               <PackagePlus/>
             </el-icon>
@@ -76,6 +76,31 @@
       </div>
     </div>
   </el-drawer>
+  <el-dialog
+      width="800"
+      title="新增模块"
+      draggable
+      destroy-on-close
+      v-model="moduleDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handleCloseModuleDialog(moduleFormRef)"
+  >
+    <el-form :model="moduleFormData" ref="moduleFormRef">
+      <el-form-item label="模块名称" :label-width="formLabelWidth" prop="title" required>
+        <el-input v-model="moduleFormData.title" placeholder="请输入模块名称" clearable/>
+      </el-form-item>
+      <el-form-item label="模块描述" :label-width="formLabelWidth" prop="description" required>
+        <el-input v-model="moduleFormData.description" placeholder="请输入模块描述" clearable/>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="moduleDialogVisible = false" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="handleSubmitModule(moduleFormRef)" :icon="Send">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -83,7 +108,8 @@ import {storeToRefs} from 'pinia'
 import {onBeforeUpdate, ref, watch} from 'vue'
 import {Paper} from '../../api';
 import {ElMessage, ElMessageBox} from "element-plus";
-import {Repeat, Link, Package, PackagePlus, Smile, X} from "lucide-vue-next";
+import type {FormInstance} from 'element-plus'
+import {Repeat, Link, Package, PackagePlus, Smile, X, Ban, Send} from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
 const props = defineProps({
@@ -158,6 +184,35 @@ const handleDeleteModule = (itemData: any) => {
     })
   }).catch(() => {
     ElMessage.info('取消删除')
+  })
+}
+
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '90px'
+// 控制新增&编辑模块Dialog是否显示
+const moduleDialogVisible = ref(false)
+// 新增模块表单的Ref
+const moduleFormRef = ref<FormInstance>()
+// FormData 初始化
+const initFormData = {
+  title: '',
+  description: '',
+}
+// 试卷模块 FormData
+const moduleFormData = ref(initFormData)
+// 处理打开Module Dialog
+const handleOpenModuleDialog = () => {
+  moduleDialogVisible.value = true
+}
+// 处理关闭Module Dialog
+const handleCloseModuleDialog = (moduleFormEl: any) => {
+  moduleDialogVisible.value = false
+  console.log(moduleFormEl)
+}
+// 处理提交模块信息
+const handleSubmitModule = (moduleFormEl: any) => {
+  moduleFormEl.validate((result: boolean) => {
+    console.log(result)
   })
 }
 </script>
