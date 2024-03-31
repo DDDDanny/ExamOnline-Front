@@ -47,6 +47,12 @@ export class Paper {
     return data
   }
 
+  // 创建试卷模块接口
+  async createPaperModuleApi(moduleInfo: object): Promise<Result> {
+    const { data } = await axios.post('/paperModule', { ...moduleInfo })
+    return data
+  }
+
   // 删除试卷模块接口
   async delPaperModuleApi(moduleId: string, paperId: string): Promise<Result> {
     const { data } = await axios.delete('/paperModule', { data: { id: moduleId, paper_id: paperId } })
