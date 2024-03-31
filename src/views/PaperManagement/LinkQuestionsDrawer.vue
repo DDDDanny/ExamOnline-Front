@@ -109,8 +109,12 @@ import {onBeforeUpdate, ref, watch} from 'vue'
 import {Paper} from '../../api';
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
+import { getCookie } from "../../utils/cookie.ts";
 import {Repeat, Link, Package, PackagePlus, Smile, X, Ban, Send} from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
+
+// 获取登录用户ID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 const props = defineProps({
   paperInfo: {
@@ -197,22 +201,38 @@ const moduleFormRef = ref<FormInstance>()
 const initFormData = {
   title: '',
   description: '',
+  paper_id: '',
+  created_user: userId
 }
 // 试卷模块 FormData
 const moduleFormData = ref(initFormData)
 // 处理打开Module Dialog
 const handleOpenModuleDialog = () => {
+  moduleFormData.value.paper_id = props.paperInfo['id']
   moduleDialogVisible.value = true
 }
 // 处理关闭Module Dialog
 const handleCloseModuleDialog = (moduleFormEl: any) => {
   moduleDialogVisible.value = false
-  console.log(moduleFormEl)
+  moduleFormData.value = initFormData
+  moduleFormEl.resetFields()
 }
 // 处理提交模块信息
 const handleSubmitModule = (moduleFormEl: any) => {
   moduleFormEl.validate((result: boolean) => {
-    console.log(result)
+    if (!result) {
+      ElMessage.warning('请输入完整的模块信息后重新提交！')
+      return
+    }
+    Paper.createPaperModuleApi(moduleFormData.value).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        getPaperModule()
+        moduleDialogVisible.value = false
+      }
+    })
   })
 }
 </script>
