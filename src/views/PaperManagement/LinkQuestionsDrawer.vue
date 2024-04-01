@@ -54,7 +54,13 @@
             <span>新增模块</span>
           </div>
         </div>
-        <el-button v-if="paperModules.length !== 0" type="primary" size="small" class="change-module-btn">
+        <el-button
+            v-if="paperModules.length !== 0"
+            type="primary"
+            size="small"
+            class="change-module-btn"
+            @click="handleOpenChangeModuleDialog"
+        >
           <el-icon size="14"><Repeat/></el-icon>
           <span style="font-size: 13px;margin-left: 10px;font-weight: normal">变 更 模 块</span>
         </el-button>
@@ -100,6 +106,18 @@
         <el-button type="primary" @click="handleSubmitModule(moduleFormRef)" :icon="Send">提 交</el-button>
       </div>
     </template>
+  </el-dialog>
+  <el-dialog
+      width="800"
+      title="模块变更"
+      draggable
+      destroy-on-close
+      v-model="moduleChangeDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handleCloseChangeModuleDialog"
+  >
+    <div></div>
   </el-dialog>
 </template>
 
@@ -234,6 +252,17 @@ const handleSubmitModule = (moduleFormEl: any) => {
       }
     })
   })
+}
+
+// 控制变更模块Dialog是否显示
+const moduleChangeDialogVisible = ref(false)
+// 处理打开变更模块Dialog
+const handleOpenChangeModuleDialog = () => {
+  moduleChangeDialogVisible.value = true
+}
+// 处理关闭变更模块Dialog
+const handleCloseChangeModuleDialog = () => {
+  moduleChangeDialogVisible.value = false
 }
 </script>
 
