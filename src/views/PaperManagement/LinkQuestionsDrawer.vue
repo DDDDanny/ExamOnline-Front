@@ -117,7 +117,37 @@
       :close-on-press-escape="false"
       @close="handleCloseChangeModuleDialog"
   >
-    <div></div>
+    <el-table
+        border
+        stripe
+        size="small"
+        :data="linkQuestionsTableData"
+        show-overflow-tooltip
+        class="common-table-base-style"
+        header-cell-class-name="table-header-row-style"
+    >
+      <el-table-column type="index" align="center" width="60" label="序号"/>
+      <el-table-column prop="title" label="模块标题" align="center" width="240"/>
+      <el-table-column prop="description" label="模块描述" align="center"/>
+      <el-table-column fixed="right" label="操 作" align="center" width="150" :resizable="false">
+        <template #default="scope">
+          <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+          <el-divider direction="vertical"/>
+          <el-button
+              link
+              size="small"
+              type="danger"
+              :icon="Trash2"
+              @click="handleDeleteModule(scope['row'])"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+      </template>
+    </el-table>
   </el-dialog>
 </template>
 
@@ -128,7 +158,18 @@ import {Paper} from '../../api';
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
-import {Repeat, Link, Package, PackagePlus, Smile, X, Ban, Send} from "lucide-vue-next";
+import {
+  Repeat,
+  Link,
+  Package,
+  PackagePlus,
+  Smile,
+  X,
+  Ban,
+  Send,
+  SquarePen,
+  Trash2,
+} from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
 // 获取登录用户ID
@@ -171,6 +212,7 @@ const getPaperModule = () => {
       ElMessage.error(response.msg)
     } else {
       paperModules.value = response.data
+      linkQuestionsTableData.value = response.data
     }
   })
 }
@@ -264,6 +306,8 @@ const handleOpenChangeModuleDialog = () => {
 const handleCloseChangeModuleDialog = () => {
   moduleChangeDialogVisible.value = false
 }
+
+const linkQuestionsTableData = ref([])
 </script>
 
 <style scoped lang="scss">
