@@ -16,6 +16,7 @@ specifiers:
   vue: ^3.4.19
   vue-router: ^4.3.0
   vue-tsc: ^1.8.27
+  vuedraggable: ^4.1.0
 
 dependencies:
   axios: registry.npmmirror.com/axios/1.6.7
@@ -27,6 +28,7 @@ dependencies:
   sass: registry.npmmirror.com/sass/1.71.1
   vue: registry.npmmirror.com/vue/3.4.21_typescript@5.3.3
   vue-router: registry.npmmirror.com/vue-router/4.3.0_vue@3.4.21
+  vuedraggable: registry.npmmirror.com/vuedraggable/4.1.0_vue@3.4.21
 
 devDependencies:
   '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/5.0.4_vite@5.1.4+vue@3.4.21
@@ -1495,6 +1497,12 @@ packages:
       lru-cache: registry.npmmirror.com/lru-cache/6.0.0
     dev: true
 
+  registry.npmmirror.com/sortablejs/1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sortablejs/-/sortablejs-1.14.0.tgz}
+    name: sortablejs
+    version: 1.14.0
+    dev: false
+
   registry.npmmirror.com/source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}
     name: source-map-js
@@ -1752,6 +1760,18 @@ packages:
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer/3.4.21_vue@3.4.21
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.4.21
       typescript: registry.npmmirror.com/typescript/5.3.3
+
+  registry.npmmirror.com/vuedraggable/4.1.0_vue@3.4.21:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vuedraggable/-/vuedraggable-4.1.0.tgz}
+    id: registry.npmmirror.com/vuedraggable/4.1.0
+    name: vuedraggable
+    version: 4.1.0
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: registry.npmmirror.com/sortablejs/1.14.0
+      vue: registry.npmmirror.com/vue/3.4.21_typescript@5.3.3
+    dev: false
 
   registry.npmmirror.com/webpack-sources/3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/webpack-sources/-/webpack-sources-3.2.3.tgz}
