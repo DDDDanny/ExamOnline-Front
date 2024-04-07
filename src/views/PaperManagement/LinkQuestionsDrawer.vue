@@ -117,41 +117,32 @@
       :close-on-press-escape="false"
       @close="handleCloseChangeModuleDialog"
   >
-    <el-table
-        border
-        stripe
-        size="small"
-        :data="linkQuestionsTableData"
-        show-overflow-tooltip
-        class="common-table-base-style"
-        header-cell-class-name="table-header-row-style"
+    <draggable
+        :list="sortModuleListData"
+        item-key="name"
+        class="list-group"
+        ghost-class="ghost"
+        handle=".handle"
+        @end="handleDragEnd"
     >
-      <el-table-column type="index" align="center" width="60" label="序号"/>
-      <el-table-column prop="title" label="模块标题" align="center" width="240"/>
-      <el-table-column prop="description" label="模块描述" align="center"/>
-      <el-table-column fixed="right" label="操 作" align="center" width="150" :resizable="false">
-        <template #default="scope">
-          <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
-          <el-divider direction="vertical"/>
-          <el-button
-              link
-              size="small"
-              type="danger"
-              :icon="Trash2"
-              @click="handleDeleteModule(scope['row'])"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+      <template #item="{ element, index }">
+        <div class="list-group-item">
+          <el-icon style="margin: 0 20px" class="handle"><AlignJustify /></el-icon>
+          <el-divider direction="vertical" style="height: 50%;margin: 0" />
+          <span class="item-content-box">{{ index + 1 }}. {{ element.title }} ( {{ element.description }} )</span>
+          <el-divider direction="vertical"  style="height: 50%;margin: 0" />
+          <div class="item-opt-box">
+            <el-icon class="item-opt-box-item" color="#79bbff"><PencilLine /></el-icon>
+            <el-icon class="item-opt-box-item" color="#F56C6C"><Trash2 /></el-icon>
+          </div>
+        </div>
       </template>
-    </el-table>
+    </draggable>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
+import draggable from 'vuedraggable'
 import {storeToRefs} from 'pinia'
 import {onBeforeUpdate, ref, watch} from 'vue'
 import {Paper} from '../../api';
@@ -159,16 +150,8 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
 import {
-  Repeat,
-  Link,
-  Package,
-  PackagePlus,
-  Smile,
-  X,
-  Ban,
-  Send,
-  SquarePen,
-  Trash2,
+  Repeat, Link, Package, PackagePlus, Smile, X, Ban,
+  Send, AlignJustify, Trash2, PencilLine
 } from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
@@ -212,7 +195,7 @@ const getPaperModule = () => {
       ElMessage.error(response.msg)
     } else {
       paperModules.value = response.data
-      linkQuestionsTableData.value = response.data
+      sortModuleListData.value = response.data
     }
   })
 }
@@ -307,10 +290,53 @@ const handleCloseChangeModuleDialog = () => {
   moduleChangeDialogVisible.value = false
 }
 
-const linkQuestionsTableData = ref([])
+// 存储模块排序的模块信息
+const sortModuleListData = ref([])
+// 拖拽结束，更新数据
+const handleDragEnd = () => {
+  console.log(78787, sortModuleListData.value)
+}
+
 </script>
 
 <style scoped lang="scss">
+.list-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .handle {
+    &:hover {
+      cursor: move; // hover后鼠标变十字拖动ICON
+    }
+  }
+  .list-group-item {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: #cccccc 0 0 5px;
+    align-items: center;
+    color: #5e5e5e;
+    .item-content-box {
+      width: 580px;
+      margin: 0 20px;
+      white-space: nowrap; /* 防止文字换行 */
+      overflow: hidden; /* 隐藏溢出的内容 */
+      text-overflow: ellipsis; /* 使用省略号表示溢出的文本 */
+    }
+    .item-opt-box {
+      display: flex;
+      margin: 0 20px;
+      .item-opt-box-item {
+        margin: 0 15px;
+        &:hover {
+          cursor: pointer; // hover后鼠标变手指
+        }
+      }
+    }
+  }
+}
 .link-question-drawer-main {
   width: 100%;
   display: flex;
