@@ -7,6 +7,7 @@ import PersonalWarehouse from '../views/QuestionManagement/PersonalWarehouse.vue
 import PublicWarehouse from '../views/QuestionManagement/PublicWarehouse.vue';
 import ErrorArchive from '../views/QuestionManagement/ErrorArchive.vue'
 import PersonalPaperWarehouse from '../views/PaperManagement/PersonalPaperWarehouse.vue'
+import PublicPaperWarehouse from "../views/PaperManagement/PublicPaperWarehouse.vue";
 
 const routers: any = [
   {
@@ -37,6 +38,10 @@ const routers: any = [
       {
         path: '/personalPapers',
         component: PersonalPaperWarehouse,
+      },
+      {
+        path: '/publicPapers',
+        component: PublicPaperWarehouse,
       }
     ]
   }
