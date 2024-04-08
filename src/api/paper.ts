@@ -58,6 +58,12 @@ export class Paper {
     const { data } = await axios.delete('/paperModule', { data: { id: moduleId, paper_id: paperId } })
     return data
   }
+
+  // 更新试卷模块顺序接口
+  async paperModuleSortApi(modules: any): Promise<Result> {
+    const { data } = await axios.put('/paperModuleSort', { modules })
+    return data
+  }
 }
 
 export default new Paper()
