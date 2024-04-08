@@ -294,9 +294,26 @@ const handleCloseChangeModuleDialog = () => {
 const sortModuleListData = ref([])
 // 拖拽结束，更新数据
 const handleDragEnd = () => {
-  console.log(78787, sortModuleListData.value)
+  const modules: any = []
+  // 重构模块数据
+  for (let [index, value] of sortModuleListData.value.entries()) {
+    modules.push({
+      id: value['id'],
+      index: index + 1,
+      updated_user: userId
+    })
+  }
+  // 更新模块顺序
+  Paper.paperModuleSortApi(modules).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      ElMessage.success('模块重新排序成功')
+      getPaperModule()
+    }
+  })
 }
-
 </script>
 
 <style scoped lang="scss">
