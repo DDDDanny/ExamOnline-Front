@@ -162,15 +162,15 @@ const handleLogin = () => {
     ElMessage.success('登录成功');
     // 存储Access Token
     localStorage.setItem('TOKEN', response.data['access'])
+    // 存储角色信息
+    localStorage.setItem('ROLE', loginRole.value);
     // 存储登录信息（登录人的姓名）
     const userInfo = { userId: response.data['userId'], username: response.data['name'] }
     setCookie('UserInfo', JSON.stringify(userInfo))
-    // 如果用户选择了记住密码，则将角色和登录信息存储到localStorage中，否则清空localStorage
+    // 如果用户选择了记住密码，则将登录信息存储到localStorage中，否则清除localStorage中的登录信息
     if (formLogin.rememberPass) {
-      localStorage.setItem('ROLE', loginRole.value);
       localStorage.setItem('LOGIN_INFO', JSON.stringify(formLogin));
     } else {
-      localStorage.removeItem('ROLE');
       localStorage.removeItem('LOGIN_INFO');
     }
     router.replace('/homepage')
