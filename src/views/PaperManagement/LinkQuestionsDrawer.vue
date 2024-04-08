@@ -132,8 +132,8 @@
           <span class="item-content-box">{{ index + 1 }}. {{ element.title }} ( {{ element.description }} )</span>
           <el-divider direction="vertical"  style="height: 50%;margin: 0" />
           <div class="item-opt-box">
-            <el-icon class="item-opt-box-item" color="#79bbff"><PencilLine /></el-icon>
-            <el-icon class="item-opt-box-item" color="#F56C6C"><Trash2 /></el-icon>
+            <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary" />
+            <el-button link class="item-opt-box-item" :icon="Trash2" type="danger" @click="handleDeleteModule(element)" />
           </div>
         </div>
       </template>
