@@ -118,6 +118,7 @@
       @close="handleCloseChangeModuleDialog"
   >
     <draggable
+        v-if="sortModuleListData.length !== 0"
         :list="sortModuleListData"
         item-key="name"
         class="list-group"
@@ -150,6 +151,9 @@
         </div>
       </template>
     </draggable>
+    <div v-else class="module-change-empty">
+      <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+    </div>
   </el-dialog>
 </template>
 
@@ -513,5 +517,11 @@ const handleDragEnd = () => {
       transform: rotate(90deg);
     }
   }
+}
+.module-change-empty {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center
 }
 </style>
