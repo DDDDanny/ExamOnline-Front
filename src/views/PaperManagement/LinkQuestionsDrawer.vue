@@ -75,7 +75,7 @@
       </el-divider>
       <div class="paper-link-box">
         <span class="paper-link-empty">暂无关联试题</span>
-        <el-button type="primary" size="small" class="link-btn">
+        <el-button type="primary" size="small" class="link-btn" @click="handleOpenLinkQuestionDialog">
           <el-icon size="14"><Link/></el-icon>
           <span style="font-size: 13px;margin-left: 10px;font-weight: normal">关 联 试 题</span>
         </el-button>
@@ -340,6 +340,16 @@ const handleDragEnd = () => {
       getPaperModule()
     }
   })
+}
+
+// 处理打开关联试题Dialog
+const handleOpenLinkQuestionDialog = () => {
+  if (paperModules.value.length === 0) {
+    ElMessage.warning('没有模块无法关联试题！请添加模块后重试！')
+    return
+  } else {
+    console.log('Open Dialog')
+  }
 }
 </script>
 
