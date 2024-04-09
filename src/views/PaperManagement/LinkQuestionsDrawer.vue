@@ -47,7 +47,7 @@
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
             <span>{{ item['description'] }}</span>
           </div>
-          <div class="add-module-card" v-if="paperModules.length < 4" @click="handleOpenModuleDialog">
+          <div class="add-module-card" v-if="paperModules.length < 4" @click="handleOpenModuleDialog('C')">
             <el-icon size="16" style="margin-bottom: 5px">
               <PackagePlus/>
             </el-icon>
@@ -84,7 +84,7 @@
   </el-drawer>
   <el-dialog
       width="800"
-      title="新增模块"
+      :title="optType === 'C' ? '新增模块' : '编辑模块'"
       draggable
       destroy-on-close
       v-model="moduleDialogVisible"
@@ -132,8 +132,20 @@
           <span class="item-content-box">{{ index + 1 }}. {{ element.title }} ( {{ element.description }} )</span>
           <el-divider direction="vertical"  style="height: 50%;margin: 0" />
           <div class="item-opt-box">
-            <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary" />
-            <el-button link class="item-opt-box-item" :icon="Trash2" type="danger" @click="handleDeleteModule(element)" />
+            <el-button
+                link
+                class="item-opt-box-item"
+                :icon="PencilLine"
+                type="primary"
+                @click="handleOpenModuleDialog('E', element)"
+            />
+            <el-button
+                link
+                class="item-opt-box-item"
+                :icon="Trash2"
+                type="danger"
+                @click="handleDeleteModule(element)"
+            />
           </div>
         </div>
       </template>
@@ -247,11 +259,17 @@ const initFormData = {
   paper_id: '',
   created_user: userId
 }
+const optType = ref('C')
 // 试卷模块 FormData
 const moduleFormData = ref(initFormData)
 // 处理打开Module Dialog
-const handleOpenModuleDialog = () => {
-  moduleFormData.value.paper_id = props.paperInfo['id']
+const handleOpenModuleDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    moduleFormData.value = itemData
+  } else {
+    moduleFormData.value.paper_id = props.paperInfo['id']
+  }
+  optType.value = opt
   moduleDialogVisible.value = true
 }
 // 处理关闭Module Dialog
@@ -262,20 +280,25 @@ const handleCloseModuleDialog = (moduleFormEl: any) => {
 }
 // 处理提交模块信息
 const handleSubmitModule = (moduleFormEl: any) => {
-  moduleFormEl.validate((result: boolean) => {
+  moduleFormEl.validate(async (result: boolean) => {
     if (!result) {
       ElMessage.warning('请输入完整的模块信息后重新提交！')
       return
     }
-    Paper.createPaperModuleApi(moduleFormData.value).then(response => {
+    try {
+      const response = optType.value === 'C'
+          ? await Paper.createPaperModuleApi(moduleFormData.value)
+          : await Paper.editPaperModuleApi({...moduleFormData.value, updated_user: userId})
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
-      } else {
-        getPaperModule()
-        moduleDialogVisible.value = false
       }
-    })
+      moduleDialogVisible.value = false
+      ElMessage.success(optType.value === 'C' ? '新增模块成功！' : '编辑模块成功！')
+      getPaperModule()
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 
