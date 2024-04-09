@@ -64,6 +64,12 @@ export class Paper {
     const { data } = await axios.put('/paperModuleSort', { modules })
     return data
   }
+
+  // 更新试卷模块信息接口
+  async editPaperModuleApi(moduleInfo: any): Promise<Result> {
+    const { data } = await axios.put('/paperModule/' + moduleInfo['id'], { ...moduleInfo })
+    return data
+  }
 }
 
 export default new Paper()
