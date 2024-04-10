@@ -87,7 +87,41 @@
               <div class="link-btn">
                 <el-button type="primary" size="small" :icon="Link" @click="handleOpenLinkQuestionDialog(item)">关 联 试 题</el-button>
               </div>
-              <el-image style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+              <el-image v-if="paperQuestions.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+              <draggable
+                  v-else
+                  :list="paperQuestions"
+                  item-key="name"
+                  class="paper-module-questions-list"
+                  ghost-class="ghost"
+                  handle=".handle"
+                  @end="handleDragEndForQuestion"
+              >
+                <template #item="{ element, index }">
+                  <div class="list-group-item">
+                    <el-icon style="margin: 0 20px" class="handle"><AlignJustify /></el-icon>
+                    <el-divider direction="vertical" style="height: 50%;margin: 0" />
+                    <el-image
+                        v-if="element['question_detail']['type'] === 'judge'"
+                        style="width: 20px;margin-left: 10px;"
+                        src="src/images/JudgeIcon.png"
+                        fit="cover"
+                    />
+                    <el-image
+                        v-else
+                        style="width: 18px;margin-left: 10px;"
+                        src="src/images/SelectIcon.png"
+                        fit="cover"
+                    />
+                    <span class="item-content-box">{{ index + 1 }}. {{ element['question_detail']['topic'] }}</span>
+                    <el-divider direction="vertical"  style="height: 50%;margin: 0" />
+                    <div class="item-opt-box">
+                      <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
+                      <el-button link class="item-opt-box-item" :icon="Unlink" type="danger"/>
+                    </div>
+                  </div>
+                </template>
+              </draggable>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -179,7 +213,7 @@ import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
 import {
   Repeat, Link, Package, PackagePlus, Smile, X, Ban,
-  Send, AlignJustify, Trash2, PencilLine, Box
+  Send, AlignJustify, Trash2, PencilLine, Box, Unlink
 } from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
@@ -386,6 +420,11 @@ const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
     console.log(moduleInfo)
   }
 }
+
+// 处理拖拽关联的试题信息
+const handleDragEndForQuestion = () => {
+  console.log(paperQuestions.value)
+}
 </script>
 
 <style scoped lang="scss">
@@ -557,6 +596,53 @@ const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
         display: flex;
         margin-top: 10px;
         justify-content: end;
+      }
+
+      .paper-module-questions-list {
+        width: 100%;
+        height: calc(100vh - 600px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        margin-top: 20px;
+
+        .list-group-item {
+          width: 97%;
+          min-height: 40px;
+          display: flex;
+          margin: 6px 0;
+          border-radius: 8px;
+          box-shadow: #cccccc 0 0 5px;
+          align-items: center;
+          color: #5e5e5e;
+          font-size: 14px;
+
+          .handle {
+            &:hover {
+              cursor: move; // hover后鼠标变十字拖动ICON
+            }
+          }
+
+          .item-content-box {
+            width: 505px;
+            margin: 0 20px;
+            white-space: nowrap; /* 防止文字换行 */
+            overflow: hidden; /* 隐藏溢出的内容 */
+            text-overflow: ellipsis; /* 使用省略号表示溢出的文本 */
+          }
+
+          .item-opt-box {
+            display: flex;
+            margin: 0 10px;
+            .item-opt-box-item {
+              margin: 0 10px;
+              &:hover {
+                cursor: pointer; // hover后鼠标变手指
+              }
+            }
+          }
+        }
       }
     }
   }
