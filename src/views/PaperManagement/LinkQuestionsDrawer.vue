@@ -228,6 +228,21 @@ const getPaperModule = () => {
   })
 }
 
+// 试卷关联的试题信息
+const paperQuestions = ref([])
+
+// 获取试卷关联的试题信息
+const getPaperQuestions = () => {
+  Paper.getPaperQuestionsApi(props.paperInfo['id']).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      paperQuestions.value = response.data
+    }
+  })
+}
+
 // 监听drawerVisible，当drawerVisible为true时，获取其他数据
 watch(drawerVisible, (newValue) => {
   if (newValue) {
@@ -235,6 +250,8 @@ watch(drawerVisible, (newValue) => {
     linkActivePane.value = 0
     // 获取试卷-模块信息
     getPaperModule()
+    // 获取试卷-试题信息
+    getPaperQuestions()
   }
 })
 
