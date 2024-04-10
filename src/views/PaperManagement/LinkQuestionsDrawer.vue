@@ -63,7 +63,6 @@
             <span>新增模块</span>
           </div>
         </div>
-
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
         <div class="divider-box">
@@ -76,7 +75,7 @@
       </el-divider>
       <div class="paper-link-box">
         <el-image v-if="paperModules.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
-        <el-tabs v-else v-model="activeName" style="width: 100%;" >
+        <el-tabs v-else v-model="linkActivePane" style="width: 100%;" >
           <el-tab-pane v-for="(item, index) in paperModules" :name="index">
             <template #label>
               <span class="custom-tabs-label">
@@ -232,6 +231,9 @@ const getPaperModule = () => {
 // 监听drawerVisible，当drawerVisible为true时，获取其他数据
 watch(drawerVisible, (newValue) => {
   if (newValue) {
+    // 初始化关联用例的默认tab
+    linkActivePane.value = 0
+    // 获取试卷-模块信息
     getPaperModule()
   }
 })
@@ -355,7 +357,8 @@ const handleDragEnd = () => {
   })
 }
 
-const activeName = ref(0)
+// 关联试题的激活页签
+const linkActivePane = ref(0)
 
 // 处理打开关联试题Dialog
 const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
