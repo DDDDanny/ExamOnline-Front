@@ -70,6 +70,12 @@ export class Paper {
     const { data } = await axios.put('/paperModule/' + moduleInfo['id'], { ...moduleInfo })
     return data
   }
+
+  // 复制试卷信息接口
+  async copyPaperApi(id: string, created_user: string): Promise<Result> {
+    const { data } = await axios.post('/paperCopy', { id, created_user })
+    return data
+  }
 }
 
 export default new Paper()
