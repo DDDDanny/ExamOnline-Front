@@ -141,6 +141,7 @@
                       size="small"
                       type="success"
                       :icon="CopyPlus"
+                      @click="handleCopy(scope['row'])"
                   >
                     复制试卷
                   </el-button>
@@ -422,6 +423,29 @@ const { changeDrawerVisible } = linkQuestion
 const openLinkDrawer = (itemData: any) => {
   changeDrawerVisible()
   paperInfo.value = itemData
+}
+
+// 处理复制试卷逻辑
+const handleCopy = (paperInfo: any) => {
+  ElMessageBox.confirm(
+      `您确定要复制「${paperInfo.title}」试卷吗？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }
+  ).then(() => {
+    Paper.copyPaperApi(paperInfo.id, userId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('复制试卷成功！')
+      getPaperTableData()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
+  })
 }
 
 </script>
