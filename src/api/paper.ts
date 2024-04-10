@@ -76,6 +76,12 @@ export class Paper {
     const { data } = await axios.post('/paperCopy', { id, created_user })
     return data
   }
+
+  // 根据试卷ID获取关联的试题信息接口
+  async getPaperQuestionsApi(paperId: string): Promise<Result> {
+    const { data } = await axios.get('/paperQuestion/' + paperId)
+    return data
+  }
 }
 
 export default new Paper()
