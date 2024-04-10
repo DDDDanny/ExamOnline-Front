@@ -35,6 +35,15 @@
         </div>
       </el-divider>
       <div class="paper-module-box">
+        <el-button
+            v-if="paperModules.length !== 0"
+            type="primary"
+            size="small"
+            :icon="Repeat"
+            @click="handleOpenChangeModuleDialog"
+        >
+          变 更 模 块
+        </el-button>
         <div class="module-card-box">
           <div class="module-card-item" v-for="item in paperModules">
             <span class="del-module-icon" @click="handleDeleteModule(item)">
@@ -54,16 +63,7 @@
             <span>新增模块</span>
           </div>
         </div>
-        <el-button
-            v-if="paperModules.length !== 0"
-            type="primary"
-            size="small"
-            class="change-module-btn"
-            @click="handleOpenChangeModuleDialog"
-        >
-          <el-icon size="14"><Repeat/></el-icon>
-          <span style="font-size: 13px;margin-left: 10px;font-weight: normal">变 更 模 块</span>
-        </el-button>
+
       </div>
       <el-divider content-position="left" style="margin: 20px 0 20px 0">
         <div class="divider-box">
@@ -71,14 +71,27 @@
             <Link/>
           </el-icon>
           <span style="margin-left: 10px">关联试题</span>
+          <span style="font-size: 13px;color: #7d7d7d">（ 模块为空时，无法关联试题 ）</span>
         </div>
       </el-divider>
       <div class="paper-link-box">
-        <span class="paper-link-empty">暂无关联试题</span>
-        <el-button type="primary" size="small" class="link-btn" @click="handleOpenLinkQuestionDialog">
-          <el-icon size="14"><Link/></el-icon>
-          <span style="font-size: 13px;margin-left: 10px;font-weight: normal">关 联 试 题</span>
-        </el-button>
+        <el-image v-if="paperModules.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+        <el-tabs v-else v-model="activeName" style="width: 100%;" >
+          <el-tab-pane v-for="(item, index) in paperModules" :name="index">
+            <template #label>
+              <span class="custom-tabs-label">
+                <el-icon><Box/></el-icon>
+                <span style="margin-left: 8px;">{{ item['title'] }}</span>
+              </span>
+            </template>
+            <div class="module-link-pane-main">
+              <div class="link-btn">
+                <el-button type="primary" size="small" :icon="Link" @click="handleOpenLinkQuestionDialog(item)">关 联 试 题</el-button>
+              </div>
+              <el-image style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </div>
   </el-drawer>
@@ -167,7 +180,7 @@ import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
 import {
   Repeat, Link, Package, PackagePlus, Smile, X, Ban,
-  Send, AlignJustify, Trash2, PencilLine
+  Send, AlignJustify, Trash2, PencilLine, Box
 } from "lucide-vue-next";
 import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 
@@ -342,13 +355,15 @@ const handleDragEnd = () => {
   })
 }
 
+const activeName = ref(0)
+
 // 处理打开关联试题Dialog
-const handleOpenLinkQuestionDialog = () => {
+const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
   if (paperModules.value.length === 0) {
     ElMessage.warning('没有模块无法关联试题！请添加模块后重试！')
     return
   } else {
-    console.log('Open Dialog')
+    console.log(moduleInfo)
   }
 }
 </script>
@@ -421,7 +436,7 @@ const handleOpenLinkQuestionDialog = () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: end;
 
     .change-module-btn {
       width: 150px;
@@ -503,12 +518,26 @@ const handleOpenLinkQuestionDialog = () => {
     .paper-link-empty {
       color: #b2b2b2;
       font-size: 13px;
-      margin-bottom: 20px;
     }
 
-    .link-btn {
-      width: 150px;
-      border-radius: 5px;
+    .custom-tabs-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .module-link-pane-main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .link-btn {
+        width: 100%;
+        display: flex;
+        margin-top: 10px;
+        justify-content: end;
+      }
     }
   }
 }
