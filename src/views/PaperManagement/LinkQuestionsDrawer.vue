@@ -127,6 +127,30 @@
         </el-tabs>
       </div>
     </div>
+    <el-drawer
+        :size="700"
+        title="题库"
+        v-model="questionsWarehouseDrawerVisible"
+        destroy-on-close
+        :append-to-body="true"
+        :close-on-click-modal="false"
+    >
+      <div class="link-questions-warehouse-main">
+        <span style="font-size: 13px">
+          Tips：您正在为「{{ linkActiveModuleInfo['title'] }}」模块添加试题，勾选试题后提交，进行批量配置
+        </span>
+      </div>
+      <template #footer>
+        <div style="flex: auto">
+          <el-button :icon="Ban" @click="questionsWarehouseDrawerVisible = false">
+            取 消
+          </el-button>
+          <el-button type="primary" :icon="Send" @click="questionsWarehouseDrawerVisible = false">
+            提 交
+          </el-button>
+        </div>
+      </template>
+    </el-drawer>
   </el-drawer>
   <el-dialog
       width="800"
@@ -411,13 +435,19 @@ const handleDragEnd = () => {
 // 关联试题的激活页签
 const linkActivePane = ref(0)
 
+// 控制题库Drawer是否可见
+const questionsWarehouseDrawerVisible = ref(false)
+// 存储打开Drawer时Module信息
+const linkActiveModuleInfo: any = ref({})
+
 // 处理打开关联试题Dialog
 const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
   if (paperModules.value.length === 0) {
     ElMessage.warning('没有模块无法关联试题！请添加模块后重试！')
     return
   } else {
-    console.log(moduleInfo)
+    questionsWarehouseDrawerVisible.value = true
+    linkActiveModuleInfo.value = moduleInfo
   }
 }
 
@@ -663,10 +693,18 @@ const handleDragEndForQuestion = () => {
     }
   }
 }
+
 .module-change-empty {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center
+}
+
+.link-questions-warehouse-main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #5e5e5e;
 }
 </style>
