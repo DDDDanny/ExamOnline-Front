@@ -103,7 +103,7 @@
                     <el-divider direction="vertical" style="height: 50%;margin: 0" />
                     <el-image
                         v-if="element['question_detail']['type'] === 'judge'"
-                        style="width: 20px;margin-left: 10px;"
+                        style="width: 18px;margin-left: 10px;"
                         src="src/images/JudgeIcon.png"
                         fit="cover"
                     />
