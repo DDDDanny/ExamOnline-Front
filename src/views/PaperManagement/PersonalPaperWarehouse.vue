@@ -108,7 +108,7 @@
                 :icon="NavigationOff"
                 @click="handleCancelPublishPaper(scope['row']['id'])"
             >
-              取消发布
+              取消
             </el-button>
             <el-button
                 link

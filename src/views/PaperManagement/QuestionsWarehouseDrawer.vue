@@ -29,7 +29,7 @@
             <span v-else>判断题</span>
           </template>
         </el-table-column>
-        <el-table-column prop="topic" label="试题标题" />
+        <el-table-column prop="topic" label="试题标题" header-align="center" />
         <template #empty>
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
