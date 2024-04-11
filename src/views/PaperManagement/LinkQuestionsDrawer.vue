@@ -85,7 +85,7 @@
             </template>
             <div class="module-link-pane-main">
               <div class="link-btn">
-                <el-button type="primary" size="small" :icon="Link" @click="handleOpenLinkQuestionDialog(item)">关 联 试 题</el-button>
+                <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">关 联 试 题</el-button>
               </div>
               <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
               <draggable
@@ -125,31 +125,7 @@
         </el-tabs>
       </div>
     </div>
-    <el-drawer
-        :size="700"
-        title="题库"
-        v-model="questionsWarehouseDrawerVisible"
-        destroy-on-close
-        :append-to-body="true"
-        :close-on-click-modal="false"
-    >
-      <div class="link-questions-warehouse-main">
-        <span style="font-size: 13px;margin-bottom: 10px">
-          Tips：您正在为「{{ linkActiveModuleInfo['title'] }}」模块添加试题，勾选试题后提交，进行批量配置
-        </span>
-        <div>123</div>
-      </div>
-      <template #footer>
-        <div style="flex: auto">
-          <el-button :icon="Ban" @click="questionsWarehouseDrawerVisible = false">
-            取 消
-          </el-button>
-          <el-button type="primary" :icon="Link" @click="questionsWarehouseDrawerVisible = false">
-            关 联
-          </el-button>
-        </div>
-      </template>
-    </el-drawer>
+    <questions-warehouse-drawer :module="activeModulePane"/>
   </el-drawer>
   <el-dialog
       width="800"
@@ -238,7 +214,8 @@ import {
   Repeat, Link, Package, PackagePlus, Smile, X, Ban,
   Send, AlignJustify, Trash2, PencilLine, Box, Unlink
 } from "lucide-vue-next";
-import {useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
+import {useQuestionsWarehouseStore, useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
+import QuestionsWarehouseDrawer from "./QuestionsWarehouseDrawer.vue";
 
 // 获取登录用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -436,26 +413,27 @@ const handleDragEnd = () => {
 
 // 关联试题的激活页签
 const linkActivePane = ref(0)
-
-// 控制题库Drawer是否可见
-const questionsWarehouseDrawerVisible = ref(false)
-// 存储打开Drawer时Module信息
-const linkActiveModuleInfo: any = ref({})
-
-// 处理打开关联试题Dialog
-const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
-  if (paperModules.value.length === 0) {
-    ElMessage.warning('没有模块无法关联试题！请添加模块后重试！')
-    return
-  } else {
-    questionsWarehouseDrawerVisible.value = true
-    linkActiveModuleInfo.value = moduleInfo
-  }
-}
+// 激活的Tab页签模块信息
+const activeModulePane = ref({})
 
 // 处理拖拽关联的试题信息
 const handleDragEndForQuestion = () => {
   console.log(paperQuestionsByModule.value)
+}
+
+// 从Store中获取，控制关联试题-题库Drawer是否显示
+const questionsWarehouse = useQuestionsWarehouseStore()
+const { changeDrawerVisible } = questionsWarehouse
+
+// 处理打开关联试题题库Drawer
+const handleOpenQuestionWarehouseDialog = (moduleInfo: any) => {
+  if (paperModules.value.length === 0) {
+    ElMessage.warning('没有模块无法关联试题！请添加模块后重试！')
+    return
+  } else {
+    activeModulePane.value = moduleInfo
+    changeDrawerVisible()
+  }
 }
 </script>
 
@@ -529,11 +507,6 @@ const handleDragEndForQuestion = () => {
     justify-content: center;
     align-items: end;
 
-    .change-module-btn {
-      width: 150px;
-      border-radius: 5px;
-    }
-
     .module-card-box {
       width: 100%;
       display: grid;
@@ -605,11 +578,6 @@ const handleDragEndForQuestion = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    .paper-link-empty {
-      color: #b2b2b2;
-      font-size: 13px;
-    }
 
     .custom-tabs-label {
       display: flex;
@@ -701,12 +669,5 @@ const handleDragEndForQuestion = () => {
   display: flex;
   align-items: center;
   justify-content: center
-}
-
-.link-questions-warehouse-main {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  color: #5e5e5e;
 }
 </style>
