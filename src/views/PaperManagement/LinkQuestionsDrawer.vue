@@ -101,23 +101,21 @@
                   <div class="list-group-item">
                     <el-icon style="margin: 0 20px" class="handle"><AlignJustify /></el-icon>
                     <el-divider direction="vertical" style="height: 50%;margin: 0" />
-                    <el-image
-                        v-if="element['question_detail']['type'] === 'judge'"
-                        style="width: 18px;margin-left: 10px;"
-                        src="src/images/JudgeIcon.png"
-                        fit="cover"
-                    />
-                    <el-image
-                        v-else
-                        style="width: 18px;margin-left: 10px;"
-                        src="src/images/SelectIcon.png"
-                        fit="cover"
-                    />
+                    <el-tooltip v-if="element['question_detail']['type'] === 'judge'" content="判断题" placement="top">
+                      <el-image style="width: 18px;margin-left: 10px;" src="src/images/JudgeIcon.png" fit="cover"/>
+                    </el-tooltip>
+                    <el-tooltip v-else content="选择题" placement="top">
+                      <el-image style="width: 18px;margin-left: 10px;" src="src/images/SelectIcon.png" fit="cover"/>
+                    </el-tooltip>
                     <span class="item-content-box">{{ index + 1 }}. {{ element['question_detail']['topic'] }}</span>
                     <el-divider direction="vertical"  style="height: 50%;margin: 0" />
                     <div class="item-opt-box">
-                      <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
-                      <el-button link class="item-opt-box-item" :icon="Unlink" type="danger"/>
+                      <el-tooltip content="编辑" placement="top">
+                        <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
+                      </el-tooltip>
+                      <el-tooltip content="取消关联" placement="top">
+                        <el-button link class="item-opt-box-item" :icon="Unlink" type="danger"/>
+                      </el-tooltip>
                     </div>
                   </div>
                 </template>
@@ -136,17 +134,18 @@
         :close-on-click-modal="false"
     >
       <div class="link-questions-warehouse-main">
-        <span style="font-size: 13px">
+        <span style="font-size: 13px;margin-bottom: 10px">
           Tips：您正在为「{{ linkActiveModuleInfo['title'] }}」模块添加试题，勾选试题后提交，进行批量配置
         </span>
+        <div>123</div>
       </div>
       <template #footer>
         <div style="flex: auto">
           <el-button :icon="Ban" @click="questionsWarehouseDrawerVisible = false">
             取 消
           </el-button>
-          <el-button type="primary" :icon="Send" @click="questionsWarehouseDrawerVisible = false">
-            提 交
+          <el-button type="primary" :icon="Link" @click="questionsWarehouseDrawerVisible = false">
+            关 联
           </el-button>
         </div>
       </template>
