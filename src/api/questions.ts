@@ -62,6 +62,12 @@ export class Question {
     const { data } = await axios.delete('/errorArchive', { data: {collector, question_id} })
     return data
   }
+
+  // 获取试题信息（用于试卷关联题库）
+  async getQuestionsWarehouseForPaper(user_id: string): Promise<Result> {
+    const { data } = await axios.get('/questionWarehouse', { params: { user_id } })
+    return data
+  }
 }
 
 export default new Question()
