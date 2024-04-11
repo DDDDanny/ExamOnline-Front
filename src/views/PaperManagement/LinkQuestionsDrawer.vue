@@ -75,7 +75,7 @@
       </el-divider>
       <div class="paper-link-box">
         <el-image v-if="paperModules.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
-        <el-tabs v-else v-model="linkActivePane" style="width: 100%;" >
+        <el-tabs v-else v-model="linkActivePane" style="width: 100%;" @tab-change="getPaperQuestionsByModule">
           <el-tab-pane v-for="(item, index) in paperModules" :name="index">
             <template #label>
               <span class="custom-tabs-label">
@@ -87,10 +87,10 @@
               <div class="link-btn">
                 <el-button type="primary" size="small" :icon="Link" @click="handleOpenLinkQuestionDialog(item)">关 联 试 题</el-button>
               </div>
-              <el-image v-if="paperQuestions.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+              <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
               <draggable
                   v-else
-                  :list="paperQuestions"
+                  :list="paperQuestionsByModule"
                   item-key="name"
                   class="paper-module-questions-list"
                   ghost-class="ghost"
@@ -275,8 +275,8 @@ onBeforeUpdate(() => {
 const paperModules = ref([])
 
 // 获取试卷模块信息
-const getPaperModule = () => {
-  Paper.getPaperModuleApi(props.paperInfo['id']).then(response => {
+const getPaperModule = async () => {
+  await Paper.getPaperModuleApi(props.paperInfo['id']).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
     } else {
@@ -286,17 +286,19 @@ const getPaperModule = () => {
   })
 }
 
-// 试卷关联的试题信息
-const paperQuestions = ref([])
+// 存储模块下试题信息
+const paperQuestionsByModule = ref([])
 
-// 获取试卷关联的试题信息
-const getPaperQuestions = () => {
+// 根据模块获取试卷关联的试题信息
+const getPaperQuestionsByModule = (moduleIndex: number) => {
   Paper.getPaperQuestionsApi(props.paperInfo['id']).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
     } else {
-      paperQuestions.value = response.data
+      paperQuestionsByModule.value = response.data.filter((item: any) =>
+          item['module'] == paperModules.value[moduleIndex]['id']
+      )
     }
   })
 }
@@ -307,9 +309,10 @@ watch(drawerVisible, (newValue) => {
     // 初始化关联用例的默认tab
     linkActivePane.value = 0
     // 获取试卷-模块信息
-    getPaperModule()
-    // 获取试卷-试题信息
-    getPaperQuestions()
+    getPaperModule().then(() => {
+      // 根据模块获取试题信息（初始化）
+      getPaperQuestionsByModule(0)
+    })
   }
 })
 
@@ -389,7 +392,7 @@ const handleSubmitModule = (moduleFormEl: any) => {
       }
       moduleDialogVisible.value = false
       ElMessage.success(optType.value === 'C' ? '新增模块成功！' : '编辑模块成功！')
-      getPaperModule()
+      await getPaperModule()
     } catch (error) {
       console.error('An error occurred:', error)
     }
@@ -453,7 +456,7 @@ const handleOpenLinkQuestionDialog = (moduleInfo: any) => {
 
 // 处理拖拽关联的试题信息
 const handleDragEndForQuestion = () => {
-  console.log(paperQuestions.value)
+  console.log(paperQuestionsByModule.value)
 }
 </script>
 
