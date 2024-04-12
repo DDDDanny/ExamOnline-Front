@@ -14,11 +14,11 @@ export const useLinkQuestionStore = defineStore('linkQuestions', () => {
 
 // 试卷关联试题-题库Drawer
 export const useQuestionsWarehouseStore = defineStore('questionWarehouse', () => {
-  const drawerVisible = ref(false)
+  const drawerVisibleQW = ref(false)
 
   function changeDrawerVisible() {
-    drawerVisible.value = !drawerVisible.value
+    drawerVisibleQW.value = !drawerVisibleQW.value
   }
 
-  return { drawerVisible, changeDrawerVisible }
+  return { drawerVisibleQW, changeDrawerVisible }
 })

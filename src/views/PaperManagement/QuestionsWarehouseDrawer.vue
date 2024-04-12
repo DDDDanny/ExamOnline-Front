@@ -2,7 +2,7 @@
   <el-drawer
       :size="700"
       title="题库"
-      v-model="drawerVisible"
+      v-model="drawerVisibleQW"
       destroy-on-close
       :append-to-body="true"
       :close-on-click-modal="false"
@@ -105,7 +105,7 @@ import {useQuestionsWarehouseStore} from "../../stores/DrawerCommonStore.ts";
 
 // 从Store中获取，控制关联试题-题库Drawer是否显示
 const questionWarehouseStore = useQuestionsWarehouseStore()
-const {drawerVisible} = storeToRefs(questionWarehouseStore)
+const {drawerVisibleQW} = storeToRefs(questionWarehouseStore)
 const { changeDrawerVisible } = questionWarehouseStore
 
 const props = defineProps({
@@ -137,7 +137,7 @@ const getQuestionsWarehouse = () => {
 }
 
 // 监听drawerVisible，当drawerVisible为true时，获取其他数据
-watch(drawerVisible, (newValue) => {
+watch(drawerVisibleQW, (newValue) => {
   if (newValue) {
     getQuestionsWarehouse()
   }

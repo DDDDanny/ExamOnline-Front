@@ -449,6 +449,7 @@ const handleCancelLink = (questionInfo: any) => {
 // 从Store中获取，控制关联试题-题库Drawer是否显示
 const questionsWarehouse = useQuestionsWarehouseStore()
 const { changeDrawerVisible } = questionsWarehouse
+const { drawerVisibleQW } = storeToRefs(questionsWarehouse)
 
 // 处理打开关联试题题库Drawer
 const handleOpenQuestionWarehouseDialog = (moduleInfo: any) => {
