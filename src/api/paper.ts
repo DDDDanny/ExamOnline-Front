@@ -83,9 +83,15 @@ export class Paper {
     return data
   }
 
-  // 取消关联试卷试题信息
+  // 取消关联试卷试题信息接口
   async deletePaperQuestionApi(id: string): Promise<Result> {
     const { data } = await axios.delete('/paperQuestion/' + id)
+    return data
+  }
+
+  // 关联试题接口
+  async linkQuestions(questions_info: []): Promise<Result> {
+    const { data } = await axios.post('/paperQuestion', { questions_info })
     return data
   }
 }
