@@ -114,7 +114,7 @@
                         <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
                       </el-tooltip>
                       <el-tooltip content="取消关联" placement="top">
-                        <el-button link class="item-opt-box-item" :icon="Unlink" type="danger"/>
+                        <el-button link class="item-opt-box-item" :icon="Unlink" type="danger" @click="handleCancelLink(element)"/>
                       </el-tooltip>
                     </div>
                   </div>
@@ -419,6 +419,31 @@ const activeModulePane = ref({})
 // 处理拖拽关联的试题信息
 const handleDragEndForQuestion = () => {
   console.log(paperQuestionsByModule.value)
+}
+
+// 处理取消关联
+const handleCancelLink = (questionInfo: any) => {
+  ElMessageBox.confirm(
+      '您确定要取消关联吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    const { id } = questionInfo
+    Paper.deletePaperQuestionApi(id).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('取消关联成功！')
+      // 刷新激活模块的试题数据
+      getPaperQuestionsByModule(linkActivePane.value)
+    })
+  })
 }
 
 // 从Store中获取，控制关联试题-题库Drawer是否显示
