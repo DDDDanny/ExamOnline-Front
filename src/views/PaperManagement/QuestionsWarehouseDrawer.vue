@@ -60,17 +60,18 @@
         <el-button link type="primary" :icon="RefreshCcw" @click="handleRefreshSumMarks"/>
       </div>
       <el-divider/>
-      <div class="link-questions-item" v-for="(item, index) in selectedQuestionsRef">
-        <div style="color: #5e5e5e;margin-bottom: 10px;">
-          <el-tag style="margin-right: 10px" :icon="Bookmark">
-            <el-icon><Tag /></el-icon>
-            {{ item['type'] === 'select' ? '选择题' : '判断题' }}
-          </el-tag>
-          <span style="line-height: 30px;">{{ index + 1 }}. {{ item['topic'] }}</span>
-          <el-form :model="formData" ref="formRef" style="margin-top: 20px">
+      <el-form :model="formData" ref="formRef">
+        <div class="link-questions-item" v-for="(item, index) in selectedQuestionsRef">
+          <div style="color: #5e5e5e;margin-bottom: 10px;">
+            <el-tag style="margin-right: 10px" :icon="Bookmark">
+              <el-icon><Tag /></el-icon>
+              {{ item['type'] === 'select' ? '选择题' : '判断题' }}
+            </el-tag>
+            <span style="line-height: 30px;">{{ index + 1 }}. {{ item['topic'] }}</span>
             <el-form-item
                 required
                 label="试题分数"
+                style="margin-top: 20px"
                 :prop="item['id']"
                 :rules="[{ required: true, message: '请输入分数', trigger: 'blur' }]"
             >
@@ -78,15 +79,15 @@
                 <template #append>分</template>
               </el-input>
             </el-form-item>
-          </el-form>
+          </div>
+          <el-divider v-if="index !== selectedQuestionsRef.length - 1" style="margin-top: 5px"/>
         </div>
-        <el-divider v-if="index !== selectedQuestionsRef.length - 1" style="margin-top: 5px"/>
-      </div>
+      </el-form>
     </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="linkQuestionsDialogVisible = false" :icon="Ban">取 消</el-button>
-        <el-button type="primary" @click="linkQuestionsDialogVisible = false" :icon="Send">提 交</el-button>
+        <el-button type="primary" @click="handleSubmitLink(formRef)" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -95,7 +96,7 @@
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import {storeToRefs} from "pinia";
-import {Questions} from '../../api';
+import {Questions, Paper} from '../../api';
 import {ElMessage, ElTable} from "element-plus";
 import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
@@ -191,6 +192,36 @@ const handleRefreshSumMarks = () => {
     }
   }
   ElMessage.success('刷新成功！已计算最新总分！')
+}
+
+// 处理提交试题关联信息
+const handleSubmitLink = (formEl: any) => {
+  formEl.validate((result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请填写完整的关联信息后重新提交！')
+      return
+    }
+    const linkData = formData.value
+    const requestData = []
+    for (const key in linkData) {
+      requestData.push({
+        paper_id: props.module['paper_id'],
+        question_id: key,
+        marks: parseFloat(linkData[key]),
+        module: props.module['id']
+      })
+    }
+    Paper.linkQuestions(requestData).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('关联试题成功！')
+        handleCloseLinkQuestionsDialog()
+        changeDrawerVisible()
+      }
+    })
+  })
 }
 </script>
 
