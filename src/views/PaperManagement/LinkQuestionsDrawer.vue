@@ -461,6 +461,13 @@ const handleOpenQuestionWarehouseDialog = (moduleInfo: any) => {
     changeDrawerVisible()
   }
 }
+
+watch(drawerVisibleQW, (newValue) => {
+  // 监听关联试题Drawer状态，当关闭时，刷新已绑定试题列表
+  if (!newValue) {
+    getPaperQuestionsByModule(linkActivePane.value)
+  }
+})
 </script>
 
 <style scoped lang="scss">
