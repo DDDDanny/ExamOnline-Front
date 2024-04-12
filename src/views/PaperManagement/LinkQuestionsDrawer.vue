@@ -443,7 +443,7 @@ const handleCancelLink = (questionInfo: any) => {
       // 刷新激活模块的试题数据
       getPaperQuestionsByModule(linkActivePane.value)
     })
-  })
+  }).catch(() => {})
 }
 
 // 从Store中获取，控制关联试题-题库Drawer是否显示
