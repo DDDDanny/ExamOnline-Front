@@ -82,6 +82,12 @@ export class Paper {
     const { data } = await axios.get('/paperQuestion/' + paperId)
     return data
   }
+
+  // 取消关联试卷试题信息
+  async deletePaperQuestionApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/paperQuestion/' + id)
+    return data
+  }
 }
 
 export default new Paper()
