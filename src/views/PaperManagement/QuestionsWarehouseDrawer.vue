@@ -12,6 +12,7 @@
         Tips：您正在为「 {{ props.module['title'] }} 」模块添加试题，勾选试题后提交，进行批量配置
       </span>
       <el-table
+          ref="multipleTableRef"
           border
           stripe
           size="small"
@@ -38,7 +39,7 @@
     <template #footer>
       <div style="flex: auto">
         <el-button :icon="Ban" @click="changeDrawerVisible">取 消</el-button>
-        <el-button type="primary" :icon="Link" @click="changeDrawerVisible">关 联</el-button>
+        <el-button type="primary" :icon="Link" @click="handleClickQuestionsLink">关 联</el-button>
       </div>
     </template>
   </el-drawer>
@@ -49,7 +50,7 @@ import { watch, ref } from "vue";
 import {storeToRefs} from "pinia";
 import {Ban, Link} from "lucide-vue-next";
 import {Questions} from '../../api';
-import {ElMessage} from "element-plus";
+import {ElMessage, ElTable} from "element-plus";
 import { getCookie } from "../../utils/cookie.ts";
 import {useQuestionsWarehouseStore} from "../../stores/DrawerCommonStore.ts";
 
@@ -92,6 +93,16 @@ watch(drawerVisible, (newValue) => {
     getQuestionsWarehouse()
   }
 })
+
+// 表格多选Ref
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+
+// 处理点击试题关联
+const handleClickQuestionsLink = () => {
+  const selectedQuestions = multipleTableRef.value.getSelectionRows()
+  console.log(selectedQuestions)
+  changeDrawerVisible()
+}
 </script>
 
 
