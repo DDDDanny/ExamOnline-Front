@@ -43,12 +43,31 @@
       </div>
     </template>
   </el-drawer>
+  <el-dialog
+      width="800"
+      title="试题关联"
+      draggable
+      append-to-body
+      destroy-on-close
+      v-model="linkQuestionsDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handleCloseLinkQuestionsDialog"
+  >
+    <div>123</div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="linkQuestionsDialogVisible = false" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="linkQuestionsDialogVisible = false" :icon="Send">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import {storeToRefs} from "pinia";
-import {Ban, Link} from "lucide-vue-next";
+import {Ban, Link, Send} from "lucide-vue-next";
 import {Questions} from '../../api';
 import {ElMessage, ElTable} from "element-plus";
 import { getCookie } from "../../utils/cookie.ts";
@@ -97,11 +116,23 @@ watch(drawerVisible, (newValue) => {
 // 表格多选Ref
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 
+// 控制填写关联试题信息Dialog是否可见
+const linkQuestionsDialogVisible = ref(false)
+
 // 处理点击试题关联
 const handleClickQuestionsLink = () => {
-  const selectedQuestions = multipleTableRef.value.getSelectionRows()
-  console.log(selectedQuestions)
-  changeDrawerVisible()
+  // 获取被选中的题目
+  const selectedQuestions: [] = multipleTableRef.value.getSelectionRows()
+  if (selectedQuestions.length === 0) {
+    ElMessage.warning('未选择试题，无法进行关联！')
+  } else {
+    linkQuestionsDialogVisible.value = true
+  }
+}
+
+// 处理关闭填写关联试题的相关信息
+const handleCloseLinkQuestionsDialog = () => {
+  linkQuestionsDialogVisible.value = false
 }
 </script>
 
