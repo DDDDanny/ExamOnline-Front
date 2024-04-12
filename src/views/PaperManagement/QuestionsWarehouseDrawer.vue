@@ -44,7 +44,7 @@
     </template>
   </el-drawer>
   <el-dialog
-      width="800"
+      width="700"
       title="试题关联"
       draggable
       append-to-body
@@ -54,7 +54,35 @@
       :close-on-press-escape="false"
       @close="handleCloseLinkQuestionsDialog"
   >
-    <div>123</div>
+    <div class="link-questions-dialog-main">
+      <div style="width: 100%;display: flex;align-items: center;">
+        <span style="margin-right: 10px">所选试题总分：{{ sumMarks }} 分</span>
+        <el-button link type="primary" :icon="RefreshCcw" @click="handleRefreshSumMarks"/>
+      </div>
+      <el-divider/>
+      <div class="link-questions-item" v-for="(item, index) in selectedQuestionsRef">
+        <div style="color: #5e5e5e;margin-bottom: 10px;">
+          <el-tag style="margin-right: 10px" :icon="Bookmark">
+            <el-icon><Tag /></el-icon>
+            {{ item['type'] === 'select' ? '选择题' : '判断题' }}
+          </el-tag>
+          <span style="line-height: 30px;">{{ index + 1 }}. {{ item['topic'] }}</span>
+          <el-form :model="formData" ref="formRef" style="margin-top: 20px">
+            <el-form-item
+                required
+                label="试题分数"
+                :prop="item['id']"
+                :rules="[{ required: true, message: '请输入分数', trigger: 'blur' }]"
+            >
+              <el-input v-model="formData[item['id']]" placeholder="请输入试题分数" clearable>
+                <template #append>分</template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <el-divider v-if="index !== selectedQuestionsRef.length - 1" style="margin-top: 5px"/>
+      </div>
+    </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="linkQuestionsDialogVisible = false" :icon="Ban">取 消</el-button>
@@ -67,10 +95,11 @@
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import {storeToRefs} from "pinia";
-import {Ban, Link, Send} from "lucide-vue-next";
 import {Questions} from '../../api';
 import {ElMessage, ElTable} from "element-plus";
+import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
+import {Ban, Bookmark, Link, Send, Tag, RefreshCcw} from "lucide-vue-next";
 import {useQuestionsWarehouseStore} from "../../stores/DrawerCommonStore.ts";
 
 // 从Store中获取，控制关联试题-题库Drawer是否显示
@@ -119,6 +148,9 @@ const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 // 控制填写关联试题信息Dialog是否可见
 const linkQuestionsDialogVisible = ref(false)
 
+// 存储被选中的试题信息
+const selectedQuestionsRef = ref([])
+
 // 处理点击试题关联
 const handleClickQuestionsLink = () => {
   // 获取被选中的题目
@@ -127,15 +159,40 @@ const handleClickQuestionsLink = () => {
     ElMessage.warning('未选择试题，无法进行关联！')
   } else {
     linkQuestionsDialogVisible.value = true
+    selectedQuestionsRef.value = selectedQuestions
+    // 初始化表单数据
+    const tempData = {}
+    for (const selectedQuestion of selectedQuestions) {
+      tempData[selectedQuestion['id']] = 0
+    }
+    formData.value = tempData
   }
 }
 
 // 处理关闭填写关联试题的相关信息
 const handleCloseLinkQuestionsDialog = () => {
   linkQuestionsDialogVisible.value = false
+  // 关闭Dialog后，初始化总分
+  sumMarks.value = 0
+}
+
+// 新增试卷表单的Ref
+const formRef = ref<FormInstance>()
+// 关联试题 FormData
+const formData = ref({})
+// 记录关联试题时的总分
+const sumMarks = ref(0)
+// 处理刷新总分
+const handleRefreshSumMarks = () => {
+  sumMarks.value = 0
+  for (const key in formData.value) {
+    if (formData.value[key] !== '') {
+      sumMarks.value += parseFloat(formData.value[key])
+    }
+  }
+  ElMessage.success('刷新成功！已计算最新总分！')
 }
 </script>
-
 
 <style scoped lang="scss">
 .link-questions-warehouse-main {
@@ -147,5 +204,15 @@ const handleCloseLinkQuestionsDialog = () => {
 :deep(.table-header-row-style) {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
+}
+.link-questions-dialog-main {
+  display: flex;
+  flex-direction: column;
+  .link-questions-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 </style>
