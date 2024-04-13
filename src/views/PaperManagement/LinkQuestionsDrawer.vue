@@ -272,6 +272,12 @@ const getPaperQuestionsByModule = (moduleIndex: number) => {
       ElMessage.error(response.msg)
       return
     } else {
+      // 重新计算关联后的分数总和
+      actual_total.value = 0
+      for (const item of response.data) {
+        actual_total.value += item['marks']
+      }
+      // 筛选出激活模块下关联的试题信息
       paperQuestionsByModule.value = response.data.filter((item: any) =>
           item['module'] == paperModules.value[moduleIndex]['id']
       )
