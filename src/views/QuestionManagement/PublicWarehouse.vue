@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="public-main-box">
-      <el-tabs v-model="activeTab" class="demo-tabs" @tab-change="handleTableChange">
+      <el-tabs v-model="activeTab" @tab-change="handleTableChange">
         <el-tab-pane name="public">
           <template #label>
             <el-icon size="15" style="margin-right: 5px">
