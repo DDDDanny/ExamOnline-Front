@@ -715,4 +715,13 @@ watch(drawerVisibleQW, (newValue) => {
   align-items: center;
   justify-content: center
 }
+
+:deep(.el-tabs__item) {
+  font-size: 13px;
+  color: #5e5e5e;
+}
+
+:deep(.is-active) {
+  color: #409eff;
+}
 </style>
