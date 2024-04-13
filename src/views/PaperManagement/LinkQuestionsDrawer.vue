@@ -101,13 +101,19 @@
                   <div class="list-group-item">
                     <el-icon style="margin: 0 20px" class="handle"><AlignJustify /></el-icon>
                     <el-divider direction="vertical" style="height: 50%;margin: 0" />
-                    <el-tooltip v-if="element['question_detail']['type'] === 'judge'" content="判断题" placement="top">
-                      <el-image style="width: 18px;margin-left: 10px;" src="src/images/JudgeIcon.png" fit="cover"/>
-                    </el-tooltip>
-                    <el-tooltip v-else content="选择题" placement="top">
-                      <el-image style="width: 18px;margin-left: 10px;" src="src/images/SelectIcon.png" fit="cover"/>
-                    </el-tooltip>
+                    <div style="width:40px; display: flex;justify-content: center">
+                      <el-tooltip v-if="element['question_detail']['type'] === 'judge'" content="判断题" placement="top">
+                        <el-image style="width: 18px;" src="src/images/JudgeIcon.png" fit="cover"/>
+                      </el-tooltip>
+                      <el-tooltip v-else content="选择题" placement="top">
+                        <el-image style="width: 18px;" src="src/images/SelectIcon.png" fit="cover"/>
+                      </el-tooltip>
+                    </div>
                     <span class="item-content-box">{{ index + 1 }}. {{ element['question_detail']['topic'] }}</span>
+                    <el-divider direction="vertical"  style="height: 50%;margin: 0" />
+                    <div style="width: 70px;display: flex;justify-content: center">
+                      <span>{{ element['marks'] }} 分</span>
+                    </div>
                     <el-divider direction="vertical"  style="height: 50%;margin: 0" />
                     <div class="item-opt-box">
                       <el-tooltip content="编辑" placement="top">
@@ -655,7 +661,7 @@ watch(drawerVisibleQW, (newValue) => {
           box-shadow: #cccccc 0 0 5px;
           align-items: center;
           color: #5e5e5e;
-          font-size: 14px;
+          font-size: 13px;
 
           .handle {
             &:hover {
@@ -665,7 +671,7 @@ watch(drawerVisibleQW, (newValue) => {
 
           .item-content-box {
             width: 505px;
-            margin: 0 20px;
+            margin: 0 10px;
             white-space: nowrap; /* 防止文字换行 */
             overflow: hidden; /* 隐藏溢出的内容 */
             text-overflow: ellipsis; /* 使用省略号表示溢出的文本 */
