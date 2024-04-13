@@ -36,7 +36,7 @@
       </el-divider>
       <div class="paper-module-box">
         <el-button
-            v-if="paperModules.length !== 0"
+            v-if="paperModules.length !== 0 && !props.paperInfo['is_published']"
             type="primary"
             size="small"
             :icon="Repeat"
@@ -45,18 +45,22 @@
           变 更 模 块
         </el-button>
         <div class="module-card-box">
-          <div class="module-card-item" v-for="item in paperModules">
-            <span class="del-module-icon" @click="handleDeleteModule(item)">
+          <div class="module-card-item" v-for="(item, index) in paperModules">
+            <span v-if="!props.paperInfo['is_published']" class="del-module-icon" @click="handleDeleteModule(item)">
               <el-icon><X class="x-animation"/></el-icon>
             </span>
             <span class="module-number" style="left: 8px;top: 8px;">
               <el-image style="width: 15px; " src="src/images/Number.png" fit="cover" />
-              <span style="margin-left: 3px">{{ item['sequence_number'] }}</span>
+              <span style="margin-left: 3px">{{ index + 1 }}</span>
             </span>
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
             <span>{{ item['description'] }}</span>
           </div>
-          <div class="add-module-card" v-if="paperModules.length < 4" @click="handleOpenModuleDialog('C')">
+          <div
+              v-if="paperModules.length < 4 && !props.paperInfo['is_published']"
+              class="add-module-card"
+              @click="handleOpenModuleDialog('C')"
+          >
             <el-icon size="16" style="margin-bottom: 5px">
               <PackagePlus/>
             </el-icon>
@@ -84,7 +88,7 @@
               </span>
             </template>
             <div class="module-link-pane-main">
-              <div class="link-btn">
+              <div class="link-btn" v-if="!props.paperInfo['is_published']">
                 <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">关 联 试 题</el-button>
               </div>
               <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
@@ -114,8 +118,8 @@
                     <div style="width: 70px;display: flex;justify-content: center">
                       <span>{{ element['marks'] }} 分</span>
                     </div>
-                    <el-divider direction="vertical"  style="height: 50%;margin: 0" />
-                    <div class="item-opt-box">
+                    <el-divider direction="vertical"  style="height: 50%;margin: 0"  v-if="!props.paperInfo['is_published']" />
+                    <div class="item-opt-box" v-if="!props.paperInfo['is_published']">
                       <el-tooltip content="编辑" placement="top">
                         <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
                       </el-tooltip>
