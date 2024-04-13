@@ -246,8 +246,8 @@ onBeforeUpdate(() => {
   paperBaseInfo.value = [
     {key: '试卷标题：', value: props.paperInfo['title']},
     {key: '试卷描述：', value: props.paperInfo['description']},
-    {key: '答题建议时长：', value: props.paperInfo['duration_minutes']},
-    {key: '计划总分：', value: props.paperInfo['total_marks']},
+    {key: '答题建议时长：', value: props.paperInfo['duration_minutes']  + ' 分钟'},
+    {key: '计划总分：', value: props.paperInfo['total_marks'] + ' 分'},
   ]
   // 初始化实际分数
   actual_total.value = props.paperInfo['actual_total']
