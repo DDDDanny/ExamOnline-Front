@@ -94,6 +94,12 @@ export class Paper {
     const { data } = await axios.post('/paperQuestion', { questions_info })
     return data
   }
+
+  // 关联试题排序接口
+  async linkQuestionsSortApi(link_questions: []): Promise<Result> {
+    const { data } = await axios.put('/paperQuestionsSort', { link_questions })
+    return data
+  }
 }
 
 export default new Paper()
