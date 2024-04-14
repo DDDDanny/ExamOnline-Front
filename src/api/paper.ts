@@ -90,7 +90,7 @@ export class Paper {
   }
 
   // 关联试题接口
-  async linkQuestions(questions_info: []): Promise<Result> {
+  async linkQuestionsApi(questions_info: []): Promise<Result> {
     const { data } = await axios.post('/paperQuestion', { questions_info })
     return data
   }

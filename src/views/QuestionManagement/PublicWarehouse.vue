@@ -453,7 +453,7 @@ const getFavoriteData = () => {
 }
 
 // 处理分页时当前页的变更事件（我的收藏页签）
-const handleCollectCurrentChange = (val) => {
+const handleCollectCurrentChange = (val: any) => {
   collectCurrentPage.value = val
   getFavoriteData()
 }

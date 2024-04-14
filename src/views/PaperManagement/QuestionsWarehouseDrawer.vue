@@ -123,8 +123,8 @@ const getQuestionsWarehouse = () => {
       ElMessage.error(response.msg)
       return
     } else {
-      const tempData = []
-      response.data.map(item => {
+      const tempData: any = []
+      response.data.map((item: any) => {
         tempData.push({
           id: item['id'],
           topic: item['topic'],
@@ -144,7 +144,7 @@ watch(drawerVisibleQW, (newValue) => {
 })
 
 // 表格多选Ref
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+const multipleTableRef: any = ref<InstanceType<typeof ElTable>>()
 
 // 控制填写关联试题信息Dialog是否可见
 const linkQuestionsDialogVisible = ref(false)
@@ -162,7 +162,7 @@ const handleClickQuestionsLink = () => {
     linkQuestionsDialogVisible.value = true
     selectedQuestionsRef.value = selectedQuestions
     // 初始化表单数据
-    const tempData = {}
+    const tempData: any = {}
     for (const selectedQuestion of selectedQuestions) {
       tempData[selectedQuestion['id']] = 0
     }
@@ -180,7 +180,7 @@ const handleCloseLinkQuestionsDialog = () => {
 // 新增试卷表单的Ref
 const formRef = ref<FormInstance>()
 // 关联试题 FormData
-const formData = ref({})
+const formData: any = ref({})
 // 记录关联试题时的总分
 const sumMarks = ref(0)
 // 处理刷新总分
@@ -201,8 +201,8 @@ const handleSubmitLink = (formEl: any) => {
       ElMessage.warning('请填写完整的关联信息后重新提交！')
       return
     }
-    const linkData = formData.value
-    const requestData = []
+    const linkData: any = formData.value
+    const requestData: any = []
     for (const key in linkData) {
       requestData.push({
         paper_id: props.module['paper_id'],
@@ -211,7 +211,7 @@ const handleSubmitLink = (formEl: any) => {
         module: props.module['id']
       })
     }
-    Paper.linkQuestions(requestData).then(response => {
+    Paper.linkQuestionsApi(requestData).then(response => {
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
