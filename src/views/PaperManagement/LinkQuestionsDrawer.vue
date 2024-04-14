@@ -103,7 +103,7 @@
               >
                 <template #item="{ element, index }">
                   <div class="list-group-item">
-                    <el-icon style="margin: 0 20px" class="handle"><AlignJustify /></el-icon>
+                    <el-icon style="margin: 0 20px" :class="props.paperInfo['is_published'] ? '' : 'handle'"><AlignJustify /></el-icon>
                     <el-divider direction="vertical" style="height: 50%;margin: 0" />
                     <div style="width:40px; display: flex;justify-content: center">
                       <el-tooltip v-if="element['question_detail']['type'] === 'judge'" content="判断题" placement="top">
