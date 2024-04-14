@@ -434,7 +434,26 @@ const activeModulePane = ref({})
 
 // 处理拖拽关联的试题信息
 const handleDragEndForQuestion = () => {
-  console.log(paperQuestionsByModule.value)
+  const linkQuestions: any = []
+  // 重构关联的试题数据
+  for (let [index, value] of paperQuestionsByModule.value.entries()) {
+    linkQuestions.push({
+      id: value['id'],
+      index: index + 1
+    })
+  }
+  // 更新关联的试题顺序
+  Paper.linkQuestionsSortApi(linkQuestions).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      ElMessage.success('试题重新排序成功')
+      // 刷新激活模块的试题数据
+      getPaperQuestionsByModule(linkActivePane.value)
+    }
+  })
+
 }
 
 // 处理取消关联
