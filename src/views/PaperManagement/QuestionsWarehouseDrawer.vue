@@ -109,7 +109,8 @@ const {drawerVisibleQW} = storeToRefs(questionWarehouseStore)
 const { changeDrawerVisible } = questionWarehouseStore
 
 const props = defineProps({
-  module: { type: Object, required: true }
+  module: { type: Object, required: true },
+  linkQuestions: { type: Array, required: true },
 })
 
 // 获取登录用户ID
@@ -123,13 +124,21 @@ const getQuestionsWarehouse = () => {
       ElMessage.error(response.msg)
       return
     } else {
+      // 用于待选试题列表去重操作
+      const linkedQuestionsIds: any = []
+      props.linkQuestions.map((item: any) => {
+        linkedQuestionsIds.push(item['question_id'])
+      })
       const tempData: any = []
       response.data.map((item: any) => {
-        tempData.push({
-          id: item['id'],
-          topic: item['topic'],
-          type: item['type']
-        })
+        // 进行去重操作
+        if (!linkedQuestionsIds.includes(item['id'])) {
+          tempData.push({
+            id: item['id'],
+            topic: item['topic'],
+            type: item['type']
+          })
+        }
       })
       tableData.value = tempData
     }

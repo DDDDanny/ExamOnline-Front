@@ -135,7 +135,7 @@
         </el-tabs>
       </div>
     </div>
-    <questions-warehouse-drawer :module="activeModulePane"/>
+    <questions-warehouse-drawer :module="activeModulePane" :link-questions="paperQuestionsByModule"/>
   </el-drawer>
   <el-dialog
       width="800"
