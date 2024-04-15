@@ -100,6 +100,12 @@ export class Paper {
     const { data } = await axios.put('/paperQuestionsSort', { link_questions })
     return data
   }
+
+  // 编辑已关联的试题接口
+  async editPaperQuestionApi(question_info: any): Promise<Result> {
+    const { data } = await axios.put('/paperQuestion/' + question_info['id'], { ...question_info })
+    return data
+  }
 }
 
 export default new Paper()
