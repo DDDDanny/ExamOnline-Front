@@ -121,7 +121,7 @@
                     <el-divider direction="vertical"  style="height: 50%;margin: 0"  v-if="!props.paperInfo['is_published']" />
                     <div class="item-opt-box" v-if="!props.paperInfo['is_published']">
                       <el-tooltip content="编辑" placement="top">
-                        <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary"/>
+                        <el-button link class="item-opt-box-item" :icon="PencilLine" type="primary" @click="handleOpenEditQuestionDialog(element)"/>
                       </el-tooltip>
                       <el-tooltip content="取消关联" placement="top">
                         <el-button link class="item-opt-box-item" :icon="Unlink" type="danger" @click="handleCancelLink(element)"/>
@@ -209,6 +209,30 @@
     <div v-else class="module-change-empty">
       <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
     </div>
+  </el-dialog>
+  <el-dialog
+      width="600"
+      title="编辑试题分数"
+      draggable
+      destroy-on-close
+      v-model="editQuestionDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="editQuestionDialogVisible = false"
+  >
+    <el-form :model="editQuestionFormData" ref="editQuestionFormRef">
+      <el-form-item label="试题分数" :label-width="formLabelWidth" prop="marks" required>
+        <el-input v-model="editQuestionFormData.marks" placeholder="请输入试题分数" clearable>
+          <template #append>分</template>
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="editQuestionDialogVisible = false" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="handleSubmitEditQuestion(editQuestionFormRef)" :icon="Send">提 交</el-button>
+      </div>
+    </template>
   </el-dialog>
 </template>
 
@@ -503,6 +527,38 @@ watch(drawerVisibleQW, (newValue) => {
     getPaperQuestionsByModule(linkActivePane.value)
   }
 })
+
+const editQuestionDialogVisible = ref(false)
+// 编辑试题信息Ref
+const editQuestionFormRef = ref<FormInstance>()
+// 编辑试题信息FormData
+const editQuestionFormData: any = ref({})
+// 处理打开编辑试题Dialog
+const handleOpenEditQuestionDialog = (questionInfo: any) => {
+  editQuestionFormData.value = questionInfo
+  editQuestionDialogVisible.value = true
+}
+// 处理提交编辑后的试题信息
+const handleSubmitEditQuestion = (formEl: any) => {
+  formEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的模块信息后重新提交！')
+      return
+    }
+    const requestData = editQuestionFormData.value
+    Paper.editPaperQuestionApi(requestData).then(response =>{
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('试题信息编辑成功！')
+        getPaperQuestionsByModule(linkActivePane.value)
+        editQuestionDialogVisible.value = false
+      }
+    })
+
+  })
+}
 </script>
 
 <style scoped lang="scss">
