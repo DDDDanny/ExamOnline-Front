@@ -477,7 +477,6 @@ const handleDragEndForQuestion = () => {
       getPaperQuestionsByModule(linkActivePane.value)
     }
   })
-
 }
 
 // 处理取消关联
@@ -556,7 +555,6 @@ const handleSubmitEditQuestion = (formEl: any) => {
         editQuestionDialogVisible.value = false
       }
     })
-
   })
 }
 </script>
