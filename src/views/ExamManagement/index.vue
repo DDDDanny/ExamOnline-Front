@@ -94,7 +94,9 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
+import { Exam } from "../../api"
+import {ElMessage} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import {
   BookOpenCheck, Check, Navigation, NavigationOff,
@@ -125,6 +127,24 @@ const tablePageTotal = ref(0)
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
 }
+
+// 获取考试表格数据
+const getExamsTableData = () => {
+  Exam.getExamsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      tableData.value = response.data.data
+      tablePageTotal.value = response.data.total
+    }
+  })
+}
+
+onMounted(() => {
+  currentPage.value = 1
+  getExamsTableData()
+})
 </script>
 
 <style scoped lang="scss">
