@@ -64,12 +64,12 @@
       <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
       <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
       <el-table-column :resizable="false"/>
-      <el-table-column fixed="right" label="操 作" align="center" width="300" :resizable="false">
+      <el-table-column fixed="right" label="操 作" align="center" width="250" :resizable="false">
         <template #default="scope">
-          <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
-          <el-divider direction="vertical"/>
-          <el-button link v-if="scope['row']['is_published']" size="small" type="danger" :icon="NavigationOff">取消</el-button>
+          <el-button link v-if="scope['row']['is_published']" size="small" type="info" :icon="NavigationOff">取消</el-button>
           <el-button link v-else size="small" type="success" :icon="Navigation">发布</el-button>
+          <el-divider direction="vertical"/>
+          <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
           <el-divider direction="vertical"/>
           <el-button link v-if="!scope['row']['is_published']" size="small" type="danger" :icon="Trash2">删除</el-button>
         </template>
