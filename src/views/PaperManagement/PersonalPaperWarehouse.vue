@@ -316,14 +316,27 @@ const handlePublishPaper = (id: string) => {
 
 // 处理取消发布试卷
 const handleCancelPublishPaper = (id: string) => {
-  Paper.paperCancelPublishApi(id).then(response => {
-    if (response.code !== 200) {
-      ElMessage.error(response.msg)
-      return
-    } else {
-      ElMessage.success('取消发布成功！')
-      getPaperTableData()
-    }
+  ElMessageBox.confirm(
+      '您确定要取消发布吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    Paper.paperCancelPublishApi(id).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('取消发布成功！')
+        getPaperTableData()
+      }
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
   })
 }
 
