@@ -40,6 +40,11 @@
       <el-table-column fixed type="index" align="center" width="60" label="序号"/>
       <el-table-column fixed prop="title" label="考试标题" align="center" width="240"/>
       <el-table-column prop="description" label="描述" align="center" width="240"/>
+      <el-table-column label="试卷标题" align="center" width="240">
+        <template #default="scope">
+          <el-button link size="small" type="primary">{{ scope['row']['paper_info']['title'] }}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column prop="pass_mark" label="及格分数" align="center" width="80"/>
       <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
       <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
