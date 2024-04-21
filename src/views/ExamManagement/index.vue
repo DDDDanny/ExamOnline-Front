@@ -18,7 +18,8 @@
       </el-select>
     </div>
     <div class="module-query-item-btn">
-      <el-button type="primary"><Search class="common-btn-icon-style"/>查 询</el-button>
+      <el-button type="primary" @click="handleQueryExams">
+        <Search class="common-btn-icon-style"/>查 询</el-button>
     </div>
   </div>
   <div class="common-module-opts-box">
@@ -144,6 +145,11 @@ const getExamsTableData = () => {
       tablePageTotal.value = response.data.total
     }
   })
+}
+
+// 处理查询考试信息
+const handleQueryExams = () => {
+  getExamsTableData()
 }
 
 onMounted(() => {
