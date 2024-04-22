@@ -457,7 +457,7 @@ const handleCopy = (paperInfo: any) => {
       getPaperTableData()
     })
   }).catch(() => {
-    ElMessage.info('取消删除')
+    ElMessage.info('取消复制')
   })
 }
 
