@@ -77,7 +77,16 @@
           <el-divider direction="vertical"/>
           <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
           <el-divider direction="vertical"/>
-          <el-button link v-if="!scope['row']['is_published']" size="small" type="danger" :icon="Trash2">删除</el-button>
+          <el-button
+              link
+              v-if="!scope['row']['is_published']"
+              size="small"
+              type="danger"
+              :icon="Trash2"
+              @click="handleDelete(scope['row']['id'])"
+          >
+            删除
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -102,7 +111,7 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import { Exam } from "../../api"
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import {
   BookOpenCheck, Check, Navigation, NavigationOff,
@@ -156,6 +165,32 @@ onMounted(() => {
   currentPage.value = 1
   getExamsTableData()
 })
+
+// 处理删除考试逻辑
+const handleDelete = (rowId: string) => {
+  ElMessageBox.confirm(
+      '您确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    Exam.deleteExamApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('删除成功！')
+        getExamsTableData()
+      }
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
+  })
+}
 </script>
 
 <style scoped lang="scss">
