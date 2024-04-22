@@ -11,6 +11,12 @@ export class Exam {
     return data
   }
 
+  // 发布考试接口
+  async publishExamApi(id: string): Promise<Result> {
+    const { data } = await axios.post('/examPublish/' + id)
+    return data
+  }
+
   // 删除考试信息接口
   async deleteExamApi(id: string): Promise<Result> {
     const { data } = await axios.delete('/exam/' + id)
