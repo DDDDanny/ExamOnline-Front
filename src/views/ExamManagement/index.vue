@@ -40,13 +40,28 @@
     >
       <el-table-column fixed type="index" align="center" width="60" label="序号"/>
       <el-table-column fixed prop="title" label="考试标题" align="center" width="240"/>
-      <el-table-column prop="description" label="描述" align="center" width="240"/>
-      <el-table-column label="试卷标题" align="center" width="240">
+      <el-table-column prop="paper_title" label="试卷标题" align="center" width="240">
         <template #default="scope">
-          <el-button link size="small" type="primary">{{ scope['row']['paper_info']['title'] }}</el-button>
+          <el-button link size="small" type="primary">{{ scope['row']['paper_title'] }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="pass_mark" label="及格分数" align="center" width="80"/>
+      <el-table-column prop="exam_status" label="考试状态" align="center" width="120">
+        <template #default="scope">
+          <el-tag size="small" v-if="scope['row']['exam_status'] === '已结束'" type="success">
+            <el-icon><Flag /></el-icon>
+            已完成
+          </el-tag>
+          <el-tag size="small" v-else-if="scope['row']['exam_status'] === '进行中'" type="primary">
+            <el-icon><Rocket /></el-icon>
+            进行中
+          </el-tag>
+          <el-tag size="small" v-else-if="scope['row']['exam_status'] === '未开始'" type="warning">
+            <el-icon><Ban /></el-icon>
+            未开始
+          </el-tag>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
       <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
       <el-table-column prop="is_published" label="发布状态" align="center" width="120">
@@ -67,8 +82,10 @@
           <span v-else>--</span>
         </template>
       </el-table-column>
+      <el-table-column prop="pass_mark" label="及格分数" align="center" width="80"/>
       <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
       <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
+      <el-table-column prop="remark" label="备注" align="center" width="200"/>
       <el-table-column :resizable="false"/>
       <el-table-column fixed="right" label="操 作" align="center" width="250" :resizable="false">
         <template #default="scope">
@@ -94,7 +111,7 @@
           </el-button>
           <el-divider direction="vertical"/>
           <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
-          <el-divider direction="vertical"/>
+          <el-divider direction="vertical" v-if="!scope['row']['is_published']"/>
           <el-button
               link
               v-if="!scope['row']['is_published']"
@@ -127,13 +144,14 @@
 </template>
 
 <script setup lang="ts">
+import moment from 'moment'
 import {onMounted, reactive, ref} from "vue";
 import { Exam } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import {
   BookOpenCheck, Check, Navigation, NavigationOff,
-  Plus, Search, SquarePen, Trash2, X
+  Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban
 } from "lucide-vue-next";
 
 // 获取登录用户ID
@@ -161,6 +179,27 @@ const handleCurrentChange = (val: number) => {
   currentPage.value = val
 }
 
+const EXAM_STATUS = {
+  ENDED: '已结束',
+  ONGOING: '进行中',
+  NOT_STARTED: '未开始',
+  UNPUBLISHED: '--'
+};
+
+// 获取考试状态
+const getExamStatus = (item: any, currentTime: number, startTime: number, endTime: number) => {
+  if (!item.is_published) {
+    return EXAM_STATUS.UNPUBLISHED;
+  }
+  if (currentTime >= endTime) {
+    return EXAM_STATUS.ENDED;
+  } else if (currentTime < endTime && currentTime >= startTime) {
+    return EXAM_STATUS.ONGOING;
+  } else {
+    return EXAM_STATUS.NOT_STARTED;
+  }
+};
+
 // 获取考试表格数据
 const getExamsTableData = () => {
   Exam.getExamsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
@@ -168,7 +207,31 @@ const getExamsTableData = () => {
       ElMessage.error(response.msg)
       return
     } else {
-      tableData.value = response.data.data
+      const tempData: any = []
+      response.data.data.map((item: any) => {
+        // 计算考试状态
+        let examStatus: string
+        const currentTime = moment().unix()
+        const startTime = moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+        const endTime = moment(item['end_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+        examStatus = getExamStatus(item, currentTime, startTime, endTime)
+        tempData.push({
+          id: item.id,
+          title: item.title,
+          paper_id: item['paper_id'],
+          paper_title: item['paper_info']['title'],
+          exam_status: examStatus,
+          start_time: item['start_time'],
+          end_time: item['end_time'],
+          is_published: item['is_published'],
+          publish_date: item['publish_date'],
+          pass_mark: item['pass_mark'],
+          created_at: item['created_at'],
+          updated_at: item['updated_at'],
+          remark: item['remark'],
+        })
+      })
+      tableData.value = tempData
       tablePageTotal.value = response.data.total
     }
   })
