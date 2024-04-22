@@ -78,6 +78,7 @@
               size="small"
               type="info"
               :icon="NavigationOff"
+              @click="handleCancelPublishExam(scope['row']['id'])"
           >
             取消
           </el-button>
@@ -219,6 +220,32 @@ const handlePublishExam = (rowId: string) => {
       ElMessage.success('发布考试成功！')
       getExamsTableData()
     }
+  })
+}
+
+// 处理取消发布考试逻辑
+const handleCancelPublishExam = (rowId: string) => {
+  ElMessageBox.confirm(
+      '您确定要取消发布吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    Exam.cancelPublishExamApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('取消发布成功！')
+        getExamsTableData()
+      }
+    })
+  }).catch(() => {
+    ElMessage.info('取消操作')
   })
 }
 </script>
