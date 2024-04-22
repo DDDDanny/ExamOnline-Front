@@ -10,6 +10,12 @@ export class Exam {
     })
     return data
   }
+
+  // 删除考试信息接口
+  async deleteExamApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/exam/' + id)
+    return data
+  }
 }
 
 export default new Exam()
