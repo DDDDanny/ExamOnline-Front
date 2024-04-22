@@ -11,9 +11,15 @@ export class Exam {
     return data
   }
 
-  // 发布考试接口
+  // 取消发布考试接口
   async publishExamApi(id: string): Promise<Result> {
     const { data } = await axios.post('/examPublish/' + id)
+    return data
+  }
+
+  // 发布考试接口
+  async cancelPublishExamApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/examPublish/' + id)
     return data
   }
 
