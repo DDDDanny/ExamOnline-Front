@@ -72,8 +72,25 @@
       <el-table-column :resizable="false"/>
       <el-table-column fixed="right" label="操 作" align="center" width="250" :resizable="false">
         <template #default="scope">
-          <el-button link v-if="scope['row']['is_published']" size="small" type="info" :icon="NavigationOff">取消</el-button>
-          <el-button link v-else size="small" type="success" :icon="Navigation">发布</el-button>
+          <el-button
+              link
+              v-if="scope['row']['is_published']"
+              size="small"
+              type="info"
+              :icon="NavigationOff"
+          >
+            取消
+          </el-button>
+          <el-button
+              link
+              v-else
+              size="small"
+              type="success"
+              :icon="Navigation"
+              @click="handlePublishExam(scope['row']['id'])"
+          >
+            发布
+          </el-button>
           <el-divider direction="vertical"/>
           <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
           <el-divider direction="vertical"/>
@@ -189,6 +206,19 @@ const handleDelete = (rowId: string) => {
     })
   }).catch(() => {
     ElMessage.info('取消删除')
+  })
+}
+
+// 处理发布考试信息
+const handlePublishExam = (rowId: string) => {
+  Exam.publishExamApi(rowId).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      ElMessage.success('发布考试成功！')
+      getExamsTableData()
+    }
   })
 }
 </script>
