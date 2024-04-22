@@ -11,6 +11,14 @@
       <el-input v-model="queryInfo.title" placeholder="请输入考试名称" style="width: 220px" clearable/>
     </div>
     <div class="module-query-item">
+      <span class="module-query-item-title">考试状态: </span>
+      <el-select v-model="queryInfo.exam_status" placeholder="请选择考试状态" style="width: 240px" clearable>
+        <el-option key="1" label="进行中" value="进行中"/>
+        <el-option key="2" label="已结束" value="已结束"/>
+        <el-option key="3" label="未开始" value="未开始"/>
+      </el-select>
+    </div>
+    <div class="module-query-item">
       <span class="module-query-item-title">发布类型: </span>
       <el-select v-model="queryInfo.is_published" placeholder="请选择发布类型" style="width: 240px" clearable>
         <el-option key="1" label="已发布" :value="true"/>
@@ -161,6 +169,7 @@ const userId = JSON.parse(getCookie('UserInfo')).userId
 const queryInfo = reactive({
   title: null,
   is_published: null,
+  exam_status: null,
   is_deleted: false,
   created_user: userId,
 })
@@ -231,8 +240,14 @@ const getExamsTableData = () => {
           remark: item['remark'],
         })
       })
-      tableData.value = tempData
-      tablePageTotal.value = response.data.total
+      if (queryInfo.exam_status) {
+        const filterData = tempData.filter((item: any) => item['exam_status'] === queryInfo.exam_status)
+        tableData.value = filterData
+        tablePageTotal.value = filterData.length
+      } else {
+        tableData.value = tempData
+        tablePageTotal.value = response.data.total
+      }
     }
   })
 }
