@@ -95,41 +95,47 @@
       <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
       <el-table-column prop="remark" label="备注" align="center" width="200"/>
       <el-table-column :resizable="false"/>
-      <el-table-column fixed="right" label="操 作" align="center" width="250" :resizable="false">
+      <el-table-column fixed="right" label="操 作" align="center" width="220" :resizable="false">
         <template #default="scope">
-          <el-button
-              link
-              v-if="scope['row']['is_published']"
-              size="small"
-              type="info"
-              :icon="NavigationOff"
-              @click="handleCancelPublishExam(scope['row']['id'])"
-          >
-            取消
-          </el-button>
-          <el-button
-              link
-              v-else
-              size="small"
-              type="success"
-              :icon="Navigation"
-              @click="handlePublishExam(scope['row']['id'])"
-          >
-            发布
-          </el-button>
-          <el-divider direction="vertical"/>
-          <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
-          <el-divider direction="vertical" v-if="!scope['row']['is_published']"/>
-          <el-button
-              link
-              v-if="!scope['row']['is_published']"
-              size="small"
-              type="danger"
-              :icon="Trash2"
-              @click="handleDelete(scope['row']['id'])"
-          >
-            删除
-          </el-button>
+          <div v-if="!scope['row']['is_published']">
+            <el-button
+                link
+                size="small"
+                type="success"
+                :icon="Navigation"
+                @click="handlePublishExam(scope['row']['id'])"
+            >
+              发布
+            </el-button>
+            <el-divider direction="vertical"/>
+            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-divider direction="vertical"/>
+            <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
+              删除
+            </el-button>
+          </div>
+          <div v-else>
+            <el-button
+                link
+                v-if="scope['row']['exam_status'] === EXAM_STATUS.NOT_STARTED"
+                size="small"
+                type="info"
+                :icon="NavigationOff"
+                @click="handleCancelPublishExam(scope['row']['id'])"
+            >
+              取消发布
+            </el-button>
+            <el-button
+                link
+                v-else-if="scope['row']['exam_status'] === EXAM_STATUS.ENDED"
+                size="small"
+                type="primary"
+                :icon="Award"
+            >
+              查看成绩
+            </el-button>
+            <span v-else>--</span>
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -158,7 +164,7 @@ import { Exam } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import {
-  BookOpenCheck, Check, Navigation, NavigationOff,
+  BookOpenCheck, Check, Navigation, NavigationOff, Award,
   Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban
 } from "lucide-vue-next";
 
