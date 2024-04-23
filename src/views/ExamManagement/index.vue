@@ -295,7 +295,7 @@ onMounted(() => {
 // 处理删除考试逻辑
 const handleDelete = (rowId: string) => {
   ElMessageBox.confirm(
-      '您确定要删除吗？',
+      '您确定要删除本场考试吗？',
       '警告',
       {
         confirmButtonText: '确定',
@@ -348,7 +348,7 @@ const handleCancelPublishExam = (rowInfo: any) => {
     return
   }
   ElMessageBox.confirm(
-      '您确定要取消发布吗？',
+      '您确定要取消发布本场考试吗？',
       '警告',
       {
         confirmButtonText: '确定',
