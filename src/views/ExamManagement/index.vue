@@ -104,7 +104,7 @@
                   size="small"
                   type="success"
                   :icon="Navigation"
-                  @click="handlePublishExam(scope['row']['id'])"
+                  @click="handlePublishExam(scope['row'])"
               >
                 发布
               </el-button>
@@ -319,8 +319,15 @@ const handleDelete = (rowId: string) => {
 }
 
 // 处理发布考试信息
-const handlePublishExam = (rowId: string) => {
-  Exam.publishExamApi(rowId).then(response => {
+const handlePublishExam = (rowInfo: any) => {
+  const thirtyMinutesLater = moment().add(30, 'minutes').unix()
+  const startTime = moment(rowInfo['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+  // 发布增加判断：距离考试开始时间小于30分钟，无法发布考试
+  if (thirtyMinutesLater >= startTime) {
+    ElMessage.warning('距离考试开始小于30分钟，无法发布考试！')
+    return
+  }
+  Exam.publishExamApi(rowInfo['id']).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
