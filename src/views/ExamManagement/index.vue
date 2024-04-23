@@ -121,7 +121,7 @@
                 size="small"
                 type="info"
                 :icon="NavigationOff"
-                @click="handleCancelPublishExam(scope['row']['id'])"
+                @click="handleCancelPublishExam(scope['row'])"
             >
               取消发布
             </el-button>
@@ -308,7 +308,14 @@ const handlePublishExam = (rowId: string) => {
 }
 
 // 处理取消发布考试逻辑
-const handleCancelPublishExam = (rowId: string) => {
+const handleCancelPublishExam = (rowInfo: any) => {
+  const twoHoursLater = moment().add(2, 'hours').unix()
+  const startTime = moment(rowInfo['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+  // 取消发布增加判断：距离考试开始时间小于2小时，无法取消发布
+  if (twoHoursLater >= startTime) {
+    ElMessage.warning('距离考试开始小于2小时，无法取消发布！')
+    return
+  }
   ElMessageBox.confirm(
       '您确定要取消发布吗？',
       '警告',
@@ -319,7 +326,7 @@ const handleCancelPublishExam = (rowId: string) => {
         center: true,
       }
   ).then(() => {
-    Exam.cancelPublishExamApi(rowId).then(response => {
+    Exam.cancelPublishExamApi(rowInfo['id']).then(response => {
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
