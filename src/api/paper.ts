@@ -106,6 +106,12 @@ export class Paper {
     const { data } = await axios.put('/paperQuestion/' + question_info['id'], { ...question_info })
     return data
   }
+
+  // 获取试卷信息接口（用于选择器）
+  async getPapersForSelectorApi(user_id: any): Promise<Result> {
+    const { data } = await axios.get('/paperForSelector', { params: { user_id } })
+    return data
+  }
 }
 
 export default new Paper()
