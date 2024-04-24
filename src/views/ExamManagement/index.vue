@@ -178,7 +178,7 @@
       </el-form-item>
       <el-form-item label="试卷" :label-width="formLabelWidth" prop="paper_id" required>
         <el-select v-model="formData.paper_id" placeholder="请选择试卷">
-          <el-option v-for="item in paperInfoForSelector" :label="item['title']" :value="item['id']"/>
+          <el-option v-for="item in paperInfoForSelector" :label="item['title']" :value="item['id']" :key="item['id']"/>
         </el-select>
       </el-form-item>
       <el-form-item label="考试时间" :label-width="formLabelWidth" prop="exam_time" required>
@@ -428,7 +428,7 @@ const formRef = ref<FormInstance>()
 const initFormData = {
   title: '',
   paper_id: '',
-  exam_time: '',
+  exam_time: [],
   pass_mark: '',
   remark: '',
   created_user: userId,
@@ -456,7 +456,18 @@ const handleSubmitExamInfo = (formEl: any) => {
       ElMessage.warning('请输入完整的考试信息后重新提交！')
       return
     }
-    console.log(formData)
+    const start_time = moment(formData.value['exam_time'][0]).format('YYYY-MM-DD HH:mm:ss')
+    const end_time = moment(formData.value['exam_time'][1]).format('YYYY-MM-DD HH:mm:ss')
+    Exam.createExamApi({ ...formData.value, start_time, end_time }).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        dialogVisible.value = false
+        getExamsTableData()
+        ElMessage.success('创建考试成功！')
+      }
+    })
   })
 }
 </script>
