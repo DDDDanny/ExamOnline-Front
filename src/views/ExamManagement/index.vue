@@ -170,12 +170,43 @@
       v-model="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      @close="dialogVisible = false"
+      @close="handleClose(formRef)"
   >
+    <el-form :model="formData" ref="formRef">
+      <el-form-item label="考试标题" :label-width="formLabelWidth" prop="title" required>
+        <el-input v-model="formData.title" placeholder="请输入考试标题" clearable/>
+      </el-form-item>
+      <el-form-item label="试卷" :label-width="formLabelWidth" prop="paper_id" required>
+        <el-select v-model="formData.paper_id" placeholder="请选择试卷">
+          <el-option label="选择题" value="select"/>
+          <el-option label="判断题" value="judge"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="考试时间" :label-width="formLabelWidth" prop="exam_time" required>
+        <el-date-picker
+            v-model="formData.exam_time"
+            type="datetimerange"
+            start-placeholder="请选择考试开始时间"
+            end-placeholder="请选择考试结束时间"
+            range-separator="至"
+            format="YYYY-MM-DD HH:mm:00"
+            date-format="YYYY-MM-DD"
+            time-format="HH:mm"
+        />
+      </el-form-item>
+      <el-form-item label="及格分数" :label-width="formLabelWidth" prop="pass_mark" required>
+        <el-input v-model="formData.pass_mark" placeholder="请输入考试及格分数" clearable>
+          <template #append>分</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="备注" :label-width="formLabelWidth" prop="remark">
+        <el-input v-model="formData.remark" placeholder="请输入备注信息" clearable/>
+      </el-form-item>
+    </el-form>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false" :icon="Send">提 交</el-button>
+        <el-button type="primary" @click="handleSubmitExamInfo(formRef)" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -185,6 +216,7 @@
 import moment from 'moment'
 import {onMounted, reactive, ref} from "vue";
 import { Exam } from "../../api"
+import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import {
@@ -374,9 +406,44 @@ const handleCancelPublishExam = (rowInfo: any) => {
 // 控制新增、编辑Dialog是否显示
 const dialogVisible = ref(false)
 
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '100px'
+// 新增试题表单的Ref
+const formRef = ref<FormInstance>()
+// FormData 初始化
+const initFormData = {
+  title: '',
+  paper_id: '',
+  exam_time: '',
+  pass_mark: '',
+  remark: '',
+  created_user: userId,
+  updated_user: userId
+}
+// 试题 FormData
+const formData = ref(initFormData)
+
 // 处理打开Dialog
 const handleOpenDialog = () => {
   dialogVisible.value = true
+}
+
+// 处理关闭Dialog回调函数
+const handleClose = (formEl: any) => {
+  formData.value = initFormData
+  formEl.resetFields()
+  dialogVisible.value = false
+}
+
+// 处理提交考试信息
+const handleSubmitExamInfo = (formEl: any) => {
+  formEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的考试信息后重新提交！')
+      return
+    }
+    console.log(formData)
+  })
 }
 </script>
 
