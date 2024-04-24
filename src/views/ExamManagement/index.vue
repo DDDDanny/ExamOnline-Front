@@ -191,6 +191,7 @@
             format="YYYY-MM-DD HH:mm:00"
             date-format="YYYY-MM-DD"
             time-format="HH:mm"
+            :disabledDate="disabledDate"
         />
       </el-form-item>
       <el-form-item label="及格分数" :label-width="formLabelWidth" prop="pass_mark" required>
@@ -316,6 +317,11 @@ const getExamsTableData = () => {
 // 处理查询考试信息
 const handleQueryExams = () => {
   getExamsTableData()
+}
+
+// 控制日期选择
+const disabledDate = (date: any) => {
+  return date <= moment().subtract(1, 'days')
 }
 
 // 存储试卷信息（用于选择器）
