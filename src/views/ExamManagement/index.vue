@@ -178,8 +178,7 @@
       </el-form-item>
       <el-form-item label="试卷" :label-width="formLabelWidth" prop="paper_id" required>
         <el-select v-model="formData.paper_id" placeholder="请选择试卷">
-          <el-option label="选择题" value="select"/>
-          <el-option label="判断题" value="judge"/>
+          <el-option v-for="item in paperInfoForSelector" :label="item['title']" :value="item['id']"/>
         </el-select>
       </el-form-item>
       <el-form-item label="考试时间" :label-width="formLabelWidth" prop="exam_time" required>
@@ -215,7 +214,7 @@
 <script setup lang="ts">
 import moment from 'moment'
 import {onMounted, reactive, ref} from "vue";
-import { Exam } from "../../api"
+import { Exam, Paper } from "../../api"
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
@@ -319,9 +318,24 @@ const handleQueryExams = () => {
   getExamsTableData()
 }
 
+// 存储试卷信息（用于选择器）
+const paperInfoForSelector = ref([])
+// 获取试卷信息
+const getPaperInfo = () => {
+  Paper.getPapersForSelectorApi(userId).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error('获取试卷信息失败！')
+      return
+    } else {
+      paperInfoForSelector.value = response.data.data
+    }
+  })
+}
+
 onMounted(() => {
   currentPage.value = 1
   getExamsTableData()
+  getPaperInfo()
 })
 
 // 处理删除考试逻辑
