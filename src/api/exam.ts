@@ -28,6 +28,12 @@ export class Exam {
     const { data } = await axios.delete('/exam/' + id)
     return data
   }
+
+  // 创建考试信息接口
+  async createExamApi(examInfo: object): Promise<Result> {
+    const { data } = await axios.post('/exam', { ...examInfo })
+    return data
+  }
 }
 
 export default new Exam()
