@@ -181,19 +181,39 @@
           <el-option v-for="item in paperInfoForSelector" :label="item['title']" :value="item['id']" :key="item['id']"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="考试时间" :label-width="formLabelWidth" prop="exam_time" required>
+      <el-form-item label="考试日期" :label-width="formLabelWidth" prop="exam_date" required>
         <el-date-picker
-            v-model="formData.exam_time"
-            type="datetimerange"
-            start-placeholder="请选择考试开始时间"
-            end-placeholder="请选择考试结束时间"
-            range-separator="至"
-            format="YYYY-MM-DD HH:mm:00"
+            v-model="formData.exam_date"
+            type="date"
+            placeholder="请选择考试日期"
+            format="YYYY-MM-DD"
             date-format="YYYY-MM-DD"
-            time-format="HH:mm"
             :disabledDate="disabledDate"
+            style="width: 100%;"
         />
       </el-form-item>
+        <div style="width:100%;display: flex;justify-content: space-between">
+          <el-form-item label="考试时间" :label-width="formLabelWidth" prop="start_time" required>
+            <el-time-select
+                v-model="formData.start_time"
+                style="width: 320px"
+                :max-time="formData.end_time"
+                placeholder="请输入考试开始时间"
+                format="HH:mm:00"
+                step="00:10:00"
+            />
+          </el-form-item>
+          <el-form-item prop="end_time" required>
+            <el-time-select
+                v-model="formData.end_time"
+                style="width: 320px"
+                :min-time="formData.start_time"
+                placeholder="请输入考试结束时间"
+                format="HH:mm:00"
+                step="00:10:00"
+            />
+          </el-form-item>
+        </div>
       <el-form-item label="及格分数" :label-width="formLabelWidth" prop="pass_mark" required>
         <el-input v-model="formData.pass_mark" placeholder="请输入考试及格分数" clearable>
           <template #append>分</template>
@@ -434,7 +454,9 @@ const formRef = ref<FormInstance>()
 const initFormData = {
   title: '',
   paper_id: '',
-  exam_time: [],
+  exam_date: '',
+  start_time: '',
+  end_time: '',
   pass_mark: '',
   remark: '',
   created_user: userId,
@@ -462,8 +484,8 @@ const handleSubmitExamInfo = (formEl: any) => {
       ElMessage.warning('请输入完整的考试信息后重新提交！')
       return
     }
-    const start_time = moment(formData.value['exam_time'][0]).format('YYYY-MM-DD HH:mm:ss')
-    const end_time = moment(formData.value['exam_time'][1]).format('YYYY-MM-DD HH:mm:ss')
+    const start_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['start_time']
+    const end_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['end_time']
     Exam.createExamApi({ ...formData.value, start_time, end_time }).then(response => {
       if (response.code !== 200) {
         ElMessage.error(response.msg)
