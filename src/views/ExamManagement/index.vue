@@ -190,6 +190,7 @@
             date-format="YYYY-MM-DD"
             :disabledDate="disabledDate"
             style="width: 100%;"
+            @change="handleChangeDate"
         />
       </el-form-item>
         <div style="width:100%;display: flex;justify-content: space-between">
@@ -202,6 +203,8 @@
                 placeholder="请输入考试开始时间"
                 format="HH:mm:00"
                 step="00:10:00"
+                start="00:00:00"
+                end="23:59:00"
             />
           </el-form-item>
           <el-form-item prop="end_time" required>
@@ -212,6 +215,8 @@
                 placeholder="请输入考试结束时间"
                 format="HH:mm:00"
                 step="00:10:00"
+                start="00:00:00"
+                end="23:59:00"
             />
           </el-form-item>
         </div>
@@ -347,7 +352,16 @@ const disabledDate = (date: any) => {
 
 // 获取当前时间，用作时间选择的限制
 const getCurrentTime = () => {
-  return moment().add(1, 'minute').format('HH:mm:00')
+  const examDate = moment(formData.value.exam_date).format('YYYY-MM-DD')
+  if (examDate === moment().format('YYYY-MM-DD')) {
+    return moment().add(1, 'minute').format('HH:mm:00')
+  }
+}
+
+// 处理日期变化时时间的清除逻辑
+const handleChangeDate = () => {
+  formData.value['start_time'] = ''
+  formData.value['end_time'] = ''
 }
 
 // 存储试卷信息（用于选择器）
