@@ -94,7 +94,12 @@
         <el-table-column prop="pass_mark" label="及格分数" align="center" width="80"/>
         <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
-        <el-table-column prop="remark" label="备注" align="center" width="200"/>
+        <el-table-column prop="remark" label="备注" align="center" width="200">
+          <template #default="scope">
+            <span v-if="scope['row']['remark']">{{ scope['row']['remark'] }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default="scope">
