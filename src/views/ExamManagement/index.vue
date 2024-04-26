@@ -197,6 +197,7 @@
             <el-time-select
                 v-model="formData.start_time"
                 style="width: 320px"
+                :min-time="getCurrentTime()"
                 :max-time="formData.end_time"
                 placeholder="请输入考试开始时间"
                 format="HH:mm:00"
@@ -342,6 +343,11 @@ const handleQueryExams = () => {
 // 控制日期选择
 const disabledDate = (date: any) => {
   return date <= moment().subtract(1, 'days')
+}
+
+// 获取当前时间，用作时间选择的限制
+const getCurrentTime = () => {
+  return moment().add(1, 'minute').format('HH:mm:00')
 }
 
 // 存储试卷信息（用于选择器）
