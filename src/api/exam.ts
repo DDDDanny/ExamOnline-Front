@@ -34,6 +34,12 @@ export class Exam {
     const { data } = await axios.post('/exam', { ...examInfo })
     return data
   }
+
+  // 编辑考试信息接口
+  async editExamApi(examInfo: any): Promise<Result> {
+    const { data } = await axios.put('/exam/' + examInfo['id'], { ...examInfo })
+    return data
+  }
 }
 
 export default new Exam()
