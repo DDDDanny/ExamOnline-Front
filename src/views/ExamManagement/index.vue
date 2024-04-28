@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog('C')">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -71,8 +71,8 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
-        <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
+        <el-table-column prop="start_datetime" label="考试开始时间" align="center" width="180"/>
+        <el-table-column prop="end_datetime" label="考试结束时间" align="center" width="180"/>
         <el-table-column prop="is_published" label="发布状态" align="center" width="120">
           <template #default="scope">
             <el-tag size="small" v-if="scope['row']['is_published']" type="success">
@@ -114,7 +114,7 @@
                 发布
               </el-button>
               <el-divider direction="vertical"/>
-              <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+              <el-button link size="small" type="warning" :icon="SquarePen" @click="handleOpenDialog('E', scope['row'])">编辑</el-button>
               <el-divider direction="vertical"/>
               <el-button link size="small" type="primary" :icon="UserRoundPlus">关联</el-button>
               <el-divider direction="vertical"/>
@@ -169,7 +169,7 @@
   </div>
   <el-dialog
       width="800"
-      title="新增考试"
+      :title="optType === 'C' ? '新增考试' : '编辑考试'"
       draggable
       destroy-on-close
       v-model="dialogVisible"
@@ -323,11 +323,15 @@ const getExamsTableData = () => {
           paper_id: item['paper_id'],
           paper_title: item['paper_info']['title'],
           exam_status: examStatus,
-          start_time: item['start_time'],
-          end_time: item['end_time'],
+          start_datetime: item['start_time'],
+          end_datetime: item['start_time'],
+          exam_date: moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD'),
+          start_time: moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss'),
+          end_time: moment(item['end_time'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss'),
           is_published: item['is_published'],
           publish_date: item['publish_date'],
           pass_mark: item['pass_mark'],
+          created_user: item['created_user'],
           created_at: item['created_at'],
           updated_at: item['updated_at'],
           remark: item['remark'],
@@ -418,7 +422,7 @@ const handleDelete = (rowId: string) => {
 // 处理发布考试信息
 const handlePublishExam = (rowInfo: any) => {
   const thirtyMinutesLater = moment().add(30, 'minutes').unix()
-  const startTime = moment(rowInfo['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+  const startTime = moment(rowInfo['start_datetime'], 'YYYY-MM-DD HH:mm:ss').unix()
   // 发布增加判断：距离考试开始时间小于30分钟，无法发布考试
   if (thirtyMinutesLater >= startTime) {
     ElMessage.warning('距离考试开始小于30分钟，无法发布考试！')
@@ -438,7 +442,7 @@ const handlePublishExam = (rowInfo: any) => {
 // 处理取消发布考试逻辑
 const handleCancelPublishExam = (rowInfo: any) => {
   const twoHoursLater = moment().add(2, 'hours').unix()
-  const startTime = moment(rowInfo['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+  const startTime = moment(rowInfo['start_datetime'], 'YYYY-MM-DD HH:mm:ss').unix()
   // 取消发布增加判断：距离考试开始时间小于2小时，无法取消发布
   if (twoHoursLater >= startTime) {
     ElMessage.warning('距离考试开始小于2小时，无法取消发布！')
@@ -490,8 +494,15 @@ const initFormData = {
 // 试题 FormData
 const formData = ref(initFormData)
 
+// 控制判断是新增OR编辑
+const optType = ref('C')
+
 // 处理打开Dialog
-const handleOpenDialog = () => {
+const handleOpenDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    formData.value = itemData
+  }
+  optType.value = opt
   dialogVisible.value = true
 }
 
@@ -509,18 +520,22 @@ const handleSubmitExamInfo = (formEl: any) => {
       ElMessage.warning('请输入完整的考试信息后重新提交！')
       return
     }
-    const start_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['start_time']
-    const end_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['end_time']
-    Exam.createExamApi({ ...formData.value, start_time, end_time }).then(response => {
+    try {
+      const start_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['start_time']
+      const end_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['end_time']
+      const response = optType.value === 'C'
+          ? await Exam.createExamApi({ ...formData.value, start_time, end_time })
+          : await Exam.editExamApi({ ...formData.value, start_time, end_time, updated_user: userId })
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
-      } else {
-        dialogVisible.value = false
-        getExamsTableData()
-        ElMessage.success('创建考试成功！')
       }
-    })
+      dialogVisible.value = false
+      ElMessage.success(optType.value === 'C' ? '新增考试成功！' : '编辑考试成功！')
+      getExamsTableData()
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 </script>
