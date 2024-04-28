@@ -40,12 +40,9 @@
           class="common-table-base-style"
           header-cell-class-name="table-header-row-style"
       >
+        <el-table-column fixed type="selection" width="40"/>
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="student_id" label="学号" align="center" width="240">
-          <template #default="scope">
-            <el-button link size="small" type="primary">{{ scope['row']['title'] }}</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column fixed prop="student_id" label="学号" align="center" width="240"/>
         <el-table-column prop="name" label="姓名" align="center" width="240"/>
         <el-table-column prop="gender" label="性别" align="center" width="120">
           <template #default="scope">
@@ -89,7 +86,7 @@
         <el-table-column fixed="right" label="操 作" align="center" width="240" :resizable="false">
           <template #default="scope">
             <el-button v-if="!scope['row']['is_active']" link size="small" type="success" :icon="Zap">激活</el-button>
-            <el-divider direction="vertical"/>
+            <el-divider v-if="!scope['row']['is_active']" direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
@@ -116,13 +113,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import {onMounted, reactive, ref} from "vue";
+import { User } from "../../api"
+import {ElMessage} from "element-plus";
 import {Check, GraduationCap, Plus, Search, Trash2, Upload, X, Zap, SquarePen} from "lucide-vue-next";
 
 // 查询条件
 const queryInfo = reactive({
   name: null,
-  student_id: null
+  student_id: null,
+  is_deleted: false,
+  is_active: null
 })
 
 // 存储表格数据
@@ -139,6 +140,23 @@ const handleCurrentChange = (val: number) => {
   currentPage.value = val
 }
 
+// 获取学生信息
+const getStudents = () => {
+  User.getStudentsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      tableData.value = response.data.data
+      tablePageTotal.value = response.data.total
+    }
+  })
+}
+
+onMounted(() => {
+  currentPage.value = 1
+  getStudents()
+})
 </script>
 
 <style scoped lang="scss">
