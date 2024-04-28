@@ -521,8 +521,14 @@ const handleSubmitExamInfo = (formEl: any) => {
       return
     }
     try {
+      const current_time = moment().format('YYYY-MM-DD HH:mm:ss')
       const start_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['start_time']
       const end_time = moment(formData.value['exam_date']).format('YYYY-MM-DD ') + formData.value['end_time']
+      // 判断考试开始时间是否已经超过当前时间（编辑过去未发布的考试）
+      if (start_time <= current_time) {
+        ElMessage.warning('考试开始时间已经超过当前时间！请重新选择考试时间！')
+        return
+      }
       const response = optType.value === 'C'
           ? await Exam.createExamApi({ ...formData.value, start_time, end_time })
           : await Exam.editExamApi({ ...formData.value, start_time, end_time, updated_user: userId })
