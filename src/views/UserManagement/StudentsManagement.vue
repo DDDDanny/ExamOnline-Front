@@ -29,6 +29,10 @@
         <Upload class="common-btn-icon-style"/>
         批量上传
       </el-button>
+      <el-button color="#42b883" style="color: #fff" @click="handleBatchActive">
+        <Zap class="common-btn-icon-style"/>
+        批量激活
+      </el-button>
     </div>
     <div class="papers-table-box">
       <el-table
@@ -43,8 +47,8 @@
       >
         <el-table-column fixed type="selection" width="40"/>
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="student_id" label="学号" align="center" width="240"/>
-        <el-table-column prop="name" label="姓名" align="center" width="240"/>
+        <el-table-column fixed prop="student_id" label="学号" align="center" width="180"/>
+        <el-table-column prop="name" label="姓名" align="center" width="180"/>
         <el-table-column prop="gender" label="性别" align="center" width="120">
           <template #default="scope">
             <span v-if="scope['row']['gender'] === 'male'">男</span>
@@ -169,6 +173,22 @@ const handleGetSelected = (selected: any[]) => {
     tempData.push(selectedElement.id)
   }
   selectedStudentsIds.value = tempData
+}
+
+// 处理批量激活
+const handleBatchActive = () => {
+  if (selectedStudentsIds.value.length === 0) {
+    ElMessage.warning('没有选择任何学生，无法进行批量激活！')
+    return
+  }
+  User.batchActiveStudentsApi(selectedStudentsIds.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    ElMessage.success('批量激活成功！')
+    getStudents()
+  })
 }
 </script>
 
