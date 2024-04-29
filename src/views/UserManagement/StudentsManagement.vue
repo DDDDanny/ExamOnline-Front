@@ -15,6 +15,13 @@
         <span class="module-query-item-title">学号: </span>
         <el-input v-model="queryInfo.student_id" placeholder="请输入学号" style="width: 220px" clearable/>
       </div>
+      <div class="module-query-item">
+        <span class="module-query-item-title">激活状态: </span>
+        <el-select v-model="queryInfo.is_active" placeholder="请选择激活状态" style="width: 240px" clearable>
+          <el-option key="1" label="已激活" :value="true"/>
+          <el-option key="2" label="未激活" :value="false"/>
+        </el-select>
+      </div>
       <div class="module-query-item-btn">
         <el-button type="primary">
           <Search class="common-btn-icon-style"/>查 询</el-button>
