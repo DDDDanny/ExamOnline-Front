@@ -39,6 +39,7 @@
           show-overflow-tooltip
           class="common-table-base-style"
           header-cell-class-name="table-header-row-style"
+          @selectionChange="handleGetSelected"
       >
         <el-table-column fixed type="selection" width="40"/>
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
@@ -157,6 +158,18 @@ onMounted(() => {
   currentPage.value = 1
   getStudents()
 })
+
+// 存储被选中的学生IDs（用于批量激活）
+const selectedStudentsIds: any = ref([])
+
+// 获取表格中选中的项
+const handleGetSelected = (selected: any[]) => {
+  const tempData: string[] = []
+  for (const selectedElement of selected) {
+    tempData.push(selectedElement.id)
+  }
+  selectedStudentsIds.value = tempData
+}
 </script>
 
 <style scoped lang="scss">
