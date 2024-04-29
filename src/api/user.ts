@@ -10,6 +10,12 @@ export class User {
     })
     return data
   }
+
+  // 批量激活接口
+  async batchActiveStudentsApi(ids: string[]): Promise<Result> {
+    const { data } = await axios.post('/studentBatchActivation', { ids })
+    return data
+  }
 }
 
 export default new User()
