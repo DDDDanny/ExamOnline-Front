@@ -32,7 +32,7 @@
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
-      <el-button color="#42b883" style="color: #fff">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenUploadDialog">
         <Upload class="common-btn-icon-style"/>
         批量上传
       </el-button>
@@ -134,13 +134,41 @@
       </div>
     </div>
   </div>
+  <el-dialog
+      width="600"
+      title="批量上传"
+      draggable
+      destroy-on-close
+      v-model="uploadDialogVisible"
+      :close-on-click-modal="false"
+  >
+    <el-upload drag accept=".xlsx" action="https://127.0.0.1">
+      <el-icon class="el-icon--upload"><Upload /></el-icon>
+      <div class="el-upload__text">
+        将文件拖放到此处或<em>单击上传</em>
+      </div>
+      <template #tip>
+        <div class="el-upload__tip">
+          文件限制：小于 1MB 的 xlsx 文件
+        </div>
+      </template>
+    </el-upload>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" :icon="Download">下载模版</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import { User } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
-import {Check, GraduationCap, Plus, Search, Trash2, Upload, X, Zap, SquarePen} from "lucide-vue-next";
+import {
+  Check, GraduationCap, Plus, Search, Trash2,
+  Upload, X, Zap, SquarePen, Download
+} from "lucide-vue-next";
 
 // 查询条件
 const queryInfo = reactive({
@@ -237,6 +265,13 @@ const handleDelete = (rowId: string) => {
   }).catch(() => {
     ElMessage.info('取消删除')
   })
+}
+
+// 控制上传Dialog展示
+const uploadDialogVisible = ref(false)
+// 处理打开上传Dialog
+const handleOpenUploadDialog = () => {
+  uploadDialogVisible.value = true
 }
 </script>
 
