@@ -36,7 +36,7 @@
         <Upload class="common-btn-icon-style"/>
         批量上传
       </el-button>
-      <el-button color="#42b883" style="color: #fff" @click="handleBatchActive">
+      <el-button color="#42b883" style="color: #fff" @click="handleBatchActive()">
         <Zap class="common-btn-icon-style"/>
         批量激活
       </el-button>
@@ -98,7 +98,16 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="240" :resizable="false">
           <template #default="scope">
-            <el-button v-if="!scope['row']['is_active']" link size="small" type="success" :icon="Zap">激活</el-button>
+            <el-button
+                v-if="!scope['row']['is_active']"
+                link
+                size="small"
+                type="success"
+                :icon="Zap"
+                @click="handleBatchActive(scope['row']['id'])"
+            >
+              激活
+            </el-button>
             <el-divider v-if="!scope['row']['is_active']" direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
@@ -186,19 +195,23 @@ const handleGetSelected = (selected: any[]) => {
 }
 
 // 处理批量激活
-const handleBatchActive = () => {
-  if (selectedStudentsIds.value.length === 0) {
-    ElMessage.warning('没有选择任何学生，无法进行批量激活！')
-    return
+const handleBatchActive = (studentId?: string) => {
+  // 如果有传入学生ID，则直接使用该ID，否则使用选中的学生ID数组
+  const ids: string[] = studentId ? [studentId] : selectedStudentsIds.value
+  // 如果没有选择任何学生，则提示并返回
+  if (ids.length === 0) {
+    ElMessage.warning('没有选择任何学生，无法进行批量激活！');
+    return;
   }
-  User.batchActiveStudentsApi(selectedStudentsIds.value).then(response => {
+  // 调用批量激活学生的 API
+  User.batchActiveStudentsApi(ids).then(response => {
     if (response.code !== 200) {
-      ElMessage.error(response.msg)
-      return
+      ElMessage.error(response.msg);
+      return;
     }
-    ElMessage.success('批量激活成功！')
-    getStudents()
-  })
+    ElMessage.success('激活成功！');
+    getStudents();
+  });
 }
 
 // 处理删除学生信息
