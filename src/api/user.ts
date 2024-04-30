@@ -16,6 +16,12 @@ export class User {
     const { data } = await axios.post('/studentBatchActivation', { ids })
     return data
   }
+
+  // 删除学生接口
+  async deleteStudentApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/student/' + id)
+    return data
+  }
 }
 
 export default new User()
