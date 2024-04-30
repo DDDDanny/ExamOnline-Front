@@ -56,6 +56,7 @@
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="student_id" label="学号" align="center" width="180"/>
         <el-table-column prop="name" label="姓名" align="center" width="180"/>
+        <el-table-column prop="username" label="登录账号" align="center" width="180"/>
         <el-table-column prop="gender" label="性别" align="center" width="120">
           <template #default="scope">
             <span v-if="scope['row']['gender'] === 'male'">男</span>
