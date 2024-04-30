@@ -102,7 +102,9 @@
             <el-divider v-if="!scope['row']['is_active']" direction="vertical"/>
             <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="danger" :icon="Trash2">删除</el-button>
+            <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
+              删除
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -128,7 +130,7 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import { User } from "../../api"
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Check, GraduationCap, Plus, Search, Trash2, Upload, X, Zap, SquarePen} from "lucide-vue-next";
 
 // 查询条件
@@ -196,6 +198,31 @@ const handleBatchActive = () => {
     }
     ElMessage.success('批量激活成功！')
     getStudents()
+  })
+}
+
+// 处理删除学生信息
+const handleDelete = (rowId: string) => {
+  ElMessageBox.confirm(
+      '您确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    User.deleteStudentApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除成功！')
+      getStudents()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
   })
 }
 </script>
