@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -159,6 +159,22 @@
       </div>
     </template>
   </el-dialog>
+  <el-dialog
+      width="800"
+      title="新增学生用户"
+      draggable
+      destroy-on-close
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+  >
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false" :icon="Send">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -167,7 +183,7 @@ import { User } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {
   Check, GraduationCap, Plus, Search, Trash2,
-  Upload, X, Zap, SquarePen, Download
+  Upload, X, Zap, SquarePen, Download, Ban, Send
 } from "lucide-vue-next";
 
 // 查询条件
@@ -272,6 +288,13 @@ const uploadDialogVisible = ref(false)
 // 处理打开上传Dialog
 const handleOpenUploadDialog = () => {
   uploadDialogVisible.value = true
+}
+
+// 控制新增&编辑用户信息Dialog
+const dialogVisible = ref(false)
+// 处理打开新增&编辑用户信息Dialog
+const handleOpenDialog = () => {
+  dialogVisible.value = true
 }
 </script>
 
