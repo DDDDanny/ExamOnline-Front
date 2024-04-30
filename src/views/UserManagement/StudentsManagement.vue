@@ -23,7 +23,7 @@
         </el-select>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary">
+        <el-button type="primary" @click="getStudents">
           <Search class="common-btn-icon-style"/>查 询</el-button>
       </div>
     </div>
