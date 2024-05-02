@@ -155,7 +155,7 @@
     </el-upload>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" :icon="Download">下载模版</el-button>
+        <el-button type="primary" :icon="Download" @click="handleDownload">下载模版</el-button>
       </div>
     </template>
   </el-dialog>
@@ -179,7 +179,7 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
-import { User } from "../../api"
+import { User, Common } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import {
   Check, GraduationCap, Plus, Search, Trash2,
@@ -295,6 +295,24 @@ const dialogVisible = ref(false)
 // 处理打开新增&编辑用户信息Dialog
 const handleOpenDialog = () => {
   dialogVisible.value = true
+}
+
+// 处理下载批量上传学生模版
+const handleDownload = async () => {
+  try {
+    const response = await Common.downloadFileApi('UploadStudentTemplates.xlsx')
+    // 处理下载的文件
+    const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/xlsx"}))
+    const link = document.createElement('a')
+    link.href = url
+    // 设置下载文件的文件名
+    link.setAttribute('download', '上传模版-学生.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('下载文件失败', error)
+  }
 }
 </script>
 
