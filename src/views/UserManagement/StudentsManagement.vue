@@ -168,6 +168,35 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
   >
+    <el-form :model="formData" ref="formRef">
+      <el-form-item label="学号" :label-width="formLabelWidth" prop="student_id" required>
+        <el-input v-model="formData.student_id" placeholder="请输入学号（唯一）" clearable/>
+      </el-form-item>
+      <el-form-item label="学生姓名" :label-width="formLabelWidth" prop="name" required>
+        <el-input v-model="formData.name" placeholder="请输入学生姓名" clearable/>
+      </el-form-item>
+      <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
+        <el-input v-model="formData.username" placeholder="请输入登录账号（若为空，默认学号为登录账号）" clearable/>
+      </el-form-item>
+      <el-form-item label="性别" :label-width="formLabelWidth" prop="gender" required>
+        <el-select v-model="formData.gender" placeholder="请选择性别">
+          <el-option label="男" value="male"/>
+          <el-option label="女" value="female"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
+        <el-input v-model="formData.phone" placeholder="请输入电话" clearable/>
+      </el-form-item>
+      <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+        <el-input v-model="formData.email" placeholder="请输入邮箱" clearable/>
+      </el-form-item>
+      <el-form-item label="是否激活" :label-width="formLabelWidth" prop="is_active" required>
+        <el-select v-model="formData.is_active" placeholder="请选择是否激活">
+          <el-option label="是" :value="true"/>
+          <el-option label="否" :value="false"/>
+        </el-select>
+      </el-form-item>
+    </el-form>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
@@ -181,10 +210,15 @@
 import {onMounted, reactive, ref} from "vue";
 import { User, Common } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
+import {getCookie} from "../../utils/cookie.ts";
+import type {FormInstance} from 'element-plus'
 import {
   Check, GraduationCap, Plus, Search, Trash2,
   Upload, X, Zap, SquarePen, Download, Ban, Send
 } from "lucide-vue-next";
+
+// 获取UserID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 // 查询条件
 const queryInfo = reactive({
@@ -290,12 +324,32 @@ const handleOpenUploadDialog = () => {
   uploadDialogVisible.value = true
 }
 
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '100px'
 // 控制新增&编辑用户信息Dialog
 const dialogVisible = ref(false)
 // 处理打开新增&编辑用户信息Dialog
 const handleOpenDialog = () => {
   dialogVisible.value = true
 }
+// 新增试题表单的Ref
+const formRef = ref<FormInstance>()
+// FormData 初始化
+const initFormData = {
+  student_id: '',
+  name: '',
+  username: '',
+  password: '123456',
+  role: 'student',
+  gender: '',
+  phone: '',
+  email: '',
+  is_active: true,
+  created_user: userId,
+  updated_user: userId
+}
+// 试题 FormData
+const formData = ref(initFormData)
 
 // 处理下载批量上传学生模版
 const handleDownload = async () => {
@@ -314,6 +368,8 @@ const handleDownload = async () => {
     console.error('下载文件失败', error)
   }
 }
+
+
 </script>
 
 <style scoped lang="scss">
