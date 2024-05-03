@@ -17,6 +17,12 @@ export class User {
     return data
   }
 
+  // 新增学生接口
+  async createStudentApi(studentInfo: any): Promise<Result> {
+    const { data } = await axios.post('/student', { ...studentInfo })
+    return data
+  }
+
   // 删除学生接口
   async deleteStudentApi(id: string): Promise<Result> {
     const { data } = await axios.delete('/student/' + id)
