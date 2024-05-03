@@ -167,6 +167,7 @@
       v-model="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      @close="handleClose(formRef)"
   >
     <el-form :model="formData" ref="formRef">
       <el-form-item label="学号" :label-width="formLabelWidth" prop="student_id" required>
@@ -200,7 +201,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false" :icon="Send">提 交</el-button>
+        <el-button type="primary" @click="handleSubmit(formRef)" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -350,6 +351,37 @@ const initFormData = {
 }
 // 试题 FormData
 const formData = ref(initFormData)
+
+// 处理关闭Dialog回调函数
+const handleClose = (createFormEl: any) => {
+  formData.value = initFormData
+  createFormEl.resetFields()
+  dialogVisible.value = false
+}
+
+// 处理提交学生信息
+const handleSubmit = async (createFormEl: any) => {
+  // 数据校验
+  createFormEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的学生信息后重新提交！')
+      return
+    }
+    if (!formData.value.username) {
+      formData.value.username = formData.value.student_id
+    }
+    User.createStudentApi(formData.value).then(response => {
+      console.log(response.data)
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('新增学生信息成功！')
+      getStudents()
+      dialogVisible.value = false
+    })
+  })
+}
 
 // 处理下载批量上传学生模版
 const handleDownload = async () => {
