@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog('C')">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -109,7 +109,14 @@
               激活
             </el-button>
             <el-divider v-if="!scope['row']['is_active']" direction="vertical"/>
-            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-button
+                link
+                size="small"
+                type="warning"
+                :icon="SquarePen"
+                @click="handleOpenDialog('E', scope['row'])">
+              编辑
+            </el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="primary" :icon="Copy">复制</el-button>
             <el-divider direction="vertical"/>
@@ -163,7 +170,7 @@
   </el-dialog>
   <el-dialog
       width="800"
-      title="新增学生用户"
+      :title="optType === 'C' ? '新增学生用户' : '编辑学生用户'"
       draggable
       destroy-on-close
       v-model="dialogVisible"
@@ -331,8 +338,14 @@ const handleOpenUploadDialog = () => {
 const formLabelWidth = '100px'
 // 控制新增&编辑用户信息Dialog
 const dialogVisible = ref(false)
+// 控制是新增还是编辑
+const optType = ref('C')
 // 处理打开新增&编辑用户信息Dialog
-const handleOpenDialog = () => {
+const handleOpenDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    formData.value = itemData
+  }
+  optType.value = opt
   dialogVisible.value = true
 }
 // 新增试题表单的Ref
@@ -369,19 +382,23 @@ const handleSubmit = async (createFormEl: any) => {
       ElMessage.warning('请输入完整的学生信息后重新提交！')
       return
     }
-    if (!formData.value.username) {
-      formData.value.username = formData.value.student_id
-    }
-    User.createStudentApi(formData.value).then(response => {
-      console.log(response.data)
+    try {
+      if (!formData.value.username) {
+        formData.value.username = formData.value.student_id
+      }
+      const response = optType.value === 'C'
+          ? await User.createStudentApi(formData.value)
+          : await User.editStudentApi({...formData.value, updated_user: userId})
       if (response.code !== 200) {
         ElMessage.error(response.msg)
         return
       }
-      ElMessage.success('新增学生信息成功！')
+      ElMessage.success(optType.value === 'C' ? '新增学生信息成功！' : '编辑学生信息成功！')
       getStudents()
       dialogVisible.value = false
-    })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 
