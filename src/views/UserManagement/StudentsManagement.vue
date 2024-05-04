@@ -96,7 +96,7 @@
         <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
-        <el-table-column fixed="right" label="操 作" align="center" width="270" :resizable="false">
+        <el-table-column fixed="right" label="操 作" align="center" width="220" :resizable="false">
           <template #default="scope">
             <el-button
                 v-if="!scope['row']['is_active']"
@@ -117,8 +117,6 @@
                 @click="handleOpenDialog('E', scope['row'])">
               编辑
             </el-button>
-            <el-divider direction="vertical"/>
-            <el-button link size="small" type="primary" :icon="Copy">复制</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
               删除
@@ -223,7 +221,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {
-  Check, GraduationCap, Plus, Search, Trash2, Copy,
+  Check, GraduationCap, Plus, Search, Trash2,
   Upload, X, Zap, SquarePen, Download, Ban, Send
 } from "lucide-vue-next";
 
