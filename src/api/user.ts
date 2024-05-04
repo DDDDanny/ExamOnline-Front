@@ -11,19 +11,25 @@ export class User {
     return data
   }
 
-  // 批量激活接口
+  // 批量激活学生接口
   async batchActiveStudentsApi(ids: string[]): Promise<Result> {
     const { data } = await axios.post('/studentBatchActivation', { ids })
     return data
   }
 
-  // 新增学生接口
+  // 新增学生信息接口
   async createStudentApi(studentInfo: any): Promise<Result> {
     const { data } = await axios.post('/student', { ...studentInfo })
     return data
   }
 
-  // 删除学生接口
+  // 编辑学生信息接口
+  async editStudentApi(studentInfo: any): Promise<Result> {
+    const { data } = await axios.put('/student/' + studentInfo['id'], { ...studentInfo })
+    return data
+  }
+
+  // 删除学生信息接口
   async deleteStudentApi(id: string): Promise<Result> {
     const { data } = await axios.delete('/student/' + id)
     return data
