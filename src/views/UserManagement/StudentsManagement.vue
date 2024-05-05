@@ -414,7 +414,7 @@ const handleDownload = async () => {
     link.click()
     window.URL.revokeObjectURL(url)
   } catch (error) {
-    console.error('下载文件失败', error)
+    console.error('下载文件失败！', error)
   }
 }
 
