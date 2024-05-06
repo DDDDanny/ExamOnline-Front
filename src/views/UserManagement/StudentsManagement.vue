@@ -149,7 +149,15 @@
       v-model="uploadDialogVisible"
       :close-on-click-modal="false"
   >
-    <el-upload drag accept=".xlsx" action="https://127.0.0.1">
+    <el-upload
+        drag
+        accept=".xlsx"
+        :action="`${baseUrl}/uploadFileForStudent`"
+        name="StudentTemplateFile"
+        :on-success="handleUploadSuccess"
+        :before-upload="beforeUploadFile"
+        v-model:file-list="fileList"
+    >
       <el-icon class="el-icon--upload"><Upload /></el-icon>
       <div class="el-upload__text">
         将文件拖放到此处或<em>单击上传</em>
@@ -225,6 +233,8 @@ import {
   Upload, X, Zap, SquarePen, Download, Ban, Send
 } from "lucide-vue-next";
 
+// 接口基础地址（用于上传文件）
+const baseUrl = import.meta.env.VITE_APP_API_BASE_URL
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
 
@@ -327,9 +337,27 @@ const handleDelete = (rowId: string) => {
 
 // 控制上传Dialog展示
 const uploadDialogVisible = ref(false)
+// 存储上传文件列表信息
+const fileList = ref([])
 // 处理打开上传Dialog
 const handleOpenUploadDialog = () => {
   uploadDialogVisible.value = true
+}
+
+// 上传成功时的回调
+const handleUploadSuccess = () => {
+  fileList.value = []
+  uploadDialogVisible.value = false
+  ElMessage.success('上传文件成功！正在解析……')
+}
+
+// 上传前进行文件大小校验
+const beforeUploadFile = (rawFile: any) => {
+  if (rawFile.size / 1024 / 1024 > 1) {
+    ElMessage.warning('上传文件过大，必须小于1MB！请调整后重新上传！')
+    return false
+  }
+  return true
 }
 
 // Dialog中Form Label的通用宽度
