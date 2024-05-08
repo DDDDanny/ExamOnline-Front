@@ -32,7 +32,7 @@
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
-      <el-button color="#42b883" style="color: #fff" @click="handleOpenUploadDialog">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenUploadDialog" :loading="uploadStatus">
         <Upload class="common-btn-icon-style"/>
         批量上传
       </el-button>
@@ -155,6 +155,7 @@
         :action="`${baseUrl}/uploadFileForStudent`"
         name="StudentTemplateFile"
         :on-success="handleUploadSuccess"
+        :on-progress="handleUploadProgress"
         :before-upload="beforeUploadFile"
         v-model:file-list="fileList"
     >
@@ -225,7 +226,7 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import { User, Common } from "../../api"
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {
@@ -339,16 +340,44 @@ const handleDelete = (rowId: string) => {
 const uploadDialogVisible = ref(false)
 // 存储上传文件列表信息
 const fileList = ref([])
+// 控制上传按钮的Loading状态
+const uploadStatus = ref(false)
 // 处理打开上传Dialog
 const handleOpenUploadDialog = () => {
   uploadDialogVisible.value = true
 }
 
 // 上传成功时的回调
-const handleUploadSuccess = () => {
+const handleUploadSuccess = (response: any) => {
+  let msg: string
+  let noticeType: any
+
+  if (response.code === 200) {
+    noticeType = 'success'
+    const failListLength = response.data['fail_list'].length
+    if (failListLength === 0) {
+      msg = '上传的学生信息全部新增成功！'
+    } else {
+      msg = `上传的学生信息部分新增成功！有${failListLength}条数据新增失败！`
+    }
+  } else if (response.code === 400) {
+    noticeType = 'warning'
+    msg = '上传的学生信息全部新增失败！'
+  } else {
+    noticeType = 'error'
+    msg = response.msg
+  }
+
   fileList.value = []
+  ElNotification({ title: '上传结果', message: msg, type: noticeType })
+  uploadStatus.value = false
+}
+
+// 上传中的回调逻辑
+const handleUploadProgress = () => {
+  ElMessage.info('数据处理中……')
   uploadDialogVisible.value = false
-  ElMessage.success('上传文件成功！正在解析……')
+  uploadStatus.value = true
 }
 
 // 上传前进行文件大小校验
