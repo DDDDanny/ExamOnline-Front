@@ -354,11 +354,15 @@ const handleUploadSuccess = (response: any) => {
 
   if (response.code === 200) {
     noticeType = 'success'
-    const failListLength = response.data['fail_list'].length
-    if (failListLength === 0) {
+    const failList = response.data['fail_list']
+    const rowNumber = []
+    for (const item of failList) {
+      rowNumber.push(item['row_number'] + 2)
+    }
+    if (failList.length === 0) {
       msg = '上传的学生信息全部新增成功！'
     } else {
-      msg = `上传的学生信息部分新增成功！有${failListLength}条数据新增失败！`
+      msg = `上传的学生信息部分新增成功！有${failList.length}条数据新增失败！行号为：【${rowNumber.toString()}】`
     }
   } else if (response.code === 400) {
     noticeType = 'warning'
