@@ -10,6 +10,7 @@ import PersonalPaperWarehouse from '../views/PaperManagement/PersonalPaperWareho
 import PublicPaperWarehouse from "../views/PaperManagement/PublicPaperWarehouse.vue";
 import ExamManagement from "../views/ExamManagement/index.vue"
 import StudentsManagement from "../views/UserManagement/StudentsManagement.vue"
+import ExamResult from "../views/ExamResult/index.vue"
 
 const routers: any = [
   {
@@ -52,6 +53,10 @@ const routers: any = [
       {
         path: '/studentsManagement',
         component: StudentsManagement,
+      },
+      {
+        path: '/examResult',
+        component: ExamResult,
       }
     ]
   }
