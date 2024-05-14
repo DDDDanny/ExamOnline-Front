@@ -9,7 +9,7 @@
     <div class="common-module-query-box">
       <div class="module-query-item">
         <span class="module-query-item-title">考试名称: </span>
-        <el-input v-model="queryInfo.name" placeholder="请输入考试名称" style="width: 220px" clearable/>
+        <el-input v-model="queryInfo.title" placeholder="请输入考试名称" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item-btn">
         <el-button type="primary" >
@@ -28,8 +28,8 @@
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="考试标题" align="center" width="250"/>
-        <el-table-column prop="start_datetime" label="考试开始时间" align="center" width="180"/>
-        <el-table-column prop="end_datetime" label="考试结束时间" align="center" width="180"/>
+        <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
+        <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default>
@@ -59,12 +59,23 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
+import {getCookie} from "../../utils/cookie.ts";
+import {ElMessage} from "element-plus";
+import { Exam } from "../../api"
 import {FileCheck, FileBadge, Search, CloudDownload} from "lucide-vue-next";
+import moment from "moment";
+
+// 获取登录用户ID
+const userId = JSON.parse(getCookie('UserInfo')).userId
 
 // 查询条件
 const queryInfo = reactive({
-  name: null,
+  title: null,
+  is_deleted: false,
+  is_published: true,
+  created_user: userId,
+  current_time: moment().format('YYYY-MM-DD HH:mm:ss')
 })
 
 // 存储表格数据
@@ -80,6 +91,23 @@ const tablePageTotal = ref(0)
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
 }
+
+// 获取考试表格数据
+const getExamsTableData = () => {
+  Exam.getExamsApi(queryInfo, currentPage.value, pageSize.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      tableData.value = response.data.data
+      tablePageTotal.value = response.data.total
+    }
+  })
+}
+
+onMounted(() => {
+  getExamsTableData()
+})
 </script>
 
 <style scoped lang="scss">
