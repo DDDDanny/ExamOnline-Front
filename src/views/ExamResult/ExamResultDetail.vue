@@ -37,9 +37,9 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default>
-            <el-button link size="small" type="success" :icon="FileBadge">查看成绩单</el-button>
+            <el-button link size="small" type="primary" :icon="Award">查看成绩</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="primary" :icon="CloudDownload">下载成绩单</el-button>
+            <el-button link size="small" type="success" :icon="CloudDownload">下载成绩单</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -67,7 +67,7 @@ import { reactive, ref } from 'vue'
 import router from "../../router";
 import {storeToRefs} from 'pinia'
 import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
-import {ChevronLeft, CloudDownload, FileBadge, Search} from "lucide-vue-next";
+import {Award, ChevronLeft, CloudDownload, Search} from "lucide-vue-next";
 
 // 从Store中获取考试信息
 const examResultDetail = useExamResultDetailStore()
