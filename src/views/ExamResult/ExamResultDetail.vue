@@ -31,7 +31,9 @@
           header-cell-class-name="table-header-row-style"
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
-        <el-table-column fixed prop="title" label="考试标题" align="center" width="250"/>
+        <el-table-column fixed prop="student_id" label="学号" align="center" width="200"/>
+        <el-table-column fixed prop="name" label="学生姓名" align="center" width="180"/>
+        <el-table-column fixed prop="result_mark" label="总得分" align="center" width="120"/>
         <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
         <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
