@@ -11,6 +11,7 @@ import PublicPaperWarehouse from "../views/PaperManagement/PublicPaperWarehouse.
 import ExamManagement from "../views/ExamManagement/index.vue"
 import StudentsManagement from "../views/UserManagement/StudentsManagement.vue"
 import ExamResult from "../views/ExamResult/index.vue"
+import ExamResultDetail from "../views/ExamResult/ExamResultDetail.vue";
 
 const routers: any = [
   {
@@ -57,7 +58,11 @@ const routers: any = [
       {
         path: '/examResult',
         component: ExamResult,
-      }
+      },
+      {
+        path: '/examResultDetail',
+        component: ExamResultDetail,
+      },
     ]
   }
 ]
