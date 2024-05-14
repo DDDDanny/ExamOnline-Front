@@ -2,7 +2,7 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording"> xxx 考试成绩单 </span>
+        <span class="page-header-wording">「{{ examInfo['title'] }}」-- 考试成绩单 </span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
@@ -25,8 +25,14 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
+import {storeToRefs} from 'pinia'
+import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
 import router from "../../router";
 import {ChevronLeft, Search} from "lucide-vue-next";
+
+// 从Store中获取考试信息
+const examResultDetail = useExamResultDetailStore()
+const { examInfo } = storeToRefs(examResultDetail)
 
 // 返回至考试结果页面
 const goBack = () => {
