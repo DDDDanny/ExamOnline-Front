@@ -33,7 +33,7 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default>
-            <el-button link size="small" type="success" :icon="FileBadge">查看成绩单</el-button>
+            <el-button link size="small" type="success" :icon="FileBadge" @click="goViewDetail">查看成绩单</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="primary" :icon="CloudDownload">下载成绩单</el-button>
           </template>
@@ -63,6 +63,7 @@ import { reactive, ref, onMounted } from "vue";
 import {getCookie} from "../../utils/cookie.ts";
 import {ElMessage} from "element-plus";
 import { Exam } from "../../api"
+import router from "../../router";
 import {FileCheck, FileBadge, Search, CloudDownload} from "lucide-vue-next";
 import moment from "moment";
 
@@ -108,6 +109,11 @@ const getExamsTableData = () => {
 onMounted(() => {
   getExamsTableData()
 })
+
+// 处理查看考试成绩单详情的页面跳转
+const goViewDetail = () => {
+  router.replace('/examResultDetail')
+}
 </script>
 
 <style scoped lang="scss">
