@@ -2,7 +2,7 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording">{{ examInfo['title'] }} -- 考试成绩单 </span>
+        <span class="page-header-wording">{{ examInfo['title'] }} -- 考试成绩单（共 {{ tableData.length }} 人）</span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
@@ -30,7 +30,7 @@
           class="common-table-base-style"
           header-cell-class-name="table-header-row-style"
       >
-        <el-table-column fixed type="index" align="center" width="60" label="序号"/>
+        <el-table-column fixed type="index" align="center" width="60" label="排名"/>
         <el-table-column fixed prop="student_id" label="学号" align="center" width="200"/>
         <el-table-column fixed prop="name" label="学生姓名" align="center" width="180"/>
         <el-table-column fixed prop="result_mark" label="总得分" align="center" width="120"/>
@@ -48,18 +48,6 @@
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
-      <div class="exam-result-detail-main-pagination-box">
-        <el-pagination
-            small
-            background
-            :total="tablePageTotal"
-            class="mt-4"
-            style="margin-top: 20px"
-            :default-page-size="pageSize"
-            layout="total, prev, pager, next"
-            @current-change="handleCurrentChange"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -88,17 +76,6 @@ const queryInfo = reactive({
 
 // 存储表格数据
 const tableData: any = ref([{}])
-// 当前页
-const currentPage = ref(1)
-// 每页数量
-const pageSize = ref(50)
-// 数据总数
-const tablePageTotal = ref(0)
-
-// 处理分页时当前页的变更事件
-const handleCurrentChange = (val: number) => {
-  currentPage.value = val
-}
 
 </script>
 
@@ -120,15 +97,9 @@ const handleCurrentChange = (val: number) => {
   color: #ffffff !important;;
 }
 
-.exam-result-detail-main-pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end
-}
-
 .exam-result-detail-table-box {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 380px);
+  height: calc(100vh - 300px);
 }
 </style>
