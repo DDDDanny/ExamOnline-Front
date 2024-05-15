@@ -53,8 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import router from "../../router";
+import { ExamResult } from "../../api";
+import {ElMessage} from "element-plus";
 import {storeToRefs} from 'pinia'
 import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
 import {Award, ChevronLeft, CloudDownload, Search} from "lucide-vue-next";
@@ -70,12 +72,43 @@ const goBack = () => {
 
 // 查询条件
 const queryInfo = reactive({
+  exam_id: examInfo.value['id'],
+  student_id: null,
   name: null,
   result_mark: null
 })
 
 // 存储表格数据
-const tableData: any = ref([{}])
+const tableData: any = ref([])
+const total: any = ref(0)
+
+// 获取表格数据
+const getExamResultData = () => {
+  ExamResult.getExamResultApi(queryInfo).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any = []
+      response.data.data.map((item: any) => {
+        tempData.push({
+          id: item['id'],
+          student_id: item['student_info']['student_id'],
+          name: item['student_info']['name'],
+          result_mark: item['result_mark'],
+          start_time: item['start_time'],
+          end_time: item['end_time']
+        })
+      })
+      tableData.value = tempData
+      total.value = response.data.total
+    }
+  })
+}
+
+onMounted(() => {
+  getExamResultData()
+})
 
 </script>
 
