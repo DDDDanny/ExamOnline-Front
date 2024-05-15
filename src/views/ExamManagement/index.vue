@@ -142,6 +142,7 @@
                   size="small"
                   type="primary"
                   :icon="Award"
+                  @click="goExamResultDetail(scope['row'])"
               >
                 查看成绩
               </el-button>
@@ -250,6 +251,8 @@ import { Exam, Paper } from "../../api"
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
+import router from "../../router";
+import {useExamResultDetailStore} from "../../stores/ExamResultDetailStore.ts";
 import {
   BookOpenCheck, Check, Navigation, NavigationOff, Award, UserRoundPlus,
   Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban, Send
@@ -543,6 +546,16 @@ const handleSubmitExamInfo = (formEl: any) => {
       console.error('An error occurred:', error)
     }
   })
+}
+
+// 从Store中获取，getExamInfo方法，用来获取考试信息
+const examResultDetail = useExamResultDetailStore()
+const { getExamInfo } = examResultDetail
+
+// 跳转至考试成绩详情页面
+const goExamResultDetail = (item: any) => {
+  getExamInfo(item, '/examManagement')
+  router.replace('/examResultDetail')
 }
 </script>
 
