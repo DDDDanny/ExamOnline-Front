@@ -117,7 +117,7 @@ const { getExamInfo } = examResultDetail
 
 // 处理查看考试成绩单详情的页面跳转
 const goViewDetail = (item: any) => {
-  getExamInfo(item)
+  getExamInfo(item, '/examResult')
   router.replace('/examResultDetail')
 }
 </script>

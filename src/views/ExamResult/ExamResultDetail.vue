@@ -73,11 +73,11 @@ import {Award, ChevronLeft, CloudDownload, Search} from "lucide-vue-next";
 
 // 从Store中获取考试信息
 const examResultDetail = useExamResultDetailStore()
-const { examInfo } = storeToRefs(examResultDetail)
+const { examInfo, sourceUrl } = storeToRefs(examResultDetail)
 
 // 返回至考试结果页面
 const goBack = () => {
-  router.replace('/examResult')
+  router.replace(sourceUrl.value)
 }
 
 // 查询条件
