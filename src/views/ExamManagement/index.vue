@@ -550,11 +550,11 @@ const handleSubmitExamInfo = (formEl: any) => {
 
 // 从Store中获取，getExamInfo方法，用来获取考试信息
 const examResultDetail = useExamResultDetailStore()
-const { getExamInfo } = examResultDetail
+const { setExamInfo } = examResultDetail
 
 // 跳转至考试成绩详情页面
 const goExamResultDetail = (item: any) => {
-  getExamInfo(item, '/examManagement')
+  setExamInfo(item, '/examManagement')
   router.replace('/examResultDetail')
 }
 </script>

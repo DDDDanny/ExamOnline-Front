@@ -113,11 +113,11 @@ onMounted(() => {
 
 // 从Store中获取，getExamInfo方法，用来获取考试信息
 const examResultDetail = useExamResultDetailStore()
-const { getExamInfo } = examResultDetail
+const { setExamInfo } = examResultDetail
 
 // 处理查看考试成绩单详情的页面跳转
 const goViewDetail = (item: any) => {
-  getExamInfo(item, '/examResult')
+  setExamInfo(item, '/examResult')
   router.replace('/examResultDetail')
 }
 </script>
