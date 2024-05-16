@@ -8,10 +8,17 @@ export const useExamResultDetailStore = defineStore('examResultDetail', () => {
   // 来源路由
   const sourceUrl: any = ref('/examResult')
 
-  function getExamInfo(item: any, url: string) {
-    examInfo.value = item
-    sourceUrl.value = url
+  // set考试信息，使用localStorage来持久化数据
+  const setExamInfo = (item: any, url: string) => {
+    localStorage.setItem('STORE_EXAM_INFO', JSON.stringify(item))
+    localStorage.setItem('STORE_SOURCE_URL', url)
   }
 
-  return { examInfo, sourceUrl, getExamInfo }
+  // 获取数据
+  const getExamInfo = () => {
+    examInfo.value = JSON.parse(localStorage.getItem('STORE_EXAM_INFO')!)
+    sourceUrl.value = localStorage.getItem('STORE_SOURCE_URL')
+  }
+
+  return { setExamInfo, getExamInfo, examInfo, sourceUrl }
 })
