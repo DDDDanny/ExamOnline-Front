@@ -8,6 +8,10 @@
     <el-divider style="margin: 15px 0"/>
     <div class="common-module-query-box">
       <div class="module-query-item">
+        <span class="module-query-item-title">学号: </span>
+        <el-input v-model="queryInfo.student_id" placeholder="请输入学号" style="width: 220px" clearable/>
+      </div>
+      <div class="module-query-item">
         <span class="module-query-item-title">学生姓名: </span>
         <el-input v-model="queryInfo.name" placeholder="请输入学生姓名" style="width: 220px" clearable/>
       </div>
@@ -16,7 +20,7 @@
         <el-input v-model="queryInfo.result_mark" placeholder="请输入考试分数" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary" >
+        <el-button type="primary" @click="getExamResultData">
           <Search class="common-btn-icon-style"/>查 询</el-button>
       </div>
     </div>
