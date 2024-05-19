@@ -116,7 +116,7 @@
               <el-divider direction="vertical"/>
               <el-button link size="small" type="warning" :icon="SquarePen" @click="handleOpenDialog('E', scope['row'])">编辑</el-button>
               <el-divider direction="vertical"/>
-              <el-button link size="small" type="primary" :icon="UserRoundPlus">关联</el-button>
+              <el-button link size="small" type="primary" :icon="UserRoundPlus" @click="openCorrelationDialog">关联</el-button>
               <el-divider direction="vertical"/>
               <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
                 删除
@@ -239,6 +239,22 @@
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
         <el-button type="primary" @click="handleSubmitExamInfo(formRef)" :icon="Send">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <el-dialog
+      width="800"
+      title="关联考生"
+      draggable
+      destroy-on-close
+      v-model="correlationDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+  >
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="correlationDialogVisible = false" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="correlationDialogVisible = false" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -556,6 +572,13 @@ const { setExamInfo } = examResultDetail
 const goExamResultDetail = (item: any) => {
   setExamInfo(item, '/examManagement')
   router.replace('/examResultDetail')
+}
+
+// 控制关联考生Dialog是否可见
+const correlationDialogVisible = ref(false)
+
+const openCorrelationDialog = () => {
+  correlationDialogVisible.value = true
 }
 </script>
 
