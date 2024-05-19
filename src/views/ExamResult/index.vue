@@ -12,7 +12,7 @@
         <el-input v-model="queryInfo.title" placeholder="请输入考试名称" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item-btn">
-        <el-button type="primary" >
+        <el-button type="primary" @click="getExamsTableData">
           <Search class="common-btn-icon-style"/>查 询</el-button>
       </div>
     </div>
