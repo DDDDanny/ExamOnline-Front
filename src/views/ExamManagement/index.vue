@@ -263,7 +263,7 @@
 <script setup lang="ts">
 import moment from 'moment'
 import {onMounted, reactive, ref} from "vue";
-import { Exam, Paper } from "../../api"
+import { Exam, Paper, User } from "../../api"
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
@@ -406,10 +406,31 @@ const getPaperInfo = () => {
   })
 }
 
+// 获取学生信息，用于考试关联考生
+const studentsInfo = ref([])
+const getStudentsInfo = () => {
+  User.getStudentsApi({is_deleted: false, is_active: true}, 1, 100000).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    const tempData: any = []
+    response.data.data.map((item: any) => {
+      tempData.push({
+        id: item.id,
+        name: item.name,
+        student_id: item.student_id
+      })
+    })
+    studentsInfo.value = tempData
+  })
+}
+
 onMounted(() => {
   currentPage.value = 1
   getExamsTableData()
   getPaperInfo()
+  getStudentsInfo()
 })
 
 // 处理删除考试逻辑
@@ -576,7 +597,7 @@ const goExamResultDetail = (item: any) => {
 
 // 控制关联考生Dialog是否可见
 const correlationDialogVisible = ref(false)
-
+// 打开关联学生Dialog
 const openCorrelationDialog = () => {
   correlationDialogVisible.value = true
 }
