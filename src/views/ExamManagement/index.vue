@@ -251,6 +251,17 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
   >
+    <div class="dialog-transfer-box">
+      <el-transfer
+          filterable
+          v-model="correlationStudents"
+          :titles="['待选考生', '已选考生']"
+          filter-placeholder="请输入学生姓名"
+          :data="studentsInfo"
+          :props="{key: 'id', label: 'name'}"
+          style="margin-top: 15px"
+      />
+    </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="correlationDialogVisible = false" :icon="Ban">取 消</el-button>
@@ -418,8 +429,7 @@ const getStudentsInfo = () => {
     response.data.data.map((item: any) => {
       tempData.push({
         id: item.id,
-        name: item.name,
-        student_id: item.student_id
+        name: `${item.name}（ ${item.student_id} ）`,
       })
     })
     studentsInfo.value = tempData
@@ -601,6 +611,8 @@ const correlationDialogVisible = ref(false)
 const openCorrelationDialog = () => {
   correlationDialogVisible.value = true
 }
+// 存储已经关联的学生信息
+const correlationStudents = ref([])
 </script>
 
 <style scoped lang="scss">
@@ -616,9 +628,24 @@ const openCorrelationDialog = () => {
   height: calc(100vh - 380px);
 }
 
+.dialog-transfer-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 :deep(.table-header-row-style) {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
+}
+
+:deep(.el-transfer-panel) {
+  width: 290px !important;
+}
+
+:deep(.el-transfer-panel .el-checkbox__label) {
+  color: #5e5e5e !important;
+  font-size: 13px !important;
 }
 
 .exam-main-pagination-box {
