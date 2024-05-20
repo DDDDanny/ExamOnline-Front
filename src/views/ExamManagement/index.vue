@@ -116,7 +116,7 @@
               <el-divider direction="vertical"/>
               <el-button link size="small" type="warning" :icon="SquarePen" @click="handleOpenDialog('E', scope['row'])">编辑</el-button>
               <el-divider direction="vertical"/>
-              <el-button link size="small" type="primary" :icon="UserRoundPlus" @click="openCorrelationDialog">关联</el-button>
+              <el-button link size="small" type="primary" :icon="UserRoundPlus" @click="openCorrelationDialog(scope['row'])">关联</el-button>
               <el-divider direction="vertical"/>
               <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
                 删除
@@ -259,7 +259,7 @@
           filter-placeholder="请输入学生姓名"
           :data="studentsInfo"
           :props="{key: 'id', label: 'name'}"
-          style="margin-top: 15px"
+          style="margin-top: 15px;"
       />
     </div>
     <template #footer>
@@ -274,7 +274,7 @@
 <script setup lang="ts">
 import moment from 'moment'
 import {onMounted, reactive, ref} from "vue";
-import { Exam, Paper, User } from "../../api"
+import { Exam, Paper, User, ExamResult } from "../../api"
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
@@ -440,7 +440,6 @@ onMounted(() => {
   currentPage.value = 1
   getExamsTableData()
   getPaperInfo()
-  getStudentsInfo()
 })
 
 // 处理删除考试逻辑
@@ -608,11 +607,28 @@ const goExamResultDetail = (item: any) => {
 // 控制关联考生Dialog是否可见
 const correlationDialogVisible = ref(false)
 // 打开关联学生Dialog
-const openCorrelationDialog = () => {
+const openCorrelationDialog = (rowInfo: any) => {
+  // 获取已经关联的考生信息
+  getExamResultStudentsInfo(rowInfo['id'])
+  // 获取所有的考生信息
+  getStudentsInfo()
   correlationDialogVisible.value = true
 }
 // 存储已经关联的学生信息
 const correlationStudents = ref([])
+const getExamResultStudentsInfo = (id: string) => {
+  ExamResult.getExamResultApi({ exam_id: id }).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    const tempData: any = []
+    response.data.data.map((item: any) => {
+      tempData.push(item['student_info']['id'])
+    })
+    correlationStudents.value = tempData
+  })
+}
 </script>
 
 <style scoped lang="scss">
