@@ -260,12 +260,13 @@
           :data="studentsInfo"
           :props="{key: 'id', label: 'name'}"
           style="margin-top: 15px;"
+          @change="handleTransferChange"
       />
     </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="correlationDialogVisible = false" :icon="Ban">取 消</el-button>
-        <el-button type="primary" @click="correlationDialogVisible = false" :icon="Send">提 交</el-button>
+        <el-button type="primary" @click="handleSubmitCorrelation" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -606,8 +607,10 @@ const goExamResultDetail = (item: any) => {
 
 // 控制关联考生Dialog是否可见
 const correlationDialogVisible = ref(false)
+const examId: any = ref('')
 // 打开关联学生Dialog
 const openCorrelationDialog = (rowInfo: any) => {
+  examId.value = rowInfo['id']
   // 获取已经关联的考生信息
   getExamResultStudentsInfo(rowInfo['id'])
   // 获取所有的考生信息
@@ -615,7 +618,7 @@ const openCorrelationDialog = (rowInfo: any) => {
   correlationDialogVisible.value = true
 }
 // 存储已经关联的学生信息
-const correlationStudents = ref([])
+const correlationStudents: any = ref([])
 const getExamResultStudentsInfo = (id: string) => {
   ExamResult.getExamResultApi({ exam_id: id }).then(response => {
     if (response.code !== 200) {
@@ -627,6 +630,23 @@ const getExamResultStudentsInfo = (id: string) => {
       tempData.push(item['student_info']['id'])
     })
     correlationStudents.value = tempData
+  })
+}
+
+// 处理已选考生变化逻辑
+const handleTransferChange = (rightValue: any) => {
+  correlationStudents.value = rightValue
+}
+
+// 处理提交考试-考生关联关系
+const handleSubmitCorrelation = () => {
+  ExamResult.createExamResultApi(examId.value, correlationStudents.value).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    ElMessage.success('关联考生成功！')
+    correlationDialogVisible.value = false
   })
 }
 </script>
