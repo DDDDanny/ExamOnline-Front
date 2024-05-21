@@ -134,7 +134,7 @@
                   取消发布
                 </el-button>
                 <el-divider direction="vertical"/>
-                <el-button link size="small" type="primary" :icon="UserRoundPlus">关联考生</el-button>
+                <el-button link size="small" type="primary" :icon="UserRoundPlus" @click="openCorrelationDialog(scope['row'])">关联考生</el-button>
               </div>
               <el-button
                   link
