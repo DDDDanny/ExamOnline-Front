@@ -275,13 +275,20 @@
     </template>
   </el-dialog>
   <el-drawer
-      :size="800"
+      :size="700"
       v-model="examScheduleDrawerVisible"
       title="查看考试安排"
       destroy-on-close
       :close-on-click-modal="false"
   >
-    <span>Hi, there!</span>
+    <div class="exam-schedule-main-box">
+      <div class="exam-schedule-date-selector">
+        <span style="color: #5e5e5e;font-size: 14px; margin-right: 10px;">日期:</span>
+        <el-date-picker v-model="examScheduleDate" type="date" placeholder="选择日期" size="small"/>
+      </div>
+      <el-divider />
+      <div class="exam-schedule-timeline"></div>
+    </div>
   </el-drawer>
 </template>
 
@@ -669,6 +676,8 @@ const examScheduleDrawerVisible = ref(false)
 const handleOpenExamScheduleDrawer = () => {
   examScheduleDrawerVisible.value = true
 }
+// 考试安排日期选择
+const examScheduleDate = ref(moment().format('YYYY-MM-DD'))
 </script>
 
 <style scoped lang="scss">
@@ -708,5 +717,11 @@ const handleOpenExamScheduleDrawer = () => {
   width: 100%;
   display: flex;
   justify-content: flex-end
+}
+
+.exam-schedule-main-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
