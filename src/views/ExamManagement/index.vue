@@ -36,6 +36,10 @@
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
+      <el-button type="primary" style="color: #fff" @click="handleOpenExamScheduleDrawer">
+        <CalendarRange class="common-btn-icon-style"/>
+        查看考试安排
+      </el-button>
     </div>
     <div class="exam-table-box">
       <el-table
@@ -270,6 +274,12 @@
       </div>
     </template>
   </el-dialog>
+  <el-drawer
+      v-model="examScheduleDrawerVisible"
+      title="查看考试安排"
+  >
+    <span>Hi, there!</span>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
@@ -283,7 +293,7 @@ import router from "../../router";
 import {useExamResultDetailStore} from "../../stores/ExamResultDetailStore.ts";
 import {
   BookOpenCheck, Check, Navigation, NavigationOff, Award, UserRoundPlus,
-  Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban, Send
+  Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban, Send, CalendarRange
 } from "lucide-vue-next";
 
 // 获取登录用户ID
@@ -648,6 +658,13 @@ const handleSubmitCorrelation = () => {
     ElMessage.success('关联考生成功！')
     correlationDialogVisible.value = false
   })
+}
+
+// 控制考试安排Drawer是否显示
+const examScheduleDrawerVisible = ref(false)
+// 打开考试安排Drawer
+const handleOpenExamScheduleDrawer = () => {
+  examScheduleDrawerVisible.value = true
 }
 </script>
 
