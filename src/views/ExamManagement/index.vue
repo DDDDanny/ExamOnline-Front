@@ -275,8 +275,11 @@
     </template>
   </el-dialog>
   <el-drawer
+      :size="800"
       v-model="examScheduleDrawerVisible"
       title="查看考试安排"
+      destroy-on-close
+      :close-on-click-modal="false"
   >
     <span>Hi, there!</span>
   </el-drawer>
