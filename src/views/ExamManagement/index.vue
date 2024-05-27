@@ -287,7 +287,16 @@
         <el-date-picker v-model="examScheduleDate" type="date" placeholder="选择日期" size="small"/>
       </div>
       <el-divider />
-      <div class="exam-schedule-timeline"></div>
+      <div class="exam-schedule-timeline">
+        <el-timeline style="max-width: 600px">
+          <el-timeline-item v-for="item in examScheduleData" :timestamp="item['start_time']" placement="top">
+            <el-card>
+              <h4>考试名称：{{ item['title'] }}</h4>
+              <p>考试时间为： {{ item['start_time'] }} - {{ item['end_time'] }}</p>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
     </div>
   </el-drawer>
 </template>
@@ -672,12 +681,21 @@ const handleSubmitCorrelation = () => {
 
 // 控制考试安排Drawer是否显示
 const examScheduleDrawerVisible = ref(false)
-// 打开考试安排Drawer
-const handleOpenExamScheduleDrawer = () => {
-  examScheduleDrawerVisible.value = true
-}
+const examScheduleData = ref([])
 // 考试安排日期选择
 const examScheduleDate = ref(moment().format('YYYY-MM-DD'))
+// 打开考试安排Drawer
+const handleOpenExamScheduleDrawer = () => {
+  const querySet = { is_deleted: false, is_published: true, start_time: examScheduleDate.value }
+  Exam.getExamScheduleApi(querySet).then(response => {
+    if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+    }
+    examScheduleData.value = response.data.data
+  })
+  examScheduleDrawerVisible.value = true
+}
 </script>
 
 <style scoped lang="scss">
@@ -723,5 +741,9 @@ const examScheduleDate = ref(moment().format('YYYY-MM-DD'))
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+.exam-schedule-timeline {
+  height: calc(100vh - 210px);
+  overflow-y: auto;
 }
 </style>
