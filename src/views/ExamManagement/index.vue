@@ -289,8 +289,15 @@
       <el-divider />
       <div class="exam-schedule-timeline">
         <el-timeline style="max-width: 600px">
-          <el-timeline-item v-for="item in examScheduleData" :timestamp="item['start_time']" placement="top">
-            <el-card>
+          <el-timeline-item
+              v-for="item in examScheduleData"
+              :timestamp="item['start_time']"
+              hollow
+              size="large"
+              placement="top"
+              :color="item['color']"
+          >
+            <el-card style="color: #5e5e5e">
               <h4>考试名称：{{ item['title'] }}</h4>
               <p>考试时间为： {{ item['start_time'] }} - {{ item['end_time'] }}</p>
             </el-card>
@@ -692,7 +699,20 @@ const handleOpenExamScheduleDrawer = () => {
         ElMessage.error(response.msg)
         return
     }
-    examScheduleData.value = response.data.data
+    const tempData = response.data.data
+    const currentTime = moment().unix()
+    tempData.map((item: any) => {
+      const startTime = moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+      const endTime = moment(item['end_time'], 'YYYY-MM-DD HH:mm:ss').unix()
+      if (currentTime >= endTime) {
+        item['color'] = '#67C23A'
+      } else if (currentTime < endTime && currentTime >= startTime) {
+        item['color'] = '#409EFF'
+      } else {
+        item['color'] = '#E6A23C'
+      }
+    })
+    examScheduleData.value = tempData
   })
   examScheduleDrawerVisible.value = true
 }
