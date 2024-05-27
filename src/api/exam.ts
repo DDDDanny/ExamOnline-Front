@@ -40,6 +40,12 @@ export class Exam {
     const { data } = await axios.put('/exam/' + examInfo['id'], { ...examInfo })
     return data
   }
+
+  // 获取考试计划数据
+  async getExamScheduleApi(querySet: any): Promise<Result> {
+    const { data } = await axios.get('/examSchedule', { params: { ...querySet }})
+    return data
+  }
 }
 
 export default new Exam()
