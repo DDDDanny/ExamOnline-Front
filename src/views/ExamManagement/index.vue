@@ -294,7 +294,10 @@
         />
       </div>
       <el-divider />
-      <div class="exam-schedule-timeline">
+      <div v-if="examScheduleData.length === 0" class="exam-schedule-empty">
+        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+      </div>
+      <div v-else class="exam-schedule-timeline">
         <el-timeline style="max-width: 600px">
           <el-timeline-item
               v-for="item in examScheduleData"
@@ -785,5 +788,11 @@ const handleChangeScheduleData = (val: any) => {
 .exam-schedule-timeline {
   height: calc(100vh - 210px);
   overflow-y: auto;
+}
+.exam-schedule-empty {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 </style>
