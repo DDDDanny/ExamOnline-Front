@@ -284,7 +284,14 @@
     <div class="exam-schedule-main-box">
       <div class="exam-schedule-date-selector">
         <span style="color: #5e5e5e;font-size: 14px; margin-right: 10px;">日期:</span>
-        <el-date-picker v-model="examScheduleDate" type="date" placeholder="选择日期" size="small"/>
+        <el-date-picker
+            v-model="examScheduleDate"
+            type="date"
+            placeholder="选择日期"
+            size="small"
+            :clearable="false"
+            @change="handleChangeScheduleData"
+        />
       </div>
       <el-divider />
       <div class="exam-schedule-timeline">
@@ -688,16 +695,18 @@ const handleSubmitCorrelation = () => {
 
 // 控制考试安排Drawer是否显示
 const examScheduleDrawerVisible = ref(false)
+// 考试安排的数据
 const examScheduleData = ref([])
 // 考试安排日期选择
 const examScheduleDate = ref(moment().format('YYYY-MM-DD'))
-// 打开考试安排Drawer
-const handleOpenExamScheduleDrawer = () => {
+
+// 获取考试安排数据
+const getExamSchedule = () => {
   const querySet = { is_deleted: false, is_published: true, start_time: examScheduleDate.value }
   Exam.getExamScheduleApi(querySet).then(response => {
     if (response.code !== 200) {
-        ElMessage.error(response.msg)
-        return
+      ElMessage.error(response.msg)
+      return
     }
     const tempData = response.data.data
     const currentTime = moment().unix()
@@ -714,7 +723,18 @@ const handleOpenExamScheduleDrawer = () => {
     })
     examScheduleData.value = tempData
   })
+}
+
+// 打开考试安排Drawer
+const handleOpenExamScheduleDrawer = () => {
+  getExamSchedule()
   examScheduleDrawerVisible.value = true
+}
+
+// 处理考试安排日期变更
+const handleChangeScheduleData = (val: any) => {
+  examScheduleDate.value = moment(val).format('YYYY-MM-DD')
+  getExamSchedule()
 }
 </script>
 
