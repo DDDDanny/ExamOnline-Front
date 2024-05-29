@@ -738,6 +738,7 @@ const handleOpenExamScheduleDrawer = () => {
 const handleChangeScheduleData = (val: any) => {
   examScheduleDate.value = moment(val).format('YYYY-MM-DD')
   getExamSchedule()
+  ElMessage.success('考试安排已刷新！')
 }
 </script>
 
