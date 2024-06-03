@@ -12,6 +12,7 @@ import ExamManagement from "../views/ExamManagement/index.vue"
 import StudentsManagement from "../views/UserManagement/StudentsManagement.vue"
 import ExamResult from "../views/ExamResult/index.vue"
 import ExamResultDetail from "../views/ExamResult/ExamResultDetail.vue";
+import PaperDetailView from "../views/PaperManagement/PaperDetailView.vue";
 
 const routers: any = [
   {
@@ -62,6 +63,10 @@ const routers: any = [
       {
         path: '/examResultDetail',
         component: ExamResultDetail,
+      },
+      {
+        path: '/paperDetailView',
+        component: PaperDetailView,
       },
     ]
   }
