@@ -9,25 +9,35 @@
     <div class="case-list-main">
       <div id="paperTitle" class="paper-title-info">
         <span style="font-size: 25px;font-weight: bolder;">xxx</span>
-        <span style="font-size: 18px;color: #5e5e5e;margin-top: 20px">yyy</span>
+        <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">YYY</span>
         <span style="font-size: 18px;color: #5e5e5e;margin-top: 20px">考试时间：YYYY - YYYY</span>
       </div>
       <div class="paper-module-box">
         <div class="module-info-box">
           <span>选择题（总分 60 分）</span>
         </div>
-        <div id="caseItems" class="paper-case-list">456</div>
+        <div id="caseItems" class="paper-case-list">
+          <span>1. 牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。</span>
+          <el-radio-group v-model="radio" style="margin-top: 20px">
+            <el-radio value="A">A. 相等</el-radio>
+            <el-radio value="B">B. 不相等</el-radio>
+            <el-radio value="C">C. 不知道</el-radio>
+          </el-radio-group>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import {ChevronLeft} from "lucide-vue-next";
 
 const goBack = () => {
   console.log('Go Back!')
 }
+
+const radio = ref('')
 </script>
 
 <style scoped lang="scss">
@@ -45,8 +55,10 @@ const goBack = () => {
 
 .case-list-main {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .paper-title-info {
@@ -58,9 +70,15 @@ const goBack = () => {
 }
 
 .paper-case-list {
-  width: 100%;
+  width: 94%;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(154, 154, 154, 0.5);
+  border-radius: 10px;
+  padding: 20px 30px;
+  color: #5e5e5e;
 }
 
 .paper-module-box {
@@ -68,6 +86,7 @@ const goBack = () => {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   .module-info-box {
     width: 100%;
