@@ -25,6 +25,9 @@
           </el-radio-group>
         </div>
       </div>
+      <div class="end-line-style">
+        <span>----- 我是底线 -----</span>
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +58,7 @@ const radio = ref('')
 
 .case-list-main {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 180px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -99,5 +102,13 @@ const radio = ref('')
     color: #fff;
     font-size: 13px;
   }
+}
+.end-line-style {
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  font-size: 13px;
+  color: #a4a4a4
 }
 </style>
