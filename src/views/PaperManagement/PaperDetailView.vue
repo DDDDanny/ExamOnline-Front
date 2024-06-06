@@ -11,16 +11,20 @@
         <span style="font-size: 25px;font-weight: bolder;">{{ paperInfo['title'] }}</span>
         <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">{{ paperInfo['description'] }}</span>
       </div>
-      <div class="paper-module-box">
+      <div class="paper-module-box" v-for="(item) in paperModuleQuestion ">
         <div class="module-info-box">
-          <span>选择题（总分 60 分）</span>
+          <span>{{ item['title'] }}（{{ item['description'] }}）</span>
         </div>
-        <div id="caseItems" class="paper-case-list">
-          <span>1. 牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。牛顿第三定律指出：两个物体之间的相互作用力大小相等，方向相反。</span>
-          <el-radio-group v-model="radio" style="margin-top: 20px">
-            <el-radio value="A">A. 相等</el-radio>
-            <el-radio value="B">B. 不相等</el-radio>
-            <el-radio value="C">C. 不知道</el-radio>
+        <div class="paper-case-list" v-for="(question, index) in item['questions']">
+          <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}</span>
+          <el-radio-group v-if="question['question_detail']['type'] === 'judge'" style="margin-top: 20px" >
+            <el-radio :value="true">对</el-radio>
+            <el-radio :value="false">错</el-radio>
+          </el-radio-group>
+          <el-radio-group v-else style="margin-top: 20px" >
+            <el-radio v-for="key in Object.keys(question['question_detail']['options'])" :value="key">
+              {{ key }}. {{ question['question_detail']['options'][key] }}
+            </el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -46,7 +50,7 @@ const { paperInfo, sourceUrl } = storeToRefs(paperView)
 paperView.getPaperInfo()
 
 // 存储试卷模块试题信息
-const paperModuleQuestion = ref([])
+const paperModuleQuestion: any = ref([])
 
 // 获取完整试卷信息
 const getCompletePaperInfo = () => {
@@ -55,6 +59,14 @@ const getCompletePaperInfo = () => {
       ElMessage.error(response.message)
       return
     }
+    // 处理试题选项
+    response.data.forEach((item: any) => {
+      item.questions.forEach((element: any) => {
+        if (element.question_detail.options !== 'T&F') {
+          element.question_detail.options = JSON.parse(element.question_detail.options)
+        }
+      })
+    })
     paperModuleQuestion.value = response.data
   })
 }
@@ -68,7 +80,6 @@ const goBack = () => {
   router.replace(sourceUrl.value)
 }
 
-const radio = ref('')
 </script>
 
 <style scoped lang="scss">
