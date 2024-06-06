@@ -132,6 +132,7 @@
                       size="small"
                       type="primary"
                       :icon="ScanEye"
+                      @click="handleViewPaper(scope['row'])"
                   >
                     预览试卷
                   </el-button>
@@ -225,10 +226,12 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import { useLinkQuestionStore } from "../../stores/DrawerCommonStore.ts";
+import { usePaperViewStore } from "../../stores/PaperViewStore.ts";
 import {getCookie} from "../../utils/cookie.ts";
 import { Paper } from "../../api"
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from 'element-plus'
+import router from "../../router";
 import LinkQuestionsDrawer from "./LinkQuestionsDrawer.vue";
 import {
   Plus, Search, FileHeart, Link, SquarePen, Trash2, ScanEye, CopyPlus,
@@ -459,6 +462,15 @@ const handleCopy = (paperInfo: any) => {
   }).catch(() => {
     ElMessage.info('取消复制')
   })
+}
+
+const paperView = usePaperViewStore()
+const { setPaperInfo } = paperView
+
+// 处理预览试卷
+const handleViewPaper = (paperInfo: any) => {
+  setPaperInfo(paperInfo, '/personalPapers')
+  router.replace('/paperDetailView')
 }
 
 </script>
