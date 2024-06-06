@@ -2,15 +2,14 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording">xxx试卷预览</span>
+        <span class="page-header-wording">{{ paperInfo['title'] }}试卷预览</span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
     <div class="case-list-main">
       <div id="paperTitle" class="paper-title-info">
-        <span style="font-size: 25px;font-weight: bolder;">xxx</span>
-        <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">YYY</span>
-        <span style="font-size: 18px;color: #5e5e5e;margin-top: 20px">考试时间：YYYY - YYYY</span>
+        <span style="font-size: 25px;font-weight: bolder;">{{ paperInfo['title'] }}</span>
+        <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">{{ paperInfo['description'] }}</span>
       </div>
       <div class="paper-module-box">
         <div class="module-info-box">
@@ -33,11 +32,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {ChevronLeft} from "lucide-vue-next";
+import { onMounted, ref } from 'vue'
+import { Paper } from "../../api"
+import { storeToRefs } from 'pinia'
+import { usePaperViewStore } from "../../stores/PaperViewStore.ts";
+import { ChevronLeft } from "lucide-vue-next";
+import router from "../../router";
+import { ElMessage } from "element-plus";
 
+// 从Store中获取考试信息
+const paperView = usePaperViewStore()
+const { paperInfo, sourceUrl } = storeToRefs(paperView)
+paperView.getPaperInfo()
+
+// 存储试卷模块试题信息
+const paperModuleQuestion = ref([])
+
+// 获取完整试卷信息
+const getCompletePaperInfo = () => {
+  Paper.getCompletePaperApi(paperInfo.value['id']).then((response: any) => {
+    if (response.code !== 200) {
+      ElMessage.error(response.message)
+      return
+    }
+    paperModuleQuestion.value = response.data
+  })
+}
+
+onMounted(() => {
+  getCompletePaperInfo()
+})
+
+// 处理页面返回
 const goBack = () => {
-  console.log('Go Back!')
+  router.replace(sourceUrl.value)
 }
 
 const radio = ref('')
