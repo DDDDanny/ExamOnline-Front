@@ -53,11 +53,7 @@
       >
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="考试标题" align="center" width="240"/>
-        <el-table-column prop="paper_title" label="试卷标题" align="center" width="240">
-          <template #default="scope">
-            <el-button link size="small" type="primary">{{ scope['row']['paper_title'] }}</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="paper_title" label="试卷标题" align="center" width="240"/>
         <el-table-column prop="exam_status" label="考试状态" align="center" width="120">
           <template #default="scope">
             <el-tag size="small" v-if="scope['row']['exam_status'] === '已结束'" type="success">
