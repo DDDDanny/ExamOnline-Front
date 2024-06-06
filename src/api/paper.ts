@@ -112,6 +112,12 @@ export class Paper {
     const { data } = await axios.get('/paperForSelector', { params: { user_id } })
     return data
   }
+
+  // 获取完整试卷信息接口（用于查看预览试卷）
+  async getCompletePaperApi(id: string): Promise<Result> {
+    const { data } = await axios.get('/paperView/' + id)
+    return data
+  }
 }
 
 export default new Paper()
