@@ -44,7 +44,9 @@
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="试卷标题" align="center" width="240">
           <template #default="scope">
-            <el-button link size="small" type="primary">{{ scope['row']['title'] }}</el-button>
+            <el-button link size="small" type="primary" @click="handleViewPaper(scope['row'])">
+              {{ scope['row']['title'] }}
+            </el-button>
           </template>
         </el-table-column>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
