@@ -31,7 +31,9 @@
         <el-table-column fixed type="index" align="center" width="60" label="序号"/>
         <el-table-column fixed prop="title" label="试卷标题" align="center" width="240">
           <template #default="scope">
-            <el-button link size="small" type="primary">{{ scope['row']['title'] }}</el-button>
+            <el-button link size="small" type="primary" @click="handleViewPaper(scope['row'])">
+              {{ scope['row']['title'] }}
+            </el-button>
           </template>
         </el-table-column>
         <el-table-column prop="description" label="试卷描述" align="center" width="240"/>
@@ -48,8 +50,10 @@
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="150" :resizable="false">
-          <template #default>
-            <el-button link size="small" type="primary" :icon="ScanEye">预览试卷</el-button>
+          <template #default="scope">
+            <el-button link size="small" type="primary" :icon="ScanEye" @click="handleViewPaper(scope['row'])">
+              预览试卷
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -77,6 +81,8 @@ import {onMounted, reactive, ref} from "vue";
 import { Paper } from "../../api"
 import {ElMessage} from "element-plus";
 import {Search, FileTerminal, ScanEye} from "lucide-vue-next";
+import {usePaperViewStore} from "../../stores/PaperViewStore.ts";
+import router from "../../router";
 
 // 查询条件
 const queryInfo = reactive({
@@ -140,6 +146,14 @@ onMounted(() => {
   getPaperTableData()
 })
 
+const paperView = usePaperViewStore()
+const { setPaperInfo } = paperView
+
+// 处理预览试卷
+const handleViewPaper = (paperInfo: any) => {
+  setPaperInfo(paperInfo, '/publicPapers')
+  router.replace('/paperDetailView')
+}
 </script>
 
 <style scoped lang="scss">
