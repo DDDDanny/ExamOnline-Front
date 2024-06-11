@@ -42,6 +42,12 @@ export class User {
     })
     return data
   }
+
+  // 删除教师信息接口
+  async deleteTeacherApi(id: string): Promise<Result> {
+    const { data } = await axios.delete('/teacher/' + id)
+    return data
+  }
 }
 
 export default new User()
