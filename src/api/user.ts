@@ -34,6 +34,14 @@ export class User {
     const { data } = await axios.delete('/student/' + id)
     return data
   }
+
+  // 获取教师信息列表接口
+  async getTeachersApi(querySet: object, currentPage: number, pageSize:number): Promise<Result> {
+    const { data } = await axios.get('/teacher', {
+      params: { ...querySet, currentPage, pageSize }
+    })
+    return data
+  }
 }
 
 export default new User()
