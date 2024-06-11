@@ -54,6 +54,12 @@ export class User {
     const { data } = await axios.post('/teacher', { ...teacherInfo })
     return data
   }
+
+  // 编辑教师信息接口
+  async editTeacherApi(teacherInfo: any): Promise<Result> {
+    const { data } = await axios.put('/teacher/' + teacherInfo['id'], { ...teacherInfo })
+    return data
+  }
 }
 
 export default new User()
