@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="common-module-opts-box">
-      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog">
+      <el-button color="#42b883" style="color: #fff" @click="handleOpenDialog('C')">
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
@@ -86,6 +86,7 @@
                 size="small"
                 type="warning"
                 :icon="SquarePen"
+                @click="handleOpenDialog('E', scope['row'])"
             >
               编辑
             </el-button>
@@ -114,7 +115,7 @@
     </div>
     <el-dialog
         width="800"
-        title="新增教师用户"
+        :title="optType === 'C' ? '新增教师用户' : '编辑教师用户'"
         draggable
         destroy-on-close
         v-model="dialogVisible"
@@ -234,8 +235,14 @@ const handleDelete = (rowId: string) => {
 const formLabelWidth = '100px'
 // 控制新增&编辑用户信息Dialog
 const dialogVisible = ref(false)
+// 控制是新增还是编辑
+const optType = ref('C')
 // 处理打开新增&编辑用户信息Dialog
-const handleOpenDialog = () => {
+const handleOpenDialog = (opt: string, itemData?: any) => {
+  if (opt === 'E') {
+    formData.value = itemData
+  }
+  optType.value = opt
   dialogVisible.value = true
 }
 // 新增教师表单的Ref
@@ -275,15 +282,16 @@ const handleSubmit = async (createFormEl: any) => {
       if (!formData.value.username) {
         formData.value.username = formData.value.teacher_id
       }
-      User.createTeacherApi(formData.value).then(response => {
-        if (response.code !== 200) {
-          ElMessage.error(response.msg)
-          return
-        }
-        ElMessage.success('新增教师成功！')
-        getTeachers()
-        dialogVisible.value = false
-      })
+      const response = optType.value === 'C'
+          ? await User.createTeacherApi(formData.value)
+          : await User.editTeacherApi({...formData.value, updated_user: userId})
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success(optType.value === 'C' ? '新增教师信息成功！' : '编辑教师信息成功！')
+      getTeachers()
+      dialogVisible.value = false
     } catch (error) {
       console.error('An error occurred:', error)
     }
