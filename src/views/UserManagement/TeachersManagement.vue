@@ -6,15 +6,12 @@
     </div>
     <div class="common-module-query-box">
       <div class="module-query-item">
-        <span class="module-query-item-title">教师姓名: </span>
-        <el-input v-model="queryInfo.name" placeholder="请输入教师姓名" style="width: 220px" clearable/>
+        <span class="module-query-item-title">教师编号: </span>
+        <el-input v-model="queryInfo.teacher_id" placeholder="请输入教师编号" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item">
-        <span class="module-query-item-title">激活状态: </span>
-        <el-select v-model="queryInfo.is_active" placeholder="请选择激活状态" style="width: 240px" clearable>
-          <el-option key="1" label="已激活" :value="true"/>
-          <el-option key="2" label="未激活" :value="false"/>
-        </el-select>
+        <span class="module-query-item-title">教师姓名: </span>
+        <el-input v-model="queryInfo.name" placeholder="请输入教师姓名" style="width: 220px" clearable/>
       </div>
       <div class="module-query-item-btn">
         <el-button type="primary" @click="getTeachers">
@@ -31,10 +28,6 @@
       <el-button color="#42b883" style="color: #fff">
         <Upload class="common-btn-icon-style"/>
         批量上传
-      </el-button>
-      <el-button color="#42b883" style="color: #fff">
-        <Zap class="common-btn-icon-style"/>
-        批量激活
       </el-button>
     </div>
     <div class="papers-table-box">
@@ -91,18 +84,8 @@
         <el-table-column prop="created_at" label="创建时间" align="center" width="180"/>
         <el-table-column prop="updated_at" label="更新时间" align="center" width="180"/>
         <el-table-column :resizable="false"/>
-        <el-table-column fixed="right" label="操 作" align="center" width="220" :resizable="false">
+        <el-table-column fixed="right" label="操 作" align="center" width="180" :resizable="false">
           <template #default="scope">
-            <el-button
-                v-if="!scope['row']['is_active']"
-                link
-                size="small"
-                type="success"
-                :icon="Zap"
-            >
-              激活
-            </el-button>
-            <el-divider v-if="!scope['row']['is_active']" direction="vertical"/>
             <el-button
                 link
                 size="small"
@@ -112,7 +95,7 @@
               编辑
             </el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="danger" :icon="Trash2">
+            <el-button link size="small" type="danger" :icon="Trash2" @click="handleDelete(scope['row']['id'])">
               删除
             </el-button>
           </template>
@@ -140,16 +123,16 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from 'vue'
 import { User } from "../../api"
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {
-  Users, Plus, Search, Upload, Zap,
+  Users, Plus, Search, Upload,
   SquarePen, Trash2, X, Check
 } from "lucide-vue-next";
 
 // 查询条件
 const queryInfo = reactive({
   name: null,
-  student_id: null,
+  teacher_id: null,
   is_deleted: false,
   is_active: null
 })
@@ -184,6 +167,31 @@ const getTeachers = () => {
 onMounted(() => {
   getTeachers()
 })
+
+// 处理删除教师信息
+const handleDelete = (rowId: string) => {
+  ElMessageBox.confirm(
+      '您确定要删除吗？',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true,
+      }
+  ).then(() => {
+    User.deleteTeacherApi(rowId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('删除成功！')
+      getTeachers()
+    })
+  }).catch(() => {
+    ElMessage.info('取消删除')
+  })
+}
 
 </script>
 
