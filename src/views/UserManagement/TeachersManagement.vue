@@ -148,7 +148,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogVisible = false" :icon="Ban">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false" :icon="Send">提 交</el-button>
+          <el-button type="primary" @click="handleSubmit(formRef)" :icon="Send">提 交</el-button>
         </div>
       </template>
     </el-dialog>
@@ -261,6 +261,33 @@ const handleClose = (createFormEl: any) => {
   formData.value = initFormData
   createFormEl.resetFields()
   dialogVisible.value = false
+}
+
+// 处理提交教师信息
+const handleSubmit = async (createFormEl: any) => {
+  // 数据校验
+  createFormEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的教师信息后重新提交！')
+      return
+    }
+    try {
+      if (!formData.value.username) {
+        formData.value.username = formData.value.teacher_id
+      }
+      User.createTeacherApi(formData.value).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.msg)
+          return
+        }
+        ElMessage.success('新增教师成功！')
+        getTeachers()
+        dialogVisible.value = false
+      })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  })
 }
 </script>
 
