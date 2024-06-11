@@ -48,6 +48,12 @@ export class User {
     const { data } = await axios.delete('/teacher/' + id)
     return data
   }
+
+  // 新增教师信息接口
+  async createTeacherApi(teacherInfo: any): Promise<Result> {
+    const { data } = await axios.post('/teacher', { ...teacherInfo })
+    return data
+  }
 }
 
 export default new User()
