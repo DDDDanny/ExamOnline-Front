@@ -51,6 +51,8 @@
             <el-icon size="25" class="header-item"><CircleUserRound /></el-icon>
           </template>
           <div style="width:100%;display: flex;flex-direction: column;align-items: center;">
+            <span style="font-weight: bolder;font-size: 14px">{{ userName }}</span>
+            <el-divider style="margin: 10px"/>
             <el-button link @click="changePwdDialogVisible = true">
               <el-icon size="18" style="margin-right: 18px"><Lock /></el-icon>
               修改密码
@@ -112,6 +114,9 @@ const menuIconEnum: any = {
   '10003_1': FileHeart, '10003_2': FileTerminal,
 }
 
+// 获取用户姓名
+const userName = JSON.parse(getCookie('UserInfo')).username
+
 // 存放菜单信息
 const menuInfo: any = ref([])
 
@@ -150,7 +155,7 @@ const handleLogout = () => {
 const changePwdDialogVisible = ref(false)
 // 修改密码表单的Ref
 const pwdFormRef = ref<FormInstance>()
-//
+// 修改密码Form Data
 const pwdFormData = ref({
   old_password: '',
   new_password: '',
