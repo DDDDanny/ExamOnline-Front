@@ -2,9 +2,7 @@
   <div class="homepage-main-box">
     <div class="homepage-left-box">
       <div class="homepage-login-info-box">
-        <span class="homepage-login-info-zh">
-          欢迎 {{ userInfo.username }} 登录！今天是{{ currentDate }}，今天您有x场考试需要参加！
-        </span>
+        <span class="homepage-login-info-zh">{{ homepageLoginWording }}</span>
         <span style="font-size: 15px">
           May each day bring you closer to your dreams and fill your life with beautiful moments.
         </span>
@@ -17,7 +15,7 @@
         <el-divider style="margin-top: 8px" />
       </div>
     </div>
-    <div class="homepage-right-box">
+    <div class="homepage-right-box" v-if="role === 'Student'">
       <div class="homepage-card-title">
         <el-icon color="#66b1ff"><Notebook /></el-icon>
         <span>错题信息</span>
@@ -29,6 +27,7 @@
 
 <script setup lang="ts">
 import moment from 'moment'
+import {onMounted, ref} from 'vue'
 import {BookOpenCheck, Notebook} from 'lucide-vue-next'
 import {getCookie} from "../../utils/cookie.ts";
 
@@ -36,6 +35,25 @@ import {getCookie} from "../../utils/cookie.ts";
 const currentDate = moment().format('YYYY-MM-DD');
 // 获取当前登录人姓名
 const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
+
+// 角色信息
+const role = localStorage.getItem('ROLE')
+
+// 首页登录信息展示
+const homepageLoginWording = ref('')
+
+// 根据登录角色判断登录信息内容
+const getLoginWording = () => {
+  if (role === 'Teacher') {
+    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了x场考试！`
+  } else {
+    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有x场考试需要参加！`
+  }
+}
+
+onMounted(() => {
+  getLoginWording()
+})
 
 </script>
 
