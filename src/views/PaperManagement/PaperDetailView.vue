@@ -11,11 +11,17 @@
         <span style="font-size: 25px;font-weight: bolder;">{{ paperInfo['title'] }}</span>
         <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">{{ paperInfo['description'] }}</span>
       </div>
-      <div class="paper-module-box" v-for="(item) in paperModuleQuestion ">
+      <div v-if="paperModuleQuestion.length === 0" style="display: flex;width:98%;justify-content: center;margin-top: 50px">
+        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+      </div>
+      <div v-else class="paper-module-box" v-for="(item) in paperModuleQuestion ">
         <div class="module-info-box">
           <span>{{ item['title'] }}（{{ item['description'] }}）</span>
         </div>
-        <div class="paper-case-list" v-for="(question, index) in item['questions']">
+        <div v-if="item['questions'].length === 0">
+          <el-image style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+        </div>
+        <div v-else class="paper-case-list" v-for="(question, index) in item['questions']">
           <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}</span>
           <el-radio-group v-if="question['question_detail']['type'] === 'judge'" style="margin-top: 20px" >
             <el-radio :value="true">对</el-radio>
@@ -28,7 +34,7 @@
           </el-radio-group>
         </div>
       </div>
-      <div class="end-line-style">
+      <div class="end-line-style" v-if="paperModuleQuestion.length !== 0">
         <span>----- 我是底线 -----</span>
       </div>
     </div>
@@ -124,7 +130,7 @@ const goBack = () => {
 }
 
 .paper-module-box {
-  width: 100%;
+  width: 98%;
   margin-top: 30px;
   display: flex;
   flex-direction: column;
