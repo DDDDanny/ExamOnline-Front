@@ -114,18 +114,11 @@
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
-      <div class="questions-main-pagination-box">
-        <el-pagination
-            small
-            background
-            :total="tablePageTotal"
-            class="mt-4"
-            style="margin-top: 20px"
-            :default-page-size="pageSize"
-            layout="total, prev, pager, next"
-            @current-change="handleCurrentChange"
-        />
-      </div>
+      <common-pagination
+          :handle-current-change="handleCurrentChange"
+          :page-size="pageSize"
+          :table-page-total="tablePageTotal"
+      />
     </div>
     <el-dialog
         width="800"
@@ -243,7 +236,11 @@ import {Questions} from "../../api";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
-import {Ban, BookHeart, Check, Info, Plus, Search, Send, SquarePen, Bookmark, Trash2, X, Tag} from "lucide-vue-next";
+import {
+  Ban, BookHeart, Check, Info, Plus, Search,
+  Send, SquarePen, Bookmark, Trash2, X, Tag
+} from "lucide-vue-next";
+import CommonPagination from "../../components/CommonPagination.vue";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -431,11 +428,5 @@ const handleOpenDetailDialog = (itemData: any) => {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 380px);
-}
-
-.questions-main-pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end
 }
 </style>
