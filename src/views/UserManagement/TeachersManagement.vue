@@ -100,18 +100,11 @@
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
-      <div class="teachers-management-main-pagination-box">
-        <el-pagination
-            small
-            background
-            :total="tablePageTotal"
-            class="mt-4"
-            style="margin-top: 20px"
-            :default-page-size="pageSize"
-            layout="total, prev, pager, next"
-            @current-change="handleCurrentChange"
-        />
-      </div>
+      <common-pagination
+          :handle-current-change="handleCurrentChange"
+          :table-page-total="tablePageTotal"
+          :page-size="pageSize"
+      />
     </div>
     <el-dialog
         width="800"
@@ -163,6 +156,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {Users, Plus, Search, SquarePen, Trash2, X, Check, Ban, Send} from "lucide-vue-next";
+import CommonPagination from "../../components/CommonPagination.vue";
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -187,6 +181,7 @@ const tablePageTotal = ref(0)
 // 处理分页时当前页的变更事件
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
+  getTeachers()
 }
 
 // 获取教师信息
