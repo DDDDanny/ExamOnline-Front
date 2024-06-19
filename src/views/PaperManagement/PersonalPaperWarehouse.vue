@@ -269,6 +269,7 @@ const tablePageTotal = ref(0)
 // 处理分页时当前页的变更事件
 const handleCurrentChange = (val: number) => {
   currentPage.value = val
+  getPaperTableData()
 }
 
 // 获取试卷列表数据
