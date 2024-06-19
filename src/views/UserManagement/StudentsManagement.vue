@@ -127,18 +127,11 @@
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
-      <div class="students-management-main-pagination-box">
-        <el-pagination
-            small
-            background
-            :total="tablePageTotal"
-            class="mt-4"
-            style="margin-top: 20px"
-            :default-page-size="pageSize"
-            layout="total, prev, pager, next"
-            @current-change="handleCurrentChange"
-        />
-      </div>
+      <common-pagination
+          :handle-current-change="handleCurrentChange"
+          :page-size="pageSize"
+          :table-page-total="tablePageTotal"
+      />
     </div>
   </div>
   <el-dialog
@@ -233,6 +226,7 @@ import {
   Check, GraduationCap, Plus, Search, Trash2,
   Upload, X, Zap, SquarePen, Download, Ban, Send
 } from "lucide-vue-next";
+import CommonPagination from "../../components/CommonPagination.vue";
 
 // 接口基础地址（用于上传文件）
 const baseUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -479,8 +473,6 @@ const handleDownload = async () => {
     console.error('下载文件失败！', error)
   }
 }
-
-
 </script>
 
 <style scoped lang="scss">
@@ -490,13 +482,9 @@ const handleDownload = async () => {
   display: flex;
   flex-direction: column;
 }
+
 :deep(.table-header-row-style) {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
-}
-.students-management-main-pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end
 }
 </style>
