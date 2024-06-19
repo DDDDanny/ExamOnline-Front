@@ -98,18 +98,11 @@
           <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
-      <div class="error-archive-main-pagination-box">
-        <el-pagination
-            small
-            background
-            :total="tablePageTotal"
-            class="mt-4"
-            style="margin-top: 20px"
-            :default-page-size="pageSize"
-            layout="total, prev, pager, next"
-            @current-change="handleCurrentChange"
-        />
-      </div>
+      <common-pagination
+          :handle-current-change="handleCurrentChange"
+          :page-size="pageSize"
+          :table-page-total="tablePageTotal"
+      />
     </div>
     <el-dialog
         width="800"
@@ -183,6 +176,7 @@ import {
 import {Questions} from "../../api";
 import {ElMessage, ElMessageBox} from "element-plus";
 import { getCookie } from "../../utils/cookie.ts";
+import CommonPagination from "../../components/CommonPagination.vue";
 
 // 获取用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -300,11 +294,5 @@ const handleDelete = (questionsId: string) => {
 :deep(.table-header-row-style) {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
-}
-
-.error-archive-main-pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end
 }
 </style>
