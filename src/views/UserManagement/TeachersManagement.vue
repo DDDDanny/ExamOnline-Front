@@ -305,9 +305,4 @@ const handleSubmit = async (createFormEl: any) => {
   background-color: #3483d1 !important;;
   color: #ffffff !important;;
 }
-.teachers-management-main-pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end
-}
 </style>
