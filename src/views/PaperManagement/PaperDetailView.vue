@@ -22,7 +22,7 @@
           <el-image style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
         </div>
         <div v-else class="paper-case-list" v-for="(question, index) in item['questions']">
-          <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}</span>
+          <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
           <el-radio-group v-if="question['question_detail']['type'] === 'judge'" style="margin-top: 20px" >
             <el-radio :value="true">对</el-radio>
             <el-radio :value="false">错</el-radio>
