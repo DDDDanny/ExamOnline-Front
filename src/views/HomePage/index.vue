@@ -7,12 +7,13 @@
           May each day bring you closer to your dreams and fill your life with beautiful moments.
         </span>
       </div>
-      <div class="homepage-left-main-box">
+      <div class="homepage-left-main-box" style="padding-bottom: 0">
         <div class="homepage-card-title">
           <el-icon color="#66b1ff"><BookOpenCheck /></el-icon>
           <span>考试信息</span>
         </div>
         <el-divider style="margin-top: 8px" />
+        <el-calendar class="calendar-style" />
       </div>
     </div>
     <div class="homepage-right-box" v-if="role === 'Student'">
@@ -86,7 +87,7 @@ onMounted(() => {
     }
   }
   .homepage-left-main-box {
-    height: 100%;
+    height: calc(100vh - 300px);
     box-shadow: 0 0 8px rgba(136, 136, 136, 0.5);
     border-radius: 8px;
     padding: 20px;
@@ -107,5 +108,17 @@ onMounted(() => {
     margin-left: 8px;
     color: #3E3E3E
   }
+}
+
+:deep(.calendar-style .el-calendar-table .el-calendar-day) {
+  height: calc((100vh - 520px) / 6);
+}
+
+:deep(.calendar-style .el-calendar-table) {
+  padding-bottom: 0;
+}
+
+:deep(.calendar-style .el-calendar__body) {
+  padding-bottom: 0;
 }
 </style>
