@@ -50,19 +50,9 @@ const role = localStorage.getItem('ROLE')
 // 首页登录信息展示
 const homepageLoginWording = ref('')
 
-// 根据登录角色判断登录信息内容
-const getLoginWording = () => {
-  if (role === 'Teacher') {
-    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了${todayExamPlan.value}场考试！`
-  } else {
-    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有x场考试需要参加！`
-  }
-}
-
 // 存储存在考试安排的日期
 const examDates: any = ref([])
-// 今日考试数量
-const todayExamPlan = ref(0)
+
 // 获取考试信息
 const getExamInfo = () => {
   const querySet = { is_deleted: false, is_published: true, created_user: userInfo['id'] }
@@ -79,14 +69,18 @@ const getExamInfo = () => {
         }
         tempData.push(item['start_time'].split(' ')[0])
       })
+      // 更新数据
+      if (role === 'Teacher') {
+        homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了 ${count} 场考试！`
+      } else {
+        homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有x场考试需要参加！`
+      }
       examDates.value = tempData
-      todayExamPlan.value = count
     }
   })
 }
 
 onMounted(() => {
-  getLoginWording()
   getExamInfo()
 })
 
