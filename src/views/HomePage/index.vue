@@ -13,7 +13,12 @@
           <span>考试信息</span>
         </div>
         <el-divider style="margin-top: 8px" />
-        <el-calendar class="calendar-style" />
+        <el-calendar class="calendar-style">
+          <template #date-cell="{ data }">
+            <span>{{ data.day.split('-')[2] }}</span>
+            <el-icon v-if="examDates.includes(data.day)" style="margin-left: 10px;" color="#ff4d36"><Star /></el-icon>
+          </template>
+        </el-calendar>
       </div>
     </div>
     <div class="homepage-right-box" v-if="role === 'Student'">
@@ -29,8 +34,10 @@
 <script setup lang="ts">
 import moment from 'moment'
 import {onMounted, ref} from 'vue'
-import {BookOpenCheck, Notebook} from 'lucide-vue-next'
+import {BookOpenCheck, Notebook, Star} from 'lucide-vue-next'
 import {getCookie} from "../../utils/cookie.ts";
+import { Exam } from "../../api"
+import { ElMessage } from "element-plus";
 
 // 获取当前日期
 const currentDate = moment().format('YYYY-MM-DD');
@@ -46,14 +53,41 @@ const homepageLoginWording = ref('')
 // 根据登录角色判断登录信息内容
 const getLoginWording = () => {
   if (role === 'Teacher') {
-    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了x场考试！`
+    homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了${todayExamPlan.value}场考试！`
   } else {
     homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有x场考试需要参加！`
   }
 }
 
+// 存储存在考试安排的日期
+const examDates: any = ref([])
+// 今日考试数量
+const todayExamPlan = ref(0)
+// 获取考试信息
+const getExamInfo = () => {
+  const querySet = { is_deleted: false, is_published: true, created_user: userInfo['id'] }
+  Exam.getExamsApi(querySet, 1, 100000).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      const tempData: any = []
+      let count = 0
+      response.data.data.map((item: any) => {
+        if (item['start_time'].split(' ')[0] === currentDate) {
+          count += 1
+        }
+        tempData.push(item['start_time'].split(' ')[0])
+      })
+      examDates.value = tempData
+      todayExamPlan.value = count
+    }
+  })
+}
+
 onMounted(() => {
   getLoginWording()
+  getExamInfo()
 })
 
 </script>
