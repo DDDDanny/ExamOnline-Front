@@ -91,15 +91,14 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+@import '../../style.scss';
+
 .homepage-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
+  @include baseFlexStyle;
 }
 .homepage-left-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
+  @include baseFlexStyle;
+
   flex-direction: column;
   .homepage-login-info-box {
     height: 120px;
