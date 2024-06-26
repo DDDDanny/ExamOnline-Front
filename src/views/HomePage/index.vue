@@ -97,9 +97,10 @@ onMounted(() => {
   @include baseFlexStyle;
 }
 .homepage-left-box {
-  @include baseFlexStyle;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 
-  flex-direction: column;
   .homepage-login-info-box {
     height: 120px;
     box-shadow: 0 0 8px rgba(136, 136, 136, 0.5);
