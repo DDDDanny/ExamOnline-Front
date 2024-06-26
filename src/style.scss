@@ -13,6 +13,13 @@ body {
   @content
 }
 
+@mixin tableHeaderStyle {
+  :deep(.table-header-row-style) {
+    background-color: #3483d1 !important;;
+    color: #ffffff !important;;
+  }
+}
+
 /*公共样式 - 按钮上的ICON*/
 .common-btn-icon-style {
   width: 16px;
