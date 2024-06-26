@@ -5,11 +5,19 @@ body {
   height: 100%;
   background-color: #e6e6e6;
 }
+
+@mixin baseFlexStyle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
 /*公共样式 - 按钮上的ICON*/
 .common-btn-icon-style {
   width: 16px;
   padding-right: 10px
 }
+
 /*公共样式 - 模块顶部区域*/
 .common-module-header-box {
   height: 30px;
@@ -22,6 +30,7 @@ body {
   background-color: rgba(239, 239, 239, 0.5);
   margin-bottom: 20px;
 }
+
 /*公共样式 - 模块查询区域*/
 .common-module-query-box {
   min-height: 80px;
@@ -42,6 +51,7 @@ body {
       margin-right: 10px
     }
   }
+
   .module-query-item-btn {
     display: flex;
     align-items: center;
@@ -49,6 +59,7 @@ body {
     font-size: 13px;
   }
 }
+
 /*公共样式 - 功能操作区域*/
 .common-module-opts-box {
   height: 60px;
@@ -62,6 +73,7 @@ body {
   background-color: rgba(239, 239, 239, 0.5);
   margin-bottom: 20px;
 }
+
 /*公共样式 - Table组件基础样式*/
 .common-table-base-style {
   width: 100%;
