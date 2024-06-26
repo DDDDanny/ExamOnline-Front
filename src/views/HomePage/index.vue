@@ -15,8 +15,12 @@
         <el-divider style="margin-top: 8px" />
         <el-calendar class="calendar-style">
           <template #date-cell="{ data }">
-            <span>{{ data.day.split('-')[2] }}</span>
-            <el-icon v-if="examDates.includes(data.day)" style="margin-left: 10px;" color="#ff4d36"><Star /></el-icon>
+            <div style="display: flex;align-items: center;">
+              <span>{{ data.day.split('-')[2] }}</span>
+              <el-icon v-if="examDates.includes(data.day)" style="margin-left: 10px;" color="#ff4d36">
+                  <Star />
+              </el-icon>
+            </div>
           </template>
         </el-calendar>
       </div>
