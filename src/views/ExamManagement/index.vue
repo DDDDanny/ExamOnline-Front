@@ -740,12 +740,16 @@ const handleChangeScheduleData = (val: any) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .exam-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
+
 .exam-table-box {
   display: flex;
   flex-direction: column;
@@ -756,11 +760,6 @@ const handleChangeScheduleData = (val: any) => {
   width: 100%;
   display: flex;
   justify-content: center;
-}
-
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
 }
 
 :deep(.el-transfer-panel) {
