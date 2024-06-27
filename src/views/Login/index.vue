@@ -180,24 +180,24 @@ const handleLogin = () => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
 .login-main-box {
   width: 100%;
   height: 100vh;
   display: flex;
 }
 .login-left-box {
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  .carousel-item-box {
-    width: 100%;
-    height:100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  @include baseFlexStyle {
+    background-color: #fff;
     align-items: center;
+  }
+  .carousel-item-box {
+    @include baseFlexStyle {
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
     .carousel-item-desc-box {
       width: 80%;
       display: flex;
