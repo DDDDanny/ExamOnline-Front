@@ -118,21 +118,19 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .exam-result-detail-main {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 
 .page-header-wording {
   color:#5e5e5e;
   font-size: 14px;
-}
-
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
 }
 
 .exam-result-detail-table-box {
