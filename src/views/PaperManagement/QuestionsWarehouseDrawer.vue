@@ -235,16 +235,17 @@ const handleSubmitLink = (formEl: any) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .link-questions-warehouse-main {
   width: 100%;
   display: flex;
   flex-direction: column;
   color: #5e5e5e;
 }
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
-}
+
 .link-questions-dialog-main {
   display: flex;
   flex-direction: column;

@@ -89,11 +89,12 @@ const goBack = () => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
 .exam-result-detail-main {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 
 .page-header-wording {

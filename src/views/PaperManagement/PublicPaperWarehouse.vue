@@ -158,22 +158,20 @@ const handleViewPaper = (paperInfo: any) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .papers-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 
 .papers-table-box {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 380px);
-}
-
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
 }
 
 .error-archive-main-pagination-box {
