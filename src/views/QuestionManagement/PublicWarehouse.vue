@@ -460,11 +460,14 @@ const handleCollectCurrentChange = (val: any) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .questions-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 
 .public-main-box {
@@ -490,10 +493,5 @@ const handleCollectCurrentChange = (val: any) => {
 
 :deep(.is-active) {
   color: #409eff;
-}
-
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
 }
 </style>
