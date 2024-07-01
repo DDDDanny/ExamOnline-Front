@@ -279,20 +279,19 @@ const handleDelete = (questionsId: string) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .error-archive-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
+
 .error-archive-table-box {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 260px);
-}
-
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
 }
 </style>
