@@ -26,9 +26,12 @@
         </div>
         <div class="login-right-common login-right-form-box">
           <span class="form-title-wording">欢迎登录</span>
-          <div class="login-select-role-group" >
+          <div class="login-select-role-group" v-if="!isAdministrator">
             <div class="select-role-item select-active-item" @click="handleActiveStudent">学生</div>
             <div class="select-role-item" style="padding-left:20px;" @click="handleActiveTeacher">教师</div>
+          </div>
+          <div class="login-select-role-group" v-else>
+            <div class="select-role-item select-active-item">管理员</div>
           </div>
           <div style="width: 85%; margin-top: 20px;">
             <el-form label-position="top" label-width="auto" :model="formLogin">
@@ -70,6 +73,9 @@ import { UserLogin } from "../../api/index.ts";
 import { LockKeyhole, UserRound, LogIn } from 'lucide-vue-next';
 import {setCookie} from "../../utils/cookie.ts";
 
+// 从当前路由获取是否为管理员登录标志
+const isAdministrator = router.currentRoute.value.query?.admin
+
 // 轮播图信息组
 const carouseGroup = [
   {
@@ -106,16 +112,20 @@ const loginRole = ref('Student')
 
 // 处理记住密码时的数据回写
 const handleRemember = () => {
-  const { ROLE, LOGIN_INFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGIN_INFO 属性
-  if (ROLE && LOGIN_INFO) { // 如果 ROLE 和 LOGIN_INFO 存在
-    const role = ROLE; // 读取 ROLE
-    const loginInfo = JSON.parse(LOGIN_INFO); // 解析 LOGIN_INFO 字符串为对象
-    if (role === 'Student') {
-      handleActiveStudent();
-    } else {
-      handleActiveTeacher();
+  if (!isAdministrator) {
+    const { ROLE, LOGIN_INFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGIN_INFO 属性
+    if (ROLE && LOGIN_INFO) { // 如果 ROLE 和 LOGIN_INFO 存在
+      const role = ROLE; // 读取 ROLE
+      const loginInfo = JSON.parse(LOGIN_INFO); // 解析 LOGIN_INFO 字符串为对象
+      if (role === 'Student') {
+        handleActiveStudent();
+      } else {
+        handleActiveTeacher();
+      }
+      Object.assign(formLogin, loginInfo); // 将解析后的登录信息合并到 formLogin 对象中
     }
-    Object.assign(formLogin, loginInfo); // 将解析后的登录信息合并到 formLogin 对象中
+  } else {
+    loginRole.value = 'Admin';
   }
 };
 
@@ -125,13 +135,15 @@ onMounted(() => {
 
 // 处理激活的登录角色
 const handleActiveRole = (index: any) => {
-  const roleItems = document.getElementsByClassName('select-role-item');
-  const activeItemClass = 'select-active-item';
-  // 添加 select-active-item 类到指定索引的元素
-  roleItems[index].classList.add(activeItemClass);
-  // 移除 select-active-item 类从另一个元素
-  const otherIndex = index === 0 ? 1 : 0;
-  roleItems[otherIndex].classList.remove(activeItemClass);
+  if (!isAdministrator) {
+    const roleItems = document.getElementsByClassName('select-role-item');
+    const activeItemClass = 'select-active-item';
+    // 添加 select-active-item 类到指定索引的元素
+    roleItems[index].classList.add(activeItemClass);
+    // 移除 select-active-item 类从另一个元素
+    const otherIndex = index === 0 ? 1 : 0;
+    roleItems[otherIndex].classList.remove(activeItemClass);
+  }
 };
 
 // 处理学生角色
