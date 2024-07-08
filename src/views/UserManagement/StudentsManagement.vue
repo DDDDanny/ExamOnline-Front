@@ -476,15 +476,13 @@ const handleDownload = async () => {
 </script>
 
 <style scoped lang="scss">
-.students-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+@import "../../style.scss";
 
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
+@include tableHeaderStyle;
+
+.students-main-box {
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 </style>
