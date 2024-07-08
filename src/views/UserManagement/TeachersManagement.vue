@@ -295,14 +295,13 @@ const handleSubmit = async (createFormEl: any) => {
 </script>
 
 <style scoped lang="scss">
+@import "../../style.scss";
+
+@include tableHeaderStyle;
+
 .teacher-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-:deep(.table-header-row-style) {
-  background-color: #3483d1 !important;;
-  color: #ffffff !important;;
+  @include baseFlexStyle {
+    flex-direction: column;
+  }
 }
 </style>
