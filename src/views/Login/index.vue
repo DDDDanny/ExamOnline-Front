@@ -105,7 +105,8 @@ const carouseGroup = [
 const formLogin = reactive({
   username: '',
   password: '',
-  rememberPass: false
+  rememberPass: false,
+  isAdmin: false,  // 标志是否为管理员
 })
 
 const loginRole = ref('Student')
@@ -113,6 +114,7 @@ const loginRole = ref('Student')
 // 处理记住密码时的数据回写
 const handleRemember = () => {
   if (!isAdministrator) {
+    formLogin.isAdmin = false
     const { ROLE, LOGIN_INFO } = localStorage; // 解构出 localStorage 对象中的 ROLE 和 LOGIN_INFO 属性
     if (ROLE && LOGIN_INFO) { // 如果 ROLE 和 LOGIN_INFO 存在
       const role = ROLE; // 读取 ROLE
@@ -126,6 +128,7 @@ const handleRemember = () => {
     }
   } else {
     loginRole.value = 'Admin';
+    formLogin.isAdmin = true
   }
 };
 
