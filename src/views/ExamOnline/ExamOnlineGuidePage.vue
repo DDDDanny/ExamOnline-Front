@@ -2,7 +2,7 @@
   <div class="exam-main-box">
     <div class="common-module-header-box">
       <el-icon>
-        <MapPinned />
+        <SwatchBook />
       </el-icon>
       <span style="margin-left: 10px">在线考试引导页</span>
     </div>
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { MapPinned } from "lucide-vue-next";
+import { SwatchBook } from "lucide-vue-next";
 </script>
 
 <style scoped lang="scss">
