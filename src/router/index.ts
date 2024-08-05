@@ -14,6 +14,7 @@ import ExamResult from "../views/ExamResult/index.vue"
 import ExamResultDetail from "../views/ExamResult/ExamResultDetail.vue";
 import PaperDetailView from "../views/PaperManagement/PaperDetailView.vue";
 import TeachersManagement from "../views/UserManagement/TeachersManagement.vue";
+import ExamOnlineGuidePage from "../views/ExamOnline/ExamOnlineGuidePage.vue";
 
 const routers: any = [
   {
@@ -72,6 +73,10 @@ const routers: any = [
       {
         path: '/teachersManagement',
         component: TeachersManagement,
+      },
+      {
+        path: '/examOnline',
+        component: ExamOnlineGuidePage,
       },
     ]
   }
