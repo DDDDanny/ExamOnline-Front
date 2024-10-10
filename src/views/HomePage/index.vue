@@ -127,6 +127,7 @@ onMounted(() => {
 }
 .homepage-right-box {
   width: 500px;
+  height: calc(100% - 52px);
   box-shadow: 0 0 8px rgba(136, 136, 136, 0.5);
   border-radius: 8px;
   margin-left: 30px;
