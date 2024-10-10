@@ -19,7 +19,25 @@
         </div>
       </el-divider>
       <div class="exam-list-box">
-        <div class="exam-list-item"></div>
+        <div class="exam-list-item">
+          <div class="exam-list-item-icon">
+            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
+          </div>
+          <div class="exam-list-item-wording">
+            <span class="wording-title">考试标题：</span>
+            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
+
+            <span class="wording-title">考试开始时间：</span>
+            <span class="wording-content" >2024.10.21 10:00:00</span>
+
+            <span class="wording-title">老师：</span>
+            <span>Master Dong</span>
+          </div>
+          <div class="exam-list-item-btn">
+            <el-icon><Highlighter/></el-icon>
+            <span style="margin-left: 5px">进入考试</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -56,12 +74,59 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
 }
 
 .exam-list-box {
-  width: 100%;
+  width: 97%;
   height: 300px;
-  background-color: #7ea4cd;
-}
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  padding: 0 20px;
 
-.exam-list-item {
+  .exam-list-item {
+    height: 260px;
+    min-width: 220px;
+    margin-right: 20px;
+    box-shadow: #5e5e5e33 0 0 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
 
+    .exam-list-item-icon {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .exam-list-item-wording {
+      width: 100%;
+      height: 150px;
+      display: flex;
+      margin-left: 20px;
+      flex-direction: column;
+      color: #5e5e5e;
+      font-size: 14px;
+
+      .wording-title {
+        font-weight: bolder
+      }
+
+      .wording-content {
+        margin-bottom: 8px;
+      }
+    }
+
+    .exam-list-item-btn {
+      width: 100%;
+      height: 30px;
+      background-color: #409eff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 14px;
+      border-radius: 0 0 8px 8px;
+    }
+  }
 }
 </style>
