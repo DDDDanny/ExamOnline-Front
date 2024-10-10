@@ -12,7 +12,7 @@
       <div class="newest-exam-info">
         <div class="content-status">
           <el-image style="width: 120px;opacity: 0.8" src="src/images/NoExam.png" fit="cover"/>
-          <span style="color: #ababab">您目前没有已经开始的考试</span>
+          <span style="color: #84bbf4">您目前没有已经开始的考试</span>
         </div>
         <div class="content-status" style="display: none;">
           <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
