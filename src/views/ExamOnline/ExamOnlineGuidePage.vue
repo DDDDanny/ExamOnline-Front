@@ -27,6 +27,9 @@
         </div>
       </el-divider>
       <div class="exam-list-box">
+        <div style="width: 100%;display: none;justify-content: center;">
+          <el-image style="width: 300px;opacity: 0.6" src="src/images/noData.png" fit="cover"/>
+        </div>
         <div class="exam-list-item">
           <div class="exam-list-item-icon">
             <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
