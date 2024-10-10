@@ -10,7 +10,7 @@
           unique-opened
           active-text-color="#ffd04b"
           background-color="#337ecc"
-          style="height: 100%;"
+          style="height: 100%;overflow-y: auto"
           :default-active="activeMenuItem"
           text-color="#fff"
           router
@@ -225,7 +225,7 @@ const handleSubmitChangePwd = async (pwdFormRefEl: any) => {
   flex-direction: column;
   .logo-box {
     width:235px;
-    height: 60px;
+    min-height: 57px;
     background-color: #337ecc;
     display: flex;
     justify-content: center;
@@ -238,7 +238,7 @@ const handleSubmitChangePwd = async (pwdFormRefEl: any) => {
   display: flex;
   flex-direction: column;
   .container-top-box {
-    height: 50px;
+    min-height: 48px;
     position: relative;
     background-color: #fff;
     color: #3E3E3E;
@@ -251,8 +251,10 @@ const handleSubmitChangePwd = async (pwdFormRefEl: any) => {
   .container-main-content-box {
     height: calc(100% - 50px);
     background-color: #fff;
-    padding: 20px;
+    //padding: 20px;
+    padding: 20px 20px 0 20px;
   }
+
 }
 .header-item {
   &:hover {

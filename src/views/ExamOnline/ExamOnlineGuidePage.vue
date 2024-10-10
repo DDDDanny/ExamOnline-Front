@@ -10,11 +10,11 @@
       <div>
       </div>
       <div class="newest-exam-info">
-        <div class="content-status">
+        <div class="content-status" style="display: none;">
           <el-image style="width: 120px;opacity: 0.8" src="src/images/NoExam.png" fit="cover"/>
           <span style="color: #84bbf4">您目前没有已经开始的考试</span>
         </div>
-        <div class="content-status" style="display: none;">
+        <div class="content-status" >
           <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
           <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: 01:01:30</span>
           <el-button type="primary" :icon="Highlighter" style="width: 350px">进 入 考 试</el-button>
@@ -127,9 +127,9 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
   width: 97%;
   height: 300px;
   display: flex;
-  align-items: center;
+  //align-items: center;
   overflow-x: auto;
-  padding: 0 20px;
+  padding: 10px;
 
   .exam-list-item {
     height: 260px;
