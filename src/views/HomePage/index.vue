@@ -144,6 +144,7 @@ onMounted(() => {
 
 :deep(.calendar-style .el-calendar-table .el-calendar-day) {
   height: calc((100vh - 520px) / 6);
+  padding: 0 8px;
 }
 
 :deep(.calendar-style .el-calendar-table) {
