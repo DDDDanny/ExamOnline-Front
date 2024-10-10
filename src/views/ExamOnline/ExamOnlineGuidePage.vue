@@ -7,10 +7,18 @@
       <span style="margin-left: 10px">在线考试引导页</span>
     </div>
     <div class="exam-online-info-box">
+      <div>
+      </div>
       <div class="newest-exam-info">
-        <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
-        <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试即将开始，距离考试开始还有: 00:01:30</span>
-        <el-button type="primary" :icon="Highlighter">进 入 考 试</el-button>
+        <div class="content-status">
+          <el-image style="width: 120px;opacity: 0.8" src="src/images/NoExam.png" fit="cover"/>
+          <span style="color: #ababab">您目前没有已经开始的考试</span>
+        </div>
+        <div class="content-status" style="display: none;">
+          <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
+          <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: 01:01:30</span>
+          <el-button type="primary" :icon="Highlighter" style="width: 350px">进 入 考 试</el-button>
+        </div>
       </div>
       <el-divider content-position="left">
         <div style="display: flex;align-items: center;color: #5e5e5e;font-size: 13px;font-weight: 400;">
@@ -101,6 +109,15 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
   margin: auto;
   align-content: center;
   color: #5e5e5e;
+
+  .content-status {
+    @include baseFlexStyle {
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
 
 .exam-list-box {
