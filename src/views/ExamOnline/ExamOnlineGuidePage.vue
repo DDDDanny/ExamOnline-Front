@@ -15,7 +15,7 @@
       <el-divider content-position="left">
         <div style="display: flex;align-items: center;color: #5e5e5e;font-size: 13px;font-weight: 400;">
           <el-icon><FileClock/></el-icon>
-          <span style="margin-left: 6px">未开始的考试</span>
+          <span style="margin-left: 6px">考试列表</span>
         </div>
       </el-divider>
       <div class="exam-list-box">
@@ -26,16 +26,46 @@
           <div class="exam-list-item-wording">
             <span class="wording-title">考试标题：</span>
             <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
-
             <span class="wording-title">考试开始时间：</span>
             <span class="wording-content" >2024.10.21 10:00:00</span>
-
             <span class="wording-title">老师：</span>
             <span>Master Dong</span>
           </div>
-          <div class="exam-list-item-btn">
+          <div class="exam-list-item-btn exam-btn-state-go">
             <el-icon><Highlighter/></el-icon>
             <span style="margin-left: 5px">进入考试</span>
+          </div>
+        </div>
+        <div class="exam-list-item">
+          <div class="exam-list-item-icon">
+            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
+          </div>
+          <div class="exam-list-item-wording">
+            <span class="wording-title">考试标题：</span>
+            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
+            <span class="wording-title">考试开始时间：</span>
+            <span class="wording-content" >2024.10.21 10:00:00</span>
+            <span class="wording-title">老师：</span>
+            <span>Master Dong</span>
+          </div>
+          <div class="exam-list-item-btn exam-btn-state-wait">
+            <span>距离开始还有00:20:20</span>
+          </div>
+        </div>
+        <div class="exam-list-item">
+          <div class="exam-list-item-icon">
+            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
+          </div>
+          <div class="exam-list-item-wording">
+            <span class="wording-title">考试标题：</span>
+            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
+            <span class="wording-title">考试开始时间：</span>
+            <span class="wording-content" >2024.10.21 10:00:00</span>
+            <span class="wording-title">老师：</span>
+            <span>Master Dong</span>
+          </div>
+          <div class="exam-list-item-btn exam-btn-state-wait">
+            <span>距离开始超过1小时</span>
           </div>
         </div>
       </div>
@@ -119,7 +149,6 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
     .exam-list-item-btn {
       width: 100%;
       height: 30px;
-      background-color: #409eff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -127,6 +156,21 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
       font-size: 14px;
       border-radius: 0 0 8px 8px;
     }
+
+    .exam-btn-state-go {
+      background-color: #409eff;
+    }
+
+    .exam-btn-state-go:hover {
+      background-color: #64b1ff;
+      cursor: pointer;
+    }
+
+    .exam-btn-state-wait {
+      background-color: #818181;
+    }
+
+
   }
 }
 </style>
