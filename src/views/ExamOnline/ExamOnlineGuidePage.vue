@@ -142,7 +142,11 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
       }
 
       .wording-content {
+        width: 180px;
         margin-bottom: 8px;
+        white-space: nowrap; /* 防止文字换行 */
+        overflow: hidden; /* 隐藏溢出的内容 */
+        text-overflow: ellipsis; /* 使用省略号表示溢出的文本 */
       }
     }
 
