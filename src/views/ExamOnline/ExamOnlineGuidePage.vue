@@ -17,7 +17,7 @@
         <div class="content-status" >
           <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
           <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: 01:01:30</span>
-          <el-button type="primary" :icon="Highlighter" style="width: 350px">进 入 考 试</el-button>
+          <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam">进 入 考 试</el-button>
         </div>
       </div>
       <el-divider content-position="left">
@@ -42,7 +42,7 @@
             <span class="wording-title">老师：</span>
             <span>Master Dong</span>
           </div>
-          <div class="exam-list-item-btn exam-btn-state-go">
+          <div class="exam-list-item-btn exam-btn-state-go" >
             <el-icon><Highlighter/></el-icon>
             <span style="margin-left: 5px">进入考试</span>
           </div>
@@ -86,6 +86,24 @@
 
 <script setup lang="ts">
 import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
+
+// 处理开始考试事件
+const handleStartExam = () => {
+  ElMessageBox.confirm(
+      '您确定要开始考试吗？考试一旦开始后，无法暂停！',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }
+  ).then(() => {
+    ElMessage.success('开始考试！祝你好运！')
+  }).catch(() => {
+    ElMessage.info('取消开始考试')
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -127,7 +145,6 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
   width: 97%;
   height: 300px;
   display: flex;
-  //align-items: center;
   overflow-x: auto;
   padding: 10px;
 
