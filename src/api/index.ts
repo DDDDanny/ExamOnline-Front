@@ -6,7 +6,9 @@ import Exam from './exam.ts'
 import User from './user.ts'
 import Common from './common.ts'
 import ExamResult from  './examResult.ts'
+import ExamOnline from "./examOnline.ts";
 
 export {
-  UserLogin, Menu, Questions, Paper, Exam, User, Common, ExamResult
+  UserLogin, Menu, Questions, Paper, Exam,
+  User, Common, ExamResult, ExamOnline
 }
