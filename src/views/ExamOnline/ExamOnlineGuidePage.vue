@@ -30,53 +30,21 @@
         <div style="width: 100%;display: none;justify-content: center;">
           <el-image style="width: 300px;opacity: 0.6" src="src/images/noData.png" fit="cover"/>
         </div>
-        <div class="exam-list-item">
+        <div class="exam-list-item" v-for="item in examWaitingList" :key="item.id">
           <div class="exam-list-item-icon">
             <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
           </div>
           <div class="exam-list-item-wording">
             <span class="wording-title">考试标题：</span>
-            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
-            <span class="wording-title">考试开始时间：</span>
-            <span class="wording-content" >2024.10.21 10:00:00</span>
-            <span class="wording-title">老师：</span>
-            <span>Master Dong</span>
+            <span class="wording-content" style="margin-bottom: 9px">{{ item.title }}</span>
+            <span class="wording-title">开始时间：</span>
+            <span class="wording-content" >{{ item.start_time }}</span>
+            <span class="wording-title">结束时间：</span>
+            <span>{{ item.end_time }}</span>
           </div>
-          <div class="exam-list-item-btn exam-btn-state-go" >
+          <div :class="'exam-list-item-btn ' + item.btn_style_cls" >
             <el-icon><Highlighter/></el-icon>
-            <span style="margin-left: 5px">进入考试</span>
-          </div>
-        </div>
-        <div class="exam-list-item">
-          <div class="exam-list-item-icon">
-            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
-          </div>
-          <div class="exam-list-item-wording">
-            <span class="wording-title">考试标题：</span>
-            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
-            <span class="wording-title">考试开始时间：</span>
-            <span class="wording-content" >2024.10.21 10:00:00</span>
-            <span class="wording-title">老师：</span>
-            <span>Master Dong</span>
-          </div>
-          <div class="exam-list-item-btn exam-btn-state-wait">
-            <span>距离开始还有00:20:20</span>
-          </div>
-        </div>
-        <div class="exam-list-item">
-          <div class="exam-list-item-icon">
-            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
-          </div>
-          <div class="exam-list-item-wording">
-            <span class="wording-title">考试标题：</span>
-            <span class="wording-content" style="margin-bottom: 9px">xxx上半学期期末考试</span>
-            <span class="wording-title">考试开始时间：</span>
-            <span class="wording-content" >2024.10.21 10:00:00</span>
-            <span class="wording-title">老师：</span>
-            <span>Master Dong</span>
-          </div>
-          <div class="exam-list-item-btn exam-btn-state-wait">
-            <span>距离开始超过1小时</span>
+            <span style="margin-left: 5px">{{ item.is_start ? '进入考试' : '考试尚未开始' }}</span>
           </div>
         </div>
       </div>
@@ -85,7 +53,43 @@
 </template>
 
 <script setup lang="ts">
+import { ExamOnline } from "../../api";
 import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
+import {getCookie} from "../../utils/cookie.ts";
+import {ElMessage} from "element-plus";
+import {onMounted, ref} from "vue";
+
+// 获取登录人信息
+const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
+
+// 待开始列表
+const examWaitingList = ref([])
+
+// 根据学生ID获取考试信息
+const getExamsByStudentId = () => {
+  ExamOnline.getExamsByStuIdApi(userInfo.userId).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    const tempData: any = []
+    response.data.map((item: any) => {
+      tempData.push({
+        id: item['id'],
+        title: item['title'],
+        start_time: item['start_time'],
+        end_time: item['end_time'],
+        is_start: item['is_start'],
+        btn_style_cls: item['is_start'] ? 'exam-btn-state-go' : 'exam-btn-state-wait'
+      })
+    })
+    examWaitingList.value = tempData
+  })
+}
+
+onMounted(() => {
+  getExamsByStudentId()
+})
 
 // 处理开始考试事件
 const handleStartExam = () => {
