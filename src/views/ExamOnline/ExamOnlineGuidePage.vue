@@ -158,8 +158,17 @@ const handleStartExam = (info: any) => {
         center: true
       }
   ).then(() => {
-    ElMessage.success('开始考试！祝你好运！')
-    router.replace('/examOnline/123')
+    // 获取考试记录ID
+    ExamOnline.getStudentExamApi(info['id'], userInfo.userId).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      } else {
+        ElMessage.success('开始考试！祝你好运！')
+        router.replace(`/examOnline/${response.data.id}`)
+      }
+    })
+
   }).catch(() => {
     ElMessage.info('取消开始考试')
   })
