@@ -15,6 +15,7 @@ import ExamResultDetail from "../views/ExamResult/ExamResultDetail.vue";
 import PaperDetailView from "../views/PaperManagement/PaperDetailView.vue";
 import TeachersManagement from "../views/UserManagement/TeachersManagement.vue";
 import ExamOnlineGuidePage from "../views/ExamOnline/ExamOnlineGuidePage.vue";
+import ExamOnlinePage from "../views/ExamOnline/ExamOnlinePage.vue";
 
 const routers: any = [
   {
@@ -23,7 +24,7 @@ const routers: any = [
   },
   {
     path: '/',
-    component:Container,
+    component: Container,
     redirect: '/homepage',
     children: [
       {
@@ -78,6 +79,10 @@ const routers: any = [
         path: '/examOnline',
         component: ExamOnlineGuidePage,
       },
+      {
+        path: '/examOnline/:id',
+        component: ExamOnlinePage,
+      }
     ]
   }
 ]
