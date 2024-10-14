@@ -151,7 +151,7 @@
           </template>
         </el-table-column>
         <template #empty>
-          <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+          <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
       <div class="exam-main-pagination-box">
@@ -291,7 +291,7 @@
       </div>
       <el-divider />
       <div v-if="examScheduleData.length === 0" class="exam-schedule-empty">
-        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+        <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
       </div>
       <div v-else class="exam-schedule-timeline">
         <el-timeline style="max-width: 600px">

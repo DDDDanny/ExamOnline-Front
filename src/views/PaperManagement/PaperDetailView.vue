@@ -12,14 +12,14 @@
         <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">{{ paperInfo['description'] }}</span>
       </div>
       <div v-if="paperModuleQuestion.length === 0" style="display: flex;width:98%;justify-content: center;margin-top: 50px">
-        <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+        <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
       </div>
       <div v-else class="paper-module-box" v-for="(item) in paperModuleQuestion ">
         <div class="module-info-box">
           <span>{{ item['title'] }}（{{ item['description'] }}）</span>
         </div>
         <div v-if="item['questions'].length === 0">
-          <el-image style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+          <el-image style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
         </div>
         <div v-else class="paper-case-list" v-for="(question, index) in item['questions']">
           <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>

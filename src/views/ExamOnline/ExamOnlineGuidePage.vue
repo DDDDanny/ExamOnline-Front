@@ -11,7 +11,7 @@
       </div>
       <div class="newest-exam-info">
         <div class="content-status" v-if="Object.keys(firstStartExam).length <= 0">
-          <el-image style="width: 120px;opacity: 0.8" src="src/images/NoExam.png" fit="cover"/>
+          <el-image style="width: 120px;opacity: 0.8" src="/src/images/NoExam.png" fit="cover"/>
           <span style="color: #84bbf4">您目前没有已经开始的考试</span>
         </div>
         <div class="content-status" v-else>
@@ -28,11 +28,11 @@
       </el-divider>
       <div class="exam-list-box">
         <div style="width: 100%;display: none;justify-content: center;">
-          <el-image style="width: 300px;opacity: 0.6" src="src/images/noData.png" fit="cover"/>
+          <el-image style="width: 300px;opacity: 0.6" src="/src/images/noData.png" fit="cover"/>
         </div>
         <div class="exam-list-item" v-for="item in examWaitingList" :key="item.id">
           <div class="exam-list-item-icon">
-            <el-image style="width: 40px;height: 40px;" src="src/images/ExamCardIcon.png" fit="cover"/>
+            <el-image style="width: 40px;height: 40px;" src="/src/images/ExamCardIcon.png" fit="cover"/>
           </div>
           <div class="exam-list-item-wording">
             <span class="wording-title">考试标题：</span>
@@ -63,6 +63,7 @@ import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
 import {getCookie} from "../../utils/cookie.ts";
 import {ElMessage} from "element-plus";
 import {onMounted, ref, watch, onBeforeUnmount} from "vue";
+import router from "../../router";
 
 // 获取登录人信息
 const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
@@ -158,6 +159,7 @@ const handleStartExam = (info: any) => {
       }
   ).then(() => {
     ElMessage.success('开始考试！祝你好运！')
+    router.replace('/examOnline/123')
   }).catch(() => {
     ElMessage.info('取消开始考试')
   })

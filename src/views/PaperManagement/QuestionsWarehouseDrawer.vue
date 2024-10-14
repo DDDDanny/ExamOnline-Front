@@ -32,7 +32,7 @@
         </el-table-column>
         <el-table-column prop="topic" label="试题标题" header-align="center" />
         <template #empty>
-          <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+          <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
         </template>
       </el-table>
     </div>

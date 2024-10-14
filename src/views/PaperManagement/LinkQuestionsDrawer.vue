@@ -50,7 +50,7 @@
               <el-icon><X class="x-animation"/></el-icon>
             </span>
             <span class="module-number" style="left: 8px;top: 8px;">
-              <el-image style="width: 15px; " src="src/images/Number.png" fit="cover" />
+              <el-image style="width: 15px; " src="/src/images/Number.png" fit="cover" />
               <span style="margin-left: 3px">{{ index + 1 }}</span>
             </span>
             <span style="margin-bottom: 5px">{{ item['title'] }}</span>
@@ -78,7 +78,7 @@
         </div>
       </el-divider>
       <div class="paper-link-box">
-        <el-image v-if="paperModules.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+        <el-image v-if="paperModules.length === 0" style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
         <el-tabs v-else v-model="linkActivePane" style="width: 100%;" @tab-change="getPaperQuestionsByModule">
           <el-tab-pane v-for="(item, index) in paperModules" :name="index">
             <template #label>
@@ -91,7 +91,7 @@
               <div class="link-btn" v-if="!props.paperInfo['is_published']">
                 <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">关 联 试 题</el-button>
               </div>
-              <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+              <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
               <draggable
                   v-else
                   :list="paperQuestionsByModule"
@@ -107,10 +107,10 @@
                     <el-divider direction="vertical" style="height: 50%;margin: 0" />
                     <div style="width:40px; display: flex;justify-content: center">
                       <el-tooltip v-if="element['question_detail']['type'] === 'judge'" content="判断题" placement="top">
-                        <el-image style="width: 18px;" src="src/images/JudgeIcon.png" fit="cover"/>
+                        <el-image style="width: 18px;" src="/src/images/JudgeIcon.png" fit="cover"/>
                       </el-tooltip>
                       <el-tooltip v-else content="选择题" placement="top">
-                        <el-image style="width: 18px;" src="src/images/SelectIcon.png" fit="cover"/>
+                        <el-image style="width: 18px;" src="/src/images/SelectIcon.png" fit="cover"/>
                       </el-tooltip>
                     </div>
                     <span class="item-content-box">{{ index + 1 }}. {{ element['question_detail']['topic'] }}</span>
@@ -207,7 +207,7 @@
       </template>
     </draggable>
     <div v-else class="module-change-empty">
-      <el-image style="width: 300px;opacity: 0.8" src="src/images/noData.png" fit="cover"/>
+      <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
     </div>
   </el-dialog>
   <el-dialog

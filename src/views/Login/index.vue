@@ -17,7 +17,7 @@
       <div class="login-right-box">
         <div class="login-right-common login-right-logo-box">
           <div class="logo-content">
-            <el-image style="width: 70px; " src="src/images/ExamOnlineLogo.png" fit="cover" />
+            <el-image style="width: 70px; " src="/src/images/ExamOnlineLogo.png" fit="cover" />
             <div style="display: flex;flex-direction: column;margin-left: 5px">
               <span class="logo-wording-item">在线考试系统</span>
               <span class="logo-wording-item-en">ExamOnline</span>
