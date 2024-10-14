@@ -10,13 +10,13 @@
       <div>
       </div>
       <div class="newest-exam-info">
-        <div class="content-status" style="display: none;">
+        <div class="content-status" v-if="Object.keys(firstStartExam).length <= 0">
           <el-image style="width: 120px;opacity: 0.8" src="src/images/NoExam.png" fit="cover"/>
           <span style="color: #84bbf4">您目前没有已经开始的考试</span>
         </div>
-        <div class="content-status" >
-          <span style="margin: auto;font-size: 25px">《xxx上半学期期末考试》</span>
-          <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: 01:01:30</span>
+        <div class="content-status" v-else>
+          <span style="margin: auto;font-size: 25px">《 {{ firstStartExam['title'] }} 》</span>
+          <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: {{ timeLeft }}</span>
           <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam">进 入 考 试</el-button>
         </div>
       </div>
@@ -53,15 +53,18 @@
 </template>
 
 <script setup lang="ts">
+import moment from "moment";
 import { ExamOnline } from "../../api";
 import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
 import {getCookie} from "../../utils/cookie.ts";
 import {ElMessage} from "element-plus";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch, onBeforeUnmount} from "vue";
 
 // 获取登录人信息
 const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
 
+// 首个正在进行的考试
+const firstStartExam = ref({})
 // 待开始列表
 const examWaitingList = ref([])
 
@@ -83,12 +86,60 @@ const getExamsByStudentId = () => {
         btn_style_cls: item['is_start'] ? 'exam-btn-state-go' : 'exam-btn-state-wait'
       })
     })
+    // 获取首个正在进行的考试
+    if (tempData.length > 0 && tempData[0].is_start) {
+      firstStartExam.value = tempData[0]
+      tempData.shift()
+    }
     examWaitingList.value = tempData
   })
 }
 
+// 初始化计时器
+let timer = null;
+// 倒计时显示
+const timeLeft = ref("")
+// 计算倒计时
+const calculateTimeLeft = () => {
+  // 获取当前时间
+  const now = new Date();
+  const targetTime = moment(firstStartExam.value.end_time, 'YYYY-MM-DD HH:mm:ss')
+  // 计算差值
+  let diff = targetTime - now
+  // 判断是否已经结束
+  if (diff < 0) {
+    console.log('------👉 倒计时结束 👈------')
+    clearInterval(timer)
+    window.location.reload(); // 刷新页面
+    return
+  }
+  const hours = Math.floor(diff / 1000 / 60 / 60);  // 小时
+  diff -= hours * 1000 * 60 * 60
+  const minutes = Math.floor(diff / 1000 / 60)  // 分钟
+  diff -= minutes * 1000 * 60;
+  const seconds = Math.floor(diff / 1000)  // 秒
+  // 确保格式化输出：例如 01 : 05 : 09
+  timeLeft.value = `${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`
+}
+
+// 启动倒计时
+const startCountdown = () => {
+  calculateTimeLeft()  // 初次计算
+  timer = setInterval(calculateTimeLeft, 1000)  // 每秒更新一次
+};
+
 onMounted(() => {
   getExamsByStudentId()
+  // 确保倒计时在 firstStartExam 数据加载完之后再启动
+  watch(() => firstStartExam.value, (newVal) => {
+    if (newVal && newVal.end_time) {
+      startCountdown()  // 启动倒计时
+    }
+  });
+})
+
+onBeforeUnmount(() => {
+  clearInterval(timer)
 })
 
 // 处理开始考试事件
