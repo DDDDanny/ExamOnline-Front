@@ -17,7 +17,7 @@
         <div class="content-status" v-else>
           <span style="margin: auto;font-size: 25px">《 {{ firstStartExam['title'] }} 》</span>
           <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: {{ timeLeft }}</span>
-          <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam">进 入 考 试</el-button>
+          <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam(firstStartExam)">进 入 考 试</el-button>
         </div>
       </div>
       <el-divider content-position="left">
@@ -42,9 +42,13 @@
             <span class="wording-title">结束时间：</span>
             <span>{{ item.end_time }}</span>
           </div>
-          <div :class="'exam-list-item-btn ' + item.btn_style_cls" >
+          <div class="exam-list-item-btn exam-btn-state-go" v-if="item.is_start" @click="handleStartExam(item)">
             <el-icon><Highlighter/></el-icon>
-            <span style="margin-left: 5px">{{ item.is_start ? '进入考试' : '考试尚未开始' }}</span>
+            <span style="margin-left: 5px">进入考试</span>
+          </div>
+          <div class="exam-list-item-btn exam-btn-state-wait" v-else>
+            <el-icon><Highlighter/></el-icon>
+            <span style="margin-left: 5px">考试尚未开始</span>
           </div>
         </div>
       </div>
@@ -82,8 +86,7 @@ const getExamsByStudentId = () => {
         title: item['title'],
         start_time: item['start_time'],
         end_time: item['end_time'],
-        is_start: item['is_start'],
-        btn_style_cls: item['is_start'] ? 'exam-btn-state-go' : 'exam-btn-state-wait'
+        is_start: item['is_start']
       })
     })
     // 获取首个正在进行的考试
@@ -143,7 +146,7 @@ onBeforeUnmount(() => {
 })
 
 // 处理开始考试事件
-const handleStartExam = () => {
+const handleStartExam = (info: any) => {
   ElMessageBox.confirm(
       '您确定要开始考试吗？考试一旦开始后，无法暂停！',
       '提示',
