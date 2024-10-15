@@ -2,7 +2,7 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording">{{ paperInfo['title'] }}试卷预览</span>
+        <span class="page-header-wording">{{ paperInfo['title'] }} - 试卷预览</span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
