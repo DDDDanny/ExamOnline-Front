@@ -1,14 +1,15 @@
 <template>
   <div class="exam-online-main-box">
     <div class="common-module-header-box">
-      <el-icon>
+      <el-icon >
         <MonitorCheck />
       </el-icon>
       <span style="margin-left: 10px">在线考试</span>
     </div>
     <div class="exam-online-tips-box">
-      <span style="margin-left: 10px">
-        温馨提示：中途离开（包含且不限于切换菜单、刷新页面操作）都将被视为提交试卷，请谨慎操作
+      <el-icon style="margin-left: 20px;color: #0077e5;font-size: 15px"><CircleAlert /></el-icon>
+      <span style="margin-left: 8px;letter-spacing: 1px">
+        温馨提示：中途离开（包含且不限于切换菜单、刷新页面操作）都将被视为提交试卷，请谨慎操作!
       </span>
     </div>
     <div class="exam-online-operation-area">
@@ -47,7 +48,7 @@
 <script setup lang="ts">
 import { Paper } from "../../api"
 import { onMounted, ref, onBeforeUnmount } from 'vue'
-import {MonitorCheck} from "lucide-vue-next";
+import { MonitorCheck, CircleAlert } from "lucide-vue-next";
 
 // 存储答案
 const answers = ref({})
@@ -92,9 +93,9 @@ $borderRadius: 4px;
   height: 30px;
   display: flex;
   align-items: center;
-  background-color: #7d7d7d;
+  background-color: #9fceff;
   border-radius: $borderRadius;
-  color: white;
+  color: #454545;
   font-size: 13px;
 }
 
@@ -128,7 +129,7 @@ $borderRadius: 4px;
 .exam-online-other-box {
   width: 300px;
   height: 100%;
-  background-color: #ececec;
+  background-color: rgba(239, 239, 239, 0.8);
   border-radius: $borderRadius;
   backdrop-filter: blur(10px);
   color: #5e5e5e;
