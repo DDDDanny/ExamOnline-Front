@@ -87,7 +87,8 @@ const getExamsByStudentId = () => {
         title: item['title'],
         start_time: item['start_time'],
         end_time: item['end_time'],
-        is_start: item['is_start']
+        is_start: item['is_start'],
+        paper_id: item['paper_id']
       })
     })
     // 获取首个正在进行的考试
@@ -165,6 +166,8 @@ const handleStartExam = (info: any) => {
         return
       } else {
         ElMessage.success('开始考试！祝你好运！')
+        // 存储试卷ID，用户获取题目信息
+        localStorage.setItem('EXAM_ONLINE_PAPER', info.paper_id)
         router.replace(`/examOnline/${response.data.id}`)
       }
     })
