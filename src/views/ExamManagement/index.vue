@@ -398,7 +398,7 @@ const getExamsTableData = () => {
           paper_title: item['paper_info']['title'],
           exam_status: examStatus,
           start_datetime: item['start_time'],
-          end_datetime: item['start_time'],
+          end_datetime: item['end_time'],
           exam_date: moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD'),
           start_time: moment(item['start_time'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss'),
           end_time: moment(item['end_time'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss'),
