@@ -144,7 +144,7 @@ const goBack = () => {
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    background: #0077e5;
+    background: #606060;
     color: #fff;
     font-size: 13px;
   }
