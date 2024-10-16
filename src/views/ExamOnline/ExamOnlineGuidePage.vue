@@ -27,10 +27,10 @@
         </div>
       </el-divider>
       <div class="exam-list-box">
-        <div style="width: 100%;display: none;justify-content: center;">
+        <div style="width: 100%;display: flex;justify-content: center;" v-if="examWaitingList.length <= 0">
           <el-image style="width: 300px;opacity: 0.6" src="/src/images/noData.png" fit="cover"/>
         </div>
-        <div class="exam-list-item" v-for="item in examWaitingList" :key="item.id">
+        <div class="exam-list-item"  v-else v-for="item in examWaitingList" :key="item.id">
           <div class="exam-list-item-icon">
             <el-image style="width: 40px;height: 40px;" src="/src/images/ExamCardIcon.png" fit="cover"/>
           </div>
