@@ -39,7 +39,21 @@
           <span>----- 我是底线 -----</span>
         </div>
       </div>
-      <div class="exam-online-other-box">123</div>
+      <div class="exam-online-other-box">
+        <span class="exam-online-count-down-wording">距离考试结束还剩</span>
+        <span class="exam-online-count-down">00:00:00</span>
+        <el-divider/>
+        <div class="exam-online-overview-box">
+          <div
+              :class="answers[item] !== null ? 'overview-item-done' : 'overview-item-hang'"
+              v-for="(item, index) in Object.keys(answers)">
+            {{ index + 1 }}
+          </div>
+        </div>
+        <div class="exam-online-submit-button">
+          <el-button type="primary" style="width: 100%">提 交</el-button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -54,7 +68,6 @@ import { MonitorCheck, CircleAlert } from "lucide-vue-next";
 const answers = ref({})
 
 // 试卷信息，渲染页面
-// 存储试卷模块试题信息
 const paperModuleQuestion: any = ref([])
 
 // 获取完整试卷信息
@@ -64,15 +77,19 @@ const getCompletePaperInfo = () => {
       ElMessage.error(response.message)
       return
     }
+    const tempAnswers: any = {}
     // 处理试题选项
     response.data.forEach((item: any) => {
       item.questions.forEach((element: any) => {
         if (element.question_detail.options !== 'T&F') {
           element.question_detail.options = JSON.parse(element.question_detail.options)
         }
+        tempAnswers[element['question_detail']['id']] = null
       })
     })
     paperModuleQuestion.value = response.data
+    // 初始化答案信息
+    answers.value = tempAnswers
   })
 }
 
@@ -126,15 +143,6 @@ $borderRadius: 4px;
   }
 }
 
-.exam-online-other-box {
-  width: 300px;
-  height: 100%;
-  background-color: rgba(239, 239, 239, 0.8);
-  border-radius: $borderRadius;
-  backdrop-filter: blur(10px);
-  color: #5e5e5e;
-}
-
 .exam-online-paper-module-box {
   width: 100%;
   margin-top: 20px;
@@ -149,7 +157,7 @@ $borderRadius: 4px;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    background: #0077e5;
+    background: #606060;
     color: #fff;
     font-size: 13px;
   }
@@ -167,7 +175,64 @@ $borderRadius: 4px;
   }
 }
 
+.exam-online-other-box {
+  width: 280px;
+  height: 100%;
+  display: flex;
+  padding: 0 10px;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(239, 239, 239, 0.8);
+  border-radius: $borderRadius;
+  backdrop-filter: blur(10px);
+  color: #5e5e5e;
 
+  .exam-online-count-down-wording {
+    font-size: 18px;
+    margin-top: 20px
+  }
 
+  .exam-online-count-down {
+    font-size: 20px;
+    margin-top: 10px;
+    letter-spacing: 1px
+  }
 
+  .exam-online-submit-button {
+    width: 95%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  .exam-online-overview-box {
+    width: 100%;
+    max-height: calc(100% - 200px);
+    display: flex;
+    flex-wrap: wrap;
+
+    .overview-item-hang {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 2px solid #606060;
+      margin: 5px 5px
+    }
+
+    .overview-item-done {
+      width: 25px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background-color: #41b883;
+      color: white;
+      margin: 5px 5px
+    }
+  }
+}
 </style>
