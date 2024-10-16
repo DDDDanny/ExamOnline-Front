@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="exam-online-submit-button">
-          <el-button type="primary" style="width: 100%">提 交</el-button>
+          <el-button type="primary" style="width: 100%" :icon="Check" @click="handleSubmit">提 交</el-button>
         </div>
       </div>
     </div>
@@ -61,11 +61,12 @@
 
 <script setup lang="ts">
 import moment from "moment";
-import { Paper, Exam } from "../../api"
+import { Paper, Exam, ExamResult} from "../../api"
 import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
-import { MonitorCheck, CircleAlert } from "lucide-vue-next";
+import { MonitorCheck, CircleAlert, Check } from "lucide-vue-next";
 import {ElMessage} from "element-plus";
 import router from "../../router";
+import { useRoute } from 'vue-router'
 
 // 存储考试结束时间
 const examDetail = ref({})
@@ -161,6 +162,36 @@ onBeforeUnmount(() => {
   localStorage.removeItem('EXAM_ONLINE_EXAM')
   clearInterval(timer)
 })
+
+const route = useRoute()
+
+// 处理交卷
+const handleSubmit = () => {
+  ElMessageBox.confirm(
+      '您确定要交卷吗？',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '我再看看',
+        type: 'warning',
+        center: true
+      }
+  ).then(() => {
+    // 更新考试结果数据（考试开始时间）
+    ExamResult.updateExamResultApi(
+        route.params.id, { end_time: moment().format('YYYY-MM-DD HH:mm:ss') }
+    ).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('提交成功！')
+      router.replace('/examOnline')
+    })
+  }).catch(() => {
+    ElMessage.info('取消交卷')
+  })
+}
 </script>
 
 <style scoped lang="scss">
