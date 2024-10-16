@@ -25,8 +25,8 @@
             <el-radio-group style="margin-top: 20px"
                             v-if="question['question_detail']['type'] === 'judge'"
                             v-model="answers[question['question_detail']['id']]">
-              <el-radio :value="true">对</el-radio>
-              <el-radio :value="false">错</el-radio>
+              <el-radio value="T">对</el-radio>
+              <el-radio value="F">错</el-radio>
             </el-radio-group>
             <el-radio-group v-else style="margin-top: 20px" v-model="answers[question['question_detail']['id']]">
               <el-radio :value="key" v-for="key in Object.keys(question['question_detail']['options'])">
@@ -188,6 +188,9 @@ const handleSubmit = () => {
       ElMessage.success('提交成功！')
       router.replace('/examOnline')
     })
+    // 组装&提交数据
+    const submitData = { exam_result_id: route.params.id, answers: { ...answers.value } }
+    ExamResult.createExamResultDetailApi(submitData)
   }).catch(() => {
     ElMessage.info('取消交卷')
   })
