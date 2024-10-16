@@ -46,6 +46,12 @@ export class Exam {
     const { data } = await axios.get('/examSchedule', { params: { ...querySet }})
     return data
   }
+
+  // 根据ID获取考试详情接口
+  async getExamDetailByIdApi(id: any): Promise<Result> {
+    const { data } = await axios.get('/examDetail', { params: { id }})
+    return data
+  }
 }
 
 export default new Exam()
