@@ -177,20 +177,26 @@ const handleSubmit = () => {
         center: true
       }
   ).then(() => {
-    // 更新考试结果数据（考试开始时间）
-    ExamResult.updateExamResultApi(
-        route.params.id, { end_time: moment().format('YYYY-MM-DD HH:mm:ss') }
-    ).then(response => {
-      if (response.code !== 200) {
-        ElMessage.error(response.msg)
-        return
-      }
-      ElMessage.success('提交成功！')
-      router.replace('/examOnline')
-    })
+    const endTime = moment().format('YYYY-MM-DD HH:mm:ss')
     // 组装&提交数据
     const submitData = { exam_result_id: route.params.id, answers: { ...answers.value } }
-    ExamResult.createExamResultDetailApi(submitData)
+    ExamResult.createExamResultDetailApi(submitData).then(res => {
+      if (res.code !== 200) {
+        ElMessage.error(res.msg)
+        return
+      }
+      // 更新考试结果数据（考试结束时间）
+      ExamResult.updateExamResultApi(
+          route.params.id, { end_time: endTime, result_mark: res.data.result_total_mark}
+      ).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.msg)
+          return
+        }
+        ElMessage.success('提交成功！')
+        router.replace('/examOnline')
+      })
+    })
   }).catch(() => {
     ElMessage.info('取消交卷')
   })
