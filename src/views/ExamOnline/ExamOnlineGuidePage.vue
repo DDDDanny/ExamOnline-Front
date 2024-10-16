@@ -58,11 +58,11 @@
 
 <script setup lang="ts">
 import moment from "moment";
-import { ExamOnline } from "../../api";
+import { ExamOnline, ExamResult } from "../../api";
 import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
-import {getCookie} from "../../utils/cookie.ts";
-import {ElMessage} from "element-plus";
-import {onMounted, ref, watch, onBeforeUnmount} from "vue";
+import { getCookie } from "../../utils/cookie.ts";
+import { ElMessage } from "element-plus";
+import { onMounted, ref, watch, onBeforeUnmount } from "vue";
 import router from "../../router";
 
 // 获取登录人信息
@@ -165,10 +165,19 @@ const handleStartExam = (info: any) => {
         ElMessage.error(response.msg)
         return
       } else {
-        ElMessage.success('开始考试！祝你好运！')
-        // 存储考试ID，用于获取试卷信息
-        localStorage.setItem('EXAM_ONLINE_EXAM', info.id)
-        router.replace(`/examOnline/${response.data.id}`)
+        // 更新考试结果数据（考试开始时间）
+        ExamResult.updateExamResultApi(
+            response.data.id, { start_time: moment().format('YYYY-MM-DD HH:mm:ss') }
+        ).then(response => {
+          if (response.code !== 200) {
+            ElMessage.error(response.msg)
+            return
+          }
+          ElMessage.success('开始考试！祝你好运！')
+          // 存储考试ID，用于获取试卷信息
+          localStorage.setItem('EXAM_ONLINE_EXAM', info.id)
+          router.replace(`/examOnline/${response.data.id}`)
+        })
       }
     })
 
