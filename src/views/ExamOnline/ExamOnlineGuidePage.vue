@@ -166,8 +166,8 @@ const handleStartExam = (info: any) => {
         return
       } else {
         ElMessage.success('开始考试！祝你好运！')
-        // 存储试卷ID，用户获取题目信息
-        localStorage.setItem('EXAM_ONLINE_PAPER', info.paper_id)
+        // 存储考试ID，用于获取试卷信息
+        localStorage.setItem('EXAM_ONLINE_EXAM', info.id)
         router.replace(`/examOnline/${response.data.id}`)
       }
     })

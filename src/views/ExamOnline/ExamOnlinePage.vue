@@ -41,7 +41,7 @@
       </div>
       <div class="exam-online-other-box">
         <span class="exam-online-count-down-wording">距离考试结束还剩</span>
-        <span class="exam-online-count-down">00:00:00</span>
+        <span class="exam-online-count-down">{{ countDown }}</span>
         <el-divider/>
         <div class="exam-online-overview-box">
           <div
@@ -60,9 +60,28 @@
 </template>
 
 <script setup lang="ts">
-import { Paper } from "../../api"
-import { onMounted, ref, onBeforeUnmount } from 'vue'
+import moment from "moment";
+import { Paper, Exam } from "../../api"
+import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import { MonitorCheck, CircleAlert } from "lucide-vue-next";
+import {ElMessage} from "element-plus";
+import router from "../../router";
+
+// 存储考试结束时间
+const examDetail = ref({})
+
+// 查询考试详情
+const getExamDetail = () => {
+  const id = localStorage.getItem('EXAM_ONLINE_EXAM')
+  Exam.getExamDetailByIdApi(id).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    } else {
+      examDetail.value = response.data
+    }
+  })
+}
 
 // 存储答案
 const answers = ref({})
@@ -72,7 +91,7 @@ const paperModuleQuestion: any = ref([])
 
 // 获取完整试卷信息
 const getCompletePaperInfo = () => {
-  Paper.getCompletePaperApi(localStorage.getItem('EXAM_ONLINE_PAPER')).then((response: any) => {
+  Paper.getCompletePaperApi(examDetail.value.paper_id).then((response: any) => {
     if (response.code !== 200) {
       ElMessage.error(response.message)
       return
@@ -93,12 +112,54 @@ const getCompletePaperInfo = () => {
   })
 }
 
+// 初始化计时器
+let timer = null;
+// 倒计时显示
+const countDown = ref("")
+// 计算倒计时
+const calculateTimeLeft = () => {
+  // 获取当前时间
+  const now = new Date();
+  const targetTime = moment(examDetail.value.end_time, 'YYYY-MM-DD HH:mm:ss')
+  // 计算差值
+  let diff = targetTime - now
+  // 判断是否已经结束
+  if (diff < 0) {
+    console.log('------👉 倒计时结束 👈------')
+    clearInterval(timer)
+    // 倒计时结束，跳转到在线考试引导页
+    router.replace('/examOnline')
+    return
+  }
+  const hours = Math.floor(diff / 1000 / 60 / 60);  // 小时
+  diff -= hours * 1000 * 60 * 60
+  const minutes = Math.floor(diff / 1000 / 60)  // 分钟
+  diff -= minutes * 1000 * 60;
+  const seconds = Math.floor(diff / 1000)  // 秒
+  // 确保格式化输出：例如 01 : 05 : 09
+  countDown.value = `${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`
+}
+
+// 启动倒计时
+const startCountdown = () => {
+  calculateTimeLeft()  // 初次计算
+  timer = setInterval(calculateTimeLeft, 1000)  // 每秒更新一次
+};
+
 onMounted(() => {
-  getCompletePaperInfo()
+  getExamDetail()
+  // 确保倒计时和获取试卷在 examDetail 数据加载完之后再启动
+  watch(() => examDetail.value, (newVal) => {
+    getCompletePaperInfo()  // 获取试卷
+    if (newVal && newVal.end_time) {
+      startCountdown()  // 启动倒计时
+    }
+  });
 })
 
 onBeforeUnmount(() => {
-  localStorage.removeItem('EXAM_ONLINE_PAPER')
+  localStorage.removeItem('EXAM_ONLINE_EXAM')
+  clearInterval(timer)
 })
 </script>
 
