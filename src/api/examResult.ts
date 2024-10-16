@@ -23,6 +23,12 @@ export class ExamResult {
     )
     return data
   }
+
+  // 创建考试结果详情API
+  async createExamResultDetailApi(detailData: {}): Promise<Result> {
+    const { data } = await axios.post('/examResultDetail', { ...detailData })
+    return  data
+  }
 }
 
 export default new ExamResult()
