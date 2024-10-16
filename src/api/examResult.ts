@@ -19,7 +19,7 @@ export class ExamResult {
   async updateExamResultApi(examResultId: string, updateData: any): Promise<Result> {
     const { data } = await axios.put(
       `/examResult/${examResultId}`,
-      { start_time: updateData.start_time }
+      { ...updateData }
     )
     return data
   }
