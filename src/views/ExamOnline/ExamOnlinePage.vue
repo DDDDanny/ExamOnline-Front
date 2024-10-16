@@ -210,6 +210,7 @@ $borderRadius: 4px;
     max-height: calc(100% - 200px);
     display: flex;
     flex-wrap: wrap;
+    overflow-y: auto;
 
     .overview-item-hang {
       width: 22px;
