@@ -14,6 +14,15 @@ export class ExamResult {
     const { data } = await axios.post('/examResult', { exam_id, student_ids })
     return data
   }
+
+  // 更新考试结果API
+  async updateExamResultApi(examResultId: string, updateData: any): Promise<Result> {
+    const { data } = await axios.put(
+      `/examResult/${examResultId}`,
+      { start_time: updateData.start_time }
+    )
+    return data
+  }
 }
 
 export default new ExamResult()
