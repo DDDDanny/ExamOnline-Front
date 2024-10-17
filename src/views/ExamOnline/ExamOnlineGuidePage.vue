@@ -54,16 +54,46 @@
       </div>
     </div>
   </div>
+  <el-dialog
+      width="300"
+      center
+      v-model="scoreViewDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      modal-class="dialog-modal-style"
+      style="border-radius: 10px"
+  >
+    <div class="exam-result-view-box">
+      <h3>本次考试，您的成绩为</h3>
+      <el-progress type="dashboard" :percentage="scoreInfo.percentage" :color="calcScoreColor">
+        <template #default="{ percentage }">
+          <span class="percentage-value">{{ scoreInfo.score }}分</span>
+          <span class="percentage-label">总分为{{ scoreInfo.actual_total }}分</span>
+        </template>
+      </el-progress>
+      <h4>{{ calcDescWording }}</h4>
+      <span class="score-progress-wording">考试开始时间：{{ scoreInfo.start_time }}</span>
+      <span class="score-progress-wording">考试结束时间：{{ scoreInfo.end_time }}</span>
+      <span class="score-progress-wording" style="margin-bottom: 20px;color: #afafaf">提示：得分详情可以到「成绩查询」模块查看</span>
+      <div class="exam-result-view-btn-box">
+        <el-button :icon="X" @click="changeDialogVisible">关 闭</el-button>
+        <el-button :icon="ListCollapse">详情查询</el-button>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import moment from "moment";
+import {storeToRefs} from "pinia";
 import { ExamOnline, ExamResult } from "../../api";
-import { SwatchBook, FileClock, Highlighter } from "lucide-vue-next";
+import { SwatchBook, FileClock, Highlighter, X, ListCollapse } from "lucide-vue-next";
 import { getCookie } from "../../utils/cookie.ts";
 import { ElMessage } from "element-plus";
-import { onMounted, ref, watch, onBeforeUnmount } from "vue";
+import { onMounted, ref, watch, onBeforeUnmount, computed } from "vue";
 import router from "../../router";
+import { useExamOnlineCallbackStore } from "../../stores/ExamOnlineCallbackStore.ts";
 
 // 获取登录人信息
 const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
@@ -185,6 +215,19 @@ const handleStartExam = (info: any) => {
     ElMessage.info('取消开始考试')
   })
 }
+
+// 处理展示考试结果
+const examEndCallback = useExamOnlineCallbackStore()
+const { scoreViewDialogVisible, scoreInfo } = storeToRefs(examEndCallback)
+const { changeDialogVisible } = examEndCallback
+// 计算展示颜色
+const calcScoreColor = computed(() => {
+  return scoreInfo.value.score > scoreInfo.value.pass_mark ? '#67C23A' : '#F56C6C'
+})
+// 计算展示说明文本
+const calcDescWording = computed(() => {
+  return scoreInfo.value.score > scoreInfo.value.pass_mark ? '不错不错！继续努力！' : '还需要继续加油哦～'
+})
 </script>
 
 <style scoped lang="scss">
@@ -291,8 +334,38 @@ const handleStartExam = (info: any) => {
     .exam-btn-state-wait {
       background-color: #818181;
     }
+  }
+}
 
+.percentage-value {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+}
 
+.percentage-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.exam-result-view-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .score-progress-wording {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .exam-result-view-btn-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
   }
 }
 </style>
