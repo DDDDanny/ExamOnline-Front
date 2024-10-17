@@ -55,7 +55,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -64,9 +63,11 @@ import moment from "moment";
 import { Paper, Exam, ExamResult} from "../../api"
 import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import { MonitorCheck, CircleAlert, Check } from "lucide-vue-next";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 import router from "../../router";
 import { useRoute } from 'vue-router'
+import { useExamOnlineCallbackStore } from '../../stores/ExamOnlineCallbackStore.ts'
+import {storeToRefs} from "pinia";
 
 // 存储考试结束时间
 const examDetail = ref({})
@@ -165,6 +166,10 @@ onBeforeUnmount(() => {
 
 const route = useRoute()
 
+const examEndCallback = useExamOnlineCallbackStore()
+const { scoreInfo } = storeToRefs(examEndCallback)
+const { changeDialogVisible } = examEndCallback
+
 // 处理交卷
 const handleSubmit = () => {
   ElMessageBox.confirm(
@@ -194,7 +199,17 @@ const handleSubmit = () => {
           return
         }
         ElMessage.success('提交成功！')
+        // 构建考试结果相关数据，作为回调数据
+        scoreInfo.value = {
+          score: res.data.result_total_mark,
+          actual_total: res.data.sum_marks,
+          pass_mark: res.data.pass_mark,
+          percentage: res.data.percentage,
+          start_time: response.data.start_time,
+          end_time: response.data.end_time
+        }
         router.replace('/examOnline')
+        changeDialogVisible()
       })
     })
   }).catch(() => {
