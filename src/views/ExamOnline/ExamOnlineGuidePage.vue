@@ -17,7 +17,10 @@
         <div class="content-status" v-else>
           <span style="margin: auto;font-size: 25px">《 {{ firstStartExam['title'] }} 》</span>
           <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: {{ timeLeft }}</span>
-          <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam(firstStartExam)">进 入 考 试</el-button>
+          <el-button type="primary" v-if="firstStartExam.status === 'start'" :icon="Highlighter" style="width: 350px" @click="handleStartExam(firstStartExam)">
+            进 入 考 试
+          </el-button>
+          <el-button v-else type="info" :icon="Highlighter" style="width: 350px">您已完成考试</el-button>
         </div>
       </div>
       <el-divider content-position="left">
@@ -42,11 +45,15 @@
             <span class="wording-title">结束时间：</span>
             <span>{{ item.end_time }}</span>
           </div>
-          <div class="exam-list-item-btn exam-btn-state-go" v-if="item.is_start" @click="handleStartExam(item)">
+          <div class="exam-list-item-btn exam-btn-state-go" v-if="item.status === 'start'" @click="handleStartExam(item)">
             <el-icon><Highlighter/></el-icon>
             <span style="margin-left: 5px">进入考试</span>
           </div>
-          <div class="exam-list-item-btn exam-btn-state-wait" v-else>
+          <div class="exam-list-item-btn exam-btn-state-wait" v-else-if="item.status === 'done'" >
+            <el-icon><Highlighter/></el-icon>
+            <span style="margin-left: 5px">您已完成考试</span>
+          </div>
+          <div class="exam-list-item-btn " v-else>
             <el-icon><Highlighter/></el-icon>
             <span style="margin-left: 5px">考试尚未开始</span>
           </div>
@@ -112,13 +119,16 @@ const getExamsByStudentId = () => {
     }
     const tempData: any = []
     response.data.map((item: any) => {
+      // 根据考试开始时间和参加考试的时间，判断状态
+      item['status'] = item['is_attend'] ? 'done' : (item['is_start'] ? 'start' : 'wait');
       tempData.push({
         id: item['id'],
         title: item['title'],
         start_time: item['start_time'],
         end_time: item['end_time'],
         is_start: item['is_start'],
-        paper_id: item['paper_id']
+        paper_id: item['paper_id'],
+        status: item['status'],
       })
     })
     // 获取首个正在进行的考试
