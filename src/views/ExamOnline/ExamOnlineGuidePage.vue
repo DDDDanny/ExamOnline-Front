@@ -17,10 +17,9 @@
         <div class="content-status" v-else>
           <span style="margin: auto;font-size: 25px">《 {{ firstStartExam['title'] }} 》</span>
           <span style="margin-top: 20px;margin-bottom: 20px;font-size: 20px">考试已经开始，距离考试结束还有: {{ timeLeft }}</span>
-          <el-button type="primary" v-if="firstStartExam.status === 'start'" :icon="Highlighter" style="width: 350px" @click="handleStartExam(firstStartExam)">
+          <el-button type="primary" :icon="Highlighter" style="width: 350px" @click="handleStartExam(firstStartExam)">
             进 入 考 试
           </el-button>
-          <el-button v-else type="info" :icon="Highlighter" style="width: 350px">您已完成考试</el-button>
         </div>
       </div>
       <el-divider content-position="left">
@@ -49,12 +48,12 @@
             <el-icon><Highlighter/></el-icon>
             <span style="margin-left: 5px">进入考试</span>
           </div>
-          <div class="exam-list-item-btn exam-btn-state-wait" v-else-if="item.status === 'done'" >
-            <el-icon><Highlighter/></el-icon>
+          <div class="exam-list-item-btn exam-btn-state-done" v-else-if="item.status === 'done'" >
+            <el-icon><Check/></el-icon>
             <span style="margin-left: 5px">您已完成考试</span>
           </div>
-          <div class="exam-list-item-btn " v-else>
-            <el-icon><Highlighter/></el-icon>
+          <div class="exam-list-item-btn exam-btn-state-wait" v-else>
+            <el-icon><Hourglass /></el-icon>
             <span style="margin-left: 5px">考试尚未开始</span>
           </div>
         </div>
@@ -95,7 +94,7 @@
 import moment from "moment";
 import {storeToRefs} from "pinia";
 import { ExamOnline, ExamResult } from "../../api";
-import { SwatchBook, FileClock, Highlighter, X, ListCollapse } from "lucide-vue-next";
+import { SwatchBook, FileClock, Highlighter, X, ListCollapse, Check, Hourglass } from "lucide-vue-next";
 import { getCookie } from "../../utils/cookie.ts";
 import { ElMessage } from "element-plus";
 import { onMounted, ref, watch, onBeforeUnmount, computed } from "vue";
@@ -131,10 +130,13 @@ const getExamsByStudentId = () => {
         status: item['status'],
       })
     })
-    // 获取首个正在进行的考试
-    if (tempData.length > 0 && tempData[0].is_start) {
-      firstStartExam.value = tempData[0]
-      tempData.shift()
+    // 获取首个正在进行并且没有完成作答的的考试
+    for (let i = 0; i < tempData.length; i++) {
+      if (tempData[i].is_start && tempData[i].status !== 'done')  {
+        firstStartExam.value = tempData[i]
+        tempData.splice(i, 1)
+        break
+      }
     }
     examWaitingList.value = tempData
   })
@@ -343,6 +345,10 @@ const calcDescWording = computed(() => {
 
     .exam-btn-state-wait {
       background-color: #818181;
+    }
+
+    .exam-btn-state-done {
+      background-color: #67C23A;
     }
   }
 }
