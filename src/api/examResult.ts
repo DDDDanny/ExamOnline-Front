@@ -29,6 +29,14 @@ export class ExamResult {
     const { data } = await axios.post('/examResultDetail', { ...detailData })
     return  data
   }
+
+  // 查询考试结果接口（学生端）
+  async getStudentExamsResultApi(querySet: object, currentPage: number, pageSize:number): Promise<Result> {
+    const { data } = await axios.get('/examResultStu', {
+      params: { ...querySet, currentPage, pageSize }
+    })
+    return data
+  }
 }
 
 export default new ExamResult()
