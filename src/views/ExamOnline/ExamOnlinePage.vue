@@ -195,7 +195,7 @@ const handleSubmit = () => {
       }
       // 更新考试结果数据（考试结束时间）
       ExamResult.updateExamResultApi(
-          route.params.id, { end_time: endTime, result_mark: res.data.result_total_mark}
+          route.params.id, { end_time: endTime, result_mark: res.data.result_total_mark, ending_status: true}
       ).then(response => {
         if (response.code !== 200) {
           ElMessage.error(response.msg)
@@ -224,7 +224,17 @@ const handleSubmit = () => {
 // 监听页面路由变化，实现异常退出提示
 onBeforeRouteLeave((to, from, next) => {
   const handleExit = () => {
-    next(); // 允许离开
+    const endTime = moment().format('YYYY-MM-DD HH:mm:ss')
+    // 更新考试结果数据（考试结束时间）
+    ExamResult.updateExamResultApi(
+        route.params.id, { end_time: endTime, ending_status: false }
+    ).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      next(); // 允许离开
+    })
   };
 
   const cancelExit = () => {
