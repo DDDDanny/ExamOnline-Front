@@ -96,7 +96,7 @@ import { Menu, UserLogin } from '../api';
 import { router } from '../router'
 import {onMounted, onBeforeMount, ref} from "vue";
 import {
-  BookMarked, Notebook, Files, FileCheck, FileTerminal,
+  BookMarked, Notebook, Files, SearchCheck, FileTerminal,
   BookOpenCheck, Users, Laptop2, GraduationCap,
   CircleUserRound, Bell, LayoutTemplate, BookHeart,
   BookCheck, Lock, LogOut, Ban, Send, FileHeart
@@ -108,7 +108,7 @@ import type {FormInstance} from 'element-plus'
 // 菜单对应的ICON
 const menuIconEnum: any = {
   '10001': BookMarked, '10002': Notebook, '10003': Files,
-  '10004': BookOpenCheck, '10005': FileCheck, '10006': GraduationCap,
+  '10004': BookOpenCheck, '10005': SearchCheck, '10006': GraduationCap,
   '10007': Users, '10008': Laptop2,
   '10001_1': BookHeart, '10001_2': BookCheck,
   '10003_1': FileHeart, '10003_2': FileTerminal,
