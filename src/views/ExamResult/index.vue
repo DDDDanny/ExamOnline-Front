@@ -33,7 +33,7 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="Award" @click="goViewDetail(scope['row'])">查看成绩</el-button>
+            <el-button link size="small" type="primary" :icon="FileSymlink" @click="goViewDetail(scope['row'])">查看成绩单</el-button>
             <el-divider direction="vertical"/>
             <el-button link size="small" type="success" :icon="CloudDownload">下载成绩单</el-button>
           </template>
@@ -65,7 +65,7 @@ import { getCookie } from "../../utils/cookie.ts";
 import { ElMessage } from "element-plus";
 import { Exam } from "../../api"
 import router from "../../router";
-import { SearchCheck, Search, CloudDownload, Award } from "lucide-vue-next";
+import {SearchCheck, Search, CloudDownload, FileSymlink} from "lucide-vue-next";
 import moment from "moment";
 
 // 获取登录用户ID
