@@ -37,9 +37,33 @@
         <el-table-column fixed type="index" align="center" width="60" label="排名"/>
         <el-table-column fixed prop="student_id" label="学号" align="center" width="200"/>
         <el-table-column fixed prop="name" label="学生姓名" align="center" width="180"/>
-        <el-table-column fixed prop="result_mark" label="总得分" align="center" width="120"/>
-        <el-table-column prop="start_time" label="考试开始时间" align="center" width="180"/>
-        <el-table-column prop="end_time" label="考试结束时间" align="center" width="180"/>
+        <el-table-column fixed prop="result_mark" label="总分" align="center" width="120"/>
+        <el-table-column prop="status" label="作答状态" align="center" width="120">
+          <template #default="scope">
+            <el-tag size="small" v-if="scope['row']['status'] === '未参加'" type="info">
+              <el-icon><X /></el-icon>
+              {{ scope['row']['status'] }}
+            </el-tag>
+            <el-tag size="small" v-else-if="scope['row']['status'] === '正常'" type="success">
+              <el-icon><Check /></el-icon>
+              {{ scope['row']['status'] }}
+            </el-tag>
+            <el-tag size="small" v-else type="danger">
+              <el-icon><ShieldAlert /></el-icon>
+              {{ scope['row']['status'] }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="start_time" label="作答开始时间" align="center" width="180">
+          <template #default="scope">
+            {{ scope['row']['start_time'] ? scope['row']['start_time'] : '--' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="end_time" label="作答结束时间" align="center" width="180">
+          <template #default="scope">
+            {{ scope['row']['end_time'] ? scope['row']['end_time'] : '--' }}
+          </template>
+        </el-table-column>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="260" :resizable="false">
           <template #default>
@@ -63,7 +87,7 @@ import { ExamResult } from "../../api";
 import {ElMessage} from "element-plus";
 import {storeToRefs} from 'pinia'
 import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
-import {Award, ChevronLeft, CloudDownload, Search} from "lucide-vue-next";
+import {Award, Check, ChevronLeft, CloudDownload, Search, ShieldAlert, X} from "lucide-vue-next";
 
 // 从Store中获取考试信息
 const examResultDetail = useExamResultDetailStore()
@@ -102,7 +126,8 @@ const getExamResultData = () => {
           name: item['student_info']['name'],
           result_mark: item['result_mark'],
           start_time: item['start_time'],
-          end_time: item['end_time']
+          end_time: item['end_time'],
+          status: !item['start_time'] ? '未参加' : item['ending_status'] ? '正常' : '退出异常',
         })
       })
       tableData.value = tempData
