@@ -2,9 +2,9 @@
   <div class="exam-result-main-box">
     <div class="common-module-header-box">
       <el-icon>
-        <FileCheck />
+        <SearchCheck />
       </el-icon>
-      <span style="margin-left: 10px">成绩管理</span>
+      <span style="margin-left: 10px">成绩查询</span>
     </div>
     <div class="common-module-query-box">
       <div class="module-query-item">
@@ -60,12 +60,12 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted } from "vue";
-import {useExamResultDetailStore} from "../../stores/ExamResultDetailStore.ts";
-import {getCookie} from "../../utils/cookie.ts";
-import {ElMessage} from "element-plus";
+import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
+import { getCookie } from "../../utils/cookie.ts";
+import { ElMessage } from "element-plus";
 import { Exam } from "../../api"
 import router from "../../router";
-import {FileCheck, Search, CloudDownload, Award} from "lucide-vue-next";
+import { SearchCheck, Search, CloudDownload, Award } from "lucide-vue-next";
 import moment from "moment";
 
 // 获取登录用户ID
