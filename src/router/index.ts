@@ -11,6 +11,7 @@ import PublicPaperWarehouse from "../views/PaperManagement/PublicPaperWarehouse.
 import ExamManagement from "../views/ExamManagement/index.vue"
 import StudentsManagement from "../views/UserManagement/StudentsManagement.vue"
 import ExamResult from "../views/ExamResult/index.vue"
+import ExamResultStu from "../views/ExamResult/indexStudent.vue"
 import ExamResultDetail from "../views/ExamResult/ExamResultDetail.vue";
 import PaperDetailView from "../views/PaperManagement/PaperDetailView.vue";
 import TeachersManagement from "../views/UserManagement/TeachersManagement.vue";
@@ -62,6 +63,10 @@ const routers: any = [
       {
         path: '/examResult',
         component: ExamResult,
+      },
+      {
+        path: '/examResultStu',
+        component: ExamResultStu,
       },
       {
         path: '/examResultDetail',
