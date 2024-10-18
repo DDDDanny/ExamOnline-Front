@@ -9,7 +9,7 @@
     <div class="exam-online-tips-box">
       <el-icon style="margin-left: 20px;color: #0077e5;font-size: 15px"><CircleAlert /></el-icon>
       <span style="margin-left: 8px;letter-spacing: 1px">
-        温馨提示：中途离开（包含且不限于切换菜单、刷新页面操作）都将被视为提交试卷，请谨慎操作!
+        温馨提示：中途离开都将被视为异常退出，若异常退出，本次考试将记为0分并且无法再次参加该考试，请谨慎操作!
       </span>
     </div>
     <div class="exam-online-operation-area">
@@ -65,7 +65,7 @@ import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import { MonitorCheck, CircleAlert, Check } from "lucide-vue-next";
 import { ElMessage } from "element-plus";
 import router from "../../router";
-import { useRoute } from 'vue-router'
+import {onBeforeRouteLeave, useRoute} from 'vue-router'
 import { useExamOnlineCallbackStore } from '../../stores/ExamOnlineCallbackStore.ts'
 import {storeToRefs} from "pinia";
 
@@ -170,6 +170,9 @@ const examEndCallback = useExamOnlineCallbackStore()
 const { scoreInfo } = storeToRefs(examEndCallback)
 const { changeDialogVisible } = examEndCallback
 
+// 记录是否是点击提交按钮切换页面（用于限制在答题时误触）
+const is_submit_btn = ref(false)
+
 // 处理交卷
 const handleSubmit = () => {
   ElMessageBox.confirm(
@@ -208,6 +211,7 @@ const handleSubmit = () => {
           start_time: response.data.start_time,
           end_time: response.data.end_time
         }
+        is_submit_btn.value = true
         router.replace('/examOnline')
         changeDialogVisible()
       })
@@ -216,6 +220,33 @@ const handleSubmit = () => {
     ElMessage.info('取消交卷')
   })
 }
+
+// 监听页面路由变化，实现异常退出提示
+onBeforeRouteLeave((to, from, next) => {
+  const handleExit = () => {
+    next(); // 允许离开
+  };
+
+  const cancelExit = () => {
+    next(false); // 阻止离开
+  };
+
+  if (!is_submit_btn.value) {
+    ElMessageBox.confirm(
+        '您确定要异常退出吗？若异常退出，考试将记为0分并且无法再次参加考试，请谨慎操作！',
+        '警告',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }
+    ).then(handleExit).catch(cancelExit);
+  } else {
+    next(); // 允许离开
+  }
+})
+
 </script>
 
 <style scoped lang="scss">
