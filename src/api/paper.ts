@@ -41,6 +41,12 @@ export class Paper {
     return data
   }
 
+  // 通过ID获取试卷信息
+  async getPaperInfoApi(paperId: string): Promise<Result> {
+    const { data } = await axios.get('/paper/' + paperId)
+    return data
+  }
+
   // 根据试卷ID获取模块信息接口
   async getPaperModuleApi(paperId: string): Promise<Result> {
     const { data } = await axios.get('/paperModule/' + paperId)
