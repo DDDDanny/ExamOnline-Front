@@ -58,7 +58,9 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="160" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="FileSymlink">查看成绩详情</el-button>
+            <el-button link size="small" type="primary" :icon="FileSymlink" @click="goToDetail(scope['row']['id'])">
+              查看成绩详情
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -87,6 +89,7 @@ import { getCookie } from "../../utils/cookie.ts";
 import { ElMessage } from "element-plus";
 import { ExamResult } from "../../api"
 import {SearchCheck, Search, FileSymlink, X, Check, ShieldAlert} from "lucide-vue-next";
+import router from "../../router";
 
 // 获取登录用户ID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -135,6 +138,12 @@ const getStudentExamResultTableData = () => {
 onMounted(() => {
   getStudentExamResultTableData()
 })
+
+// 处理进入成绩详情页
+const goToDetail = (recordId: string) => {
+  router.replace(`/paperResultStu/${ recordId }`)
+  localStorage.setItem('RESULT_DETAILS_SOURCE_URL_STU', router.currentRoute.value.path)
+}
 </script>
 
 <style scoped lang="scss">
