@@ -17,6 +17,7 @@ import PaperDetailView from "../views/PaperManagement/PaperDetailView.vue";
 import TeachersManagement from "../views/UserManagement/TeachersManagement.vue";
 import ExamOnlineGuidePage from "../views/ExamOnline/ExamOnlineGuidePage.vue";
 import ExamOnlinePage from "../views/ExamOnline/ExamOnlinePage.vue";
+import PaperResultDetailStu from "../views/ExamResult/PaperResultDetailStu.vue";
 
 const routers: any = [
   {
@@ -87,6 +88,10 @@ const routers: any = [
       {
         path: '/examOnline/:id',
         component: ExamOnlinePage,
+      },
+      {
+        path: '/paperResultStu/:id',
+        component: PaperResultDetailStu,
       }
     ]
   }
