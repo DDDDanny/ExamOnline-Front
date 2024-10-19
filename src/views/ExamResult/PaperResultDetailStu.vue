@@ -2,23 +2,57 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording">xxx考试 - 成绩预览</span>
+        <span class="page-header-wording">{{ examTitle }} - 成绩预览</span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
+    <common-result-view :paper-info="paperInfo" />
   </div>
 </template>
 
 <script setup lang="ts">
 import router from "../../router";
-import {computed, onBeforeUnmount, onMounted} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import {ChevronLeft} from "lucide-vue-next";
+import CommonResultView from "../../components/CommonResultView.vue";
+import {ExamResult, Paper} from "../../api";
+import {ElMessage} from "element-plus";
+
+// 试卷信息
+const paperInfo = ref({})
+// 考试标题
+const examTitle = ref('')
+
+// 获取考试结果相关信息
+const getExamResultInfo = () => {
+  const examResultId = router.currentRoute.value.params.id
+  ExamResult.getExamResultByIdApi(examResultId).then((response: any) => {
+    if (response.code !== 200) {
+      ElMessage.error(response.message)
+      return
+    }
+    examTitle.value = response.data.exam_info.title
+    const paperId: string = response.data.exam_info.paper_id
+    // 获取试卷信息
+    Paper.getPaperInfoApi(paperId).then((res: any) => {
+      if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+      }
+      paperInfo.value = res.data
+    })
+  })
+}
 
 // 处理页面返回
 const goBack = () => {
   const sourceUrl = localStorage.getItem('RESULT_DETAILS_SOURCE_URL_STU')
   router.replace(sourceUrl)
 }
+
+onMounted(() => {
+  getExamResultInfo()
+})
 
 onBeforeUnmount(() => {
   // 销毁
