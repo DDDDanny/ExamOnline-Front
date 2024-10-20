@@ -43,6 +43,12 @@ export class ExamResult {
     const { data } = await axios.get(`/examResult/${id}`)
     return data
   }
+
+  // 根据考试结果ID获取详情信息
+  async getExamResultDetailApi(id:string): Promise<Result> {
+    const { data } = await axios.get(`/examResultDetail/${id}`)
+    return data
+  }
 }
 
 export default new ExamResult()
