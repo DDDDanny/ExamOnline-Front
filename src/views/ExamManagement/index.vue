@@ -141,10 +141,10 @@
                   v-else-if="scope['row']['exam_status'] === EXAM_STATUS.ENDED"
                   size="small"
                   type="primary"
-                  :icon="Award"
+                  :icon="FileSymlink"
                   @click="goExamResultDetail(scope['row'])"
               >
-                查看成绩
+                查看成绩单
               </el-button>
               <span v-else>--</span>
             </div>
@@ -324,7 +324,7 @@ import {getCookie} from "../../utils/cookie.ts";
 import router from "../../router";
 import {useExamResultDetailStore} from "../../stores/ExamResultDetailStore.ts";
 import {
-  BookOpenCheck, Check, Navigation, NavigationOff, Award, UserRoundPlus,
+  BookOpenCheck, Check, Navigation, NavigationOff, FileSymlink, UserRoundPlus,
   Plus, Search, SquarePen, Trash2, X, Flag, Rocket, Ban, Send, CalendarRange
 } from "lucide-vue-next";
 
