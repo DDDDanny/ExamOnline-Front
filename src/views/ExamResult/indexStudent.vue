@@ -58,9 +58,17 @@
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="160" :resizable="false">
           <template #default="scope">
-            <el-button link size="small" type="primary" :icon="FileSymlink" @click="goToDetail(scope['row']['id'])">
+            <el-button
+                v-if="scope['row']['status'] === '正常'"
+                link
+                size="small"
+                type="primary"
+                :icon="FileSymlink"
+                @click="goToDetail(scope['row']['id'])"
+            >
               查看成绩详情
             </el-button>
+            <span v-else>--</span>
           </template>
         </el-table-column>
         <template #empty>
