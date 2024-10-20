@@ -14,17 +14,30 @@
       <div v-if="item['questions'].length === 0">
         <el-image style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
       </div>
-      <div v-else class="paper-case-list" v-for="(question, index) in item['questions']">
+      <div v-else class="paper-case-list" :style="getIsTrue(question['question_id'])" v-for="(question, index) in item['questions']">
         <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
-        <el-radio-group v-if="question['question_detail']['type'] === 'judge'" style="margin-top: 20px" >
-          <el-radio :value="true">对</el-radio>
-          <el-radio :value="false">错</el-radio>
+        <el-radio-group
+            v-if="question['question_detail']['type'] === 'judge'"
+            :model-value="getStudentAnswer(question['question_id'])"
+            style="margin-top: 20px"
+        >
+          <el-radio value="T">对</el-radio>
+          <el-radio value="F">错</el-radio>
         </el-radio-group>
-        <el-radio-group v-else style="margin-top: 20px" >
+        <el-radio-group v-else style="margin-top: 20px" :model-value="getStudentAnswer(question['question_id'])">
           <el-radio v-for="key in Object.keys(question['question_detail']['options'])" :value="key">
             {{ key }}. {{ question['question_detail']['options'][key] }}
           </el-radio>
         </el-radio-group>
+        <el-divider/>
+        <div style="width: auto;display: flex;align-items: center">
+          <span style="font-size: 15px">参考答案：</span>
+          <span style="font-size: 15px;display: flex;align-items: center"  v-if="question['question_detail']['type'] === 'judge'">
+            <Check v-if="getReferenceAnswer(question['question_id']) == 'T'" style="height: 17px"/>
+            <X v-else style="height: 17px"/>
+          </span>
+          <span style="font-size: 15px" v-else>{{ getReferenceAnswer(question['question_id']) }}</span>
+        </div>
       </div>
     </div>
     <div class="end-line-style" v-if="paperModuleQuestion.length !== 0">
@@ -34,12 +47,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import { Paper } from "../api";
 import { ElMessage } from "element-plus";
+import {Check, X} from "lucide-vue-next";
 
 const props = defineProps({
   paperInfo: { type: Object, required: true, default: () => ({}) },
+  examResultAnswers: { type: Array, required: true }
 })
 
 const paperModuleQuestion = ref([])
@@ -61,6 +76,22 @@ const getExamResultInfo = () => {
     })
     paperModuleQuestion.value = response.data
   })
+}
+
+// 获取答案
+const getStudentAnswer = (q_id: string) => {
+  return props.examResultAnswers?.find(item => item['question_id'] === q_id).solution
+}
+
+// 获取试题作答是否正确
+const getIsTrue = (q_id: string) => {
+  const isTrue = props.examResultAnswers?.find(item => item['question_id'] === q_id).is_true
+  return !isTrue ? 'box-shadow: 0 0 8px #F56C6C;' : ''
+}
+
+// 获取参考答案
+const getReferenceAnswer = (q_id: string) => {
+  return props.examResultAnswers?.find(item => item['question_id'] === q_id).reference_answer
 }
 
 watch(() => props.paperInfo, (newValue) => {
