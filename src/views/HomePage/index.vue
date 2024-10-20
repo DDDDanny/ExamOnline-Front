@@ -2,7 +2,7 @@
   <div class="homepage-main-box">
     <div class="homepage-left-box">
       <div class="homepage-login-info-box">
-        <span class="homepage-login-info-zh">{{ homepageLoginWording }}</span>
+        <span class="homepage-login-info-zh">{{ homePageLoginWording }}</span>
         <span style="font-size: 15px">
           May each day bring you closer to your dreams and fill your life with beautiful moments.
         </span>
@@ -40,7 +40,7 @@ import moment from 'moment'
 import {onMounted, ref} from 'vue'
 import {BookOpenCheck, Notebook, Star} from 'lucide-vue-next'
 import {getCookie} from "../../utils/cookie.ts";
-import { Exam } from "../../api"
+import { HomePage } from "../../api"
 import { ElMessage } from "element-plus";
 
 // 获取当前日期
@@ -52,34 +52,24 @@ const userInfo = getCookie('UserInfo') ? JSON.parse(getCookie('UserInfo')) : {}
 const role = localStorage.getItem('ROLE')
 
 // 首页登录信息展示
-const homepageLoginWording = ref('')
+const homePageLoginWording = ref('')
 
 // 存储存在考试安排的日期
 const examDates: any = ref([])
 
 // 获取考试信息
 const getExamInfo = () => {
-  const querySet = { is_deleted: false, is_published: true, created_user: userInfo['id'] }
-  Exam.getExamsApi(querySet, 1, 100000).then(response => {
+  HomePage.getExamStatisticsApi(role, userInfo.userId).then(response => {
     if (response.code !== 200) {
       ElMessage.error(response.msg)
       return
     } else {
-      const tempData: any = []
-      let count = 0
-      response.data.data.map((item: any) => {
-        if (item['start_time'].split(' ')[0] === currentDate) {
-          count += 1
-        }
-        tempData.push(item['start_time'].split(' ')[0])
-      })
-      // 更新数据
-      if (role === 'Teacher') {
-        homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了 ${count} 场考试！`
+      if (role === 'Student') {
+        homePageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有 ${response.data.count} 场考试需要参加！`
       } else {
-        homepageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您有x场考试需要参加！`
+        homePageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了 ${response.data.count} 场考试！`
       }
-      examDates.value = tempData
+      examDates.value = response.data.exam_dates
     }
   })
 }
