@@ -66,8 +66,18 @@
         </el-table-column>
         <el-table-column :resizable="false"/>
         <el-table-column fixed="right" label="操 作" align="center" width="160" :resizable="false">
-          <template #default>
-            <el-button link size="small" type="primary" :icon="FileSymlink">查看成绩详情</el-button>
+          <template #default="scope">
+            <el-button
+                link
+                v-if="scope['row']['status'] === '正常'"
+                size="small"
+                type="primary"
+                :icon="FileSymlink"
+                @click="goPaperResultDetail(scope.row.id)"
+            >
+              查看成绩详情
+            </el-button>
+            <span v-else>--</span>
           </template>
         </el-table-column>
         <template #empty>
@@ -138,6 +148,11 @@ onMounted(() => {
   getExamResultData()
 })
 
+// 进入成绩详情页面
+const goPaperResultDetail = (recordId) => {
+  router.replace(`/paperResultTeacher/${ recordId }`)
+  localStorage.setItem('RESULT_DETAILS_SOURCE_URL_TEACHER', router.currentRoute.value.path)
+}
 </script>
 
 <style scoped lang="scss">
