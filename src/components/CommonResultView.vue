@@ -1,20 +1,20 @@
 <template>
-  <div class="case-list-main">
-    <div id="paperTitle" class="paper-title-info">
+  <div class="common-result-view-main-main">
+    <div id="paperTitle" class="common-result-view-paper-title">
       <span style="font-size: 25px;font-weight: bolder;">{{ props.paperInfo['title'] }}</span>
       <span style="font-size: 18px;color: #5e5e5e;margin-top: 15px">{{ props.paperInfo['description'] }}</span>
     </div>
-    <div v-if="paperModuleQuestion.length === 0" style="display: flex;width:98%;justify-content: center;margin-top: 50px">
+    <div v-if="paperModuleQuestion.length === 0" class="common-result-view-module-empty">
       <el-image style="width: 300px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
     </div>
-    <div v-else class="paper-module-box" v-for="(item) in paperModuleQuestion ">
+    <div v-else class="common-result-view-module-box" v-for="(item) in paperModuleQuestion ">
       <div class="module-info-box">
         <span>{{ item['title'] }}（{{ item['description'] }}）</span>
       </div>
       <div v-if="item['questions'].length === 0">
         <el-image style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
       </div>
-      <div v-else class="paper-case-list" :style="getIsTrue(question['question_id'])" v-for="(question, index) in item['questions']">
+      <div v-else class="common-result-view-case-list" :style="getIsTrue(question['question_id'])" v-for="(question, index) in item['questions']">
         <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
         <el-radio-group
             v-if="question['question_detail']['type'] === 'judge'"
@@ -40,17 +40,17 @@
         </div>
       </div>
     </div>
-    <div class="end-line-style" v-if="paperModuleQuestion.length !== 0">
+    <div class="common-result-view-end-line-style" v-if="paperModuleQuestion.length !== 0">
       <span>----- 我是底线 -----</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
+import { ref, watch} from "vue";
 import { Paper } from "../api";
 import { ElMessage } from "element-plus";
-import {Check, X} from "lucide-vue-next";
+import { Check, X } from "lucide-vue-next";
 
 const props = defineProps({
   paperInfo: { type: Object, required: true, default: () => ({}) },
@@ -103,14 +103,15 @@ watch(() => props.paperInfo, (newValue) => {
 
 
 <style scoped lang="scss">
-.case-list-main {
+.common-result-view-main-main {
   width: 100%;
   height: calc(100vh - 180px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
 }
-.paper-title-info {
+
+.common-result-view-paper-title {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -118,8 +119,15 @@ watch(() => props.paperInfo, (newValue) => {
   margin-top: 20px;
 }
 
-.paper-case-list {
-  width: 94%;
+.common-result-view-module-empty {
+  width:98%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px
+}
+
+.common-result-view-case-list {
+  width: 90%;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -130,7 +138,7 @@ watch(() => props.paperInfo, (newValue) => {
   color: #5e5e5e;
 }
 
-.paper-module-box {
+.common-result-view-module-box {
   width: 98%;
   margin-top: 30px;
   display: flex;
@@ -149,7 +157,7 @@ watch(() => props.paperInfo, (newValue) => {
     font-size: 13px;
   }
 }
-.end-line-style {
+.common-result-view-end-line-style {
   width: 100%;
   display: flex;
   margin-top: 20px;
