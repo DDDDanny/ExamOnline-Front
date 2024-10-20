@@ -6,7 +6,7 @@
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
-    <common-result-view :paper-info="paperInfo" />
+    <common-result-view :paper-info="paperInfo" :exam-result-answers="examResultAnswers"/>
   </div>
 </template>
 
@@ -23,9 +23,11 @@ const paperInfo = ref({})
 // 考试标题
 const examTitle = ref('')
 
-// 获取考试结果相关信息
+// ExamResultId
+const examResultId = router.currentRoute.value.params.id
+
+// 获取考试结果概览以及试卷信息
 const getExamResultInfo = () => {
-  const examResultId = router.currentRoute.value.params.id
   ExamResult.getExamResultByIdApi(examResultId).then((response: any) => {
     if (response.code !== 200) {
       ElMessage.error(response.message)
@@ -44,6 +46,19 @@ const getExamResultInfo = () => {
   })
 }
 
+// 获取考试答案
+const examResultAnswers = ref([])
+// 获取考试结果试题详情
+const getExamResultQuestionsInfo = () => {
+  ExamResult.getExamResultDetailApi(examResultId).then((response: any) => {
+    if (response.code !== 200) {
+      ElMessage.error(response.message)
+      return
+    }
+    examResultAnswers.value = response.data
+  })
+}
+
 // 处理页面返回
 const goBack = () => {
   const sourceUrl = localStorage.getItem('RESULT_DETAILS_SOURCE_URL_STU')
@@ -52,6 +67,7 @@ const goBack = () => {
 
 onMounted(() => {
   getExamResultInfo()
+  getExamResultQuestionsInfo()
 })
 
 onBeforeUnmount(() => {
