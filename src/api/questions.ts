@@ -63,6 +63,12 @@ export class Question {
     return data
   }
 
+  // 更新错题收藏信息接口
+  async updateErrorArchiveApi(questionInfo: any): Promise<Result> {
+    const { data } = await axios.put('/errorArchive/' + questionInfo.id, { ...questionInfo })
+    return  data
+  }
+
   // 取消收藏（删除）错题集的试题
   async delErrorArchiveQuestionApi(collector: string, question_id: string): Promise<Result> {
     const { data } = await axios.delete('/errorArchive', { data: {collector, question_id} })
