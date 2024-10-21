@@ -81,7 +81,7 @@
               详情
             </el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="warning" :icon="SquarePen">编辑</el-button>
+            <el-button link size="small" type="warning" :icon="SquarePen" @click="handleOpenEditDialog(scope['row'])">编辑</el-button>
             <el-divider direction="vertical"/>
             <el-button
                 link
@@ -164,6 +164,35 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog
+        width="800"
+        title="编辑收藏信息"
+        draggable
+        destroy-on-close
+        v-model="editDialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        @close="handleCloseEditDialog(formRef)"
+    >
+      <el-form :model="formData" ref="formRef">
+        <el-form-item label="错题解析" :label-width="formLabelWidth" prop="explanation" required>
+          <el-input v-model="formData.explanation" placeholder="请输入错题解析" clearable/>
+        </el-form-item>
+        <el-form-item label="难度" :label-width="formLabelWidth" prop="difficulty" required>
+          <el-select v-model="formData.difficulty" placeholder="请选择难度">
+            <el-option label="简单" value="E" key="E"/>
+            <el-option label="中等" value="M" key="M"/>
+            <el-option label="困难" value="H" key="H"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="handleCloseEditDialog(formRef)" :icon="Ban">取 消</el-button>
+          <el-button type="primary" @click="handleSubmitEditCollect(formRef)" :icon="Send">提 交</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -171,7 +200,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {
   Notebook, Sun, Info, Search, SquarePen, Trash2,
-  CloudSun, CloudRain, Check, X, Tag
+  CloudSun, CloudRain, Check, X, Tag, Ban, Send
 } from "lucide-vue-next";
 import {Questions} from "../../api";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -212,6 +241,7 @@ const getErrorArchive = () => {
       response.data.data.map((item: any) => {
         tempData.push({
           id: item['question_info'].id,
+          record_id: item.id,
           topic: item['question_info'].topic,
           type: item['question_info'].type,
           trial_type: item['question_info']['trial_type'],
@@ -221,6 +251,7 @@ const getErrorArchive = () => {
           difficulty: item['difficulty'],
           explanation: item['explanation'],
           created_at: item['created_at'],
+          collector: item['collector'],
         })
       })
       tableData.value = tempData
@@ -274,6 +305,57 @@ const handleDelete = (questionsId: string) => {
     })
   }).catch(() => {
     ElMessage.info('取消删除!')
+  })
+}
+
+// 控制编辑收藏信息Dialog是否可见
+const editDialogVisible = ref(false)
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '100px'
+// 新增试题表单的Ref
+const formRef = ref<FormInstance>()
+
+// 试题 FormData
+const formData = ref({})
+
+// 处理关闭收藏错题Dialog
+const handleCloseEditDialog = (formEl: any) => {
+  formData.value = {}
+  formEl.resetFields()
+  editDialogVisible.value = false
+}
+
+// 处理打开编辑收藏信息Dialog
+const handleOpenEditDialog = (item: any) => {
+  editDialogVisible.value = true
+  formData.value = {
+    id:           item.record_id,
+    collector:    item.collector,
+    difficulty:   item.difficulty,
+    explanation:  item.explanation,
+    question_id:  item.id
+  }
+}
+// 提交错题收藏
+const handleSubmitEditCollect = (formEl: any) => {
+  formEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的信息！')
+      return
+    }
+    try {
+      Questions.updateErrorArchiveApi(formData.value).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.msg)
+          return
+        }
+        ElMessage.success('编辑成功！')
+        getErrorArchive()
+        editDialogVisible.value = false
+      })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 </script>
