@@ -15,7 +15,17 @@
         <el-image style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
       </div>
       <div v-else class="common-result-view-case-list" :style="getIsTrue(question['question_id'])" v-for="(question, index) in item['questions']">
-        <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
+        <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
+          <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
+          <div v-if="props.isCollect">
+            <el-tooltip class="box-item" effect="dark" content="取消收藏至错题集" placement="bottom" v-if="getCollectBtn(question['question_id'])">
+              <el-button type="danger" :icon="Heart" circle size="small" />
+            </el-tooltip>
+            <el-tooltip class="box-item" effect="dark" content="收藏至错题集" placement="bottom" v-else>
+              <el-button :icon="Heart" circle size="small" />
+            </el-tooltip>
+          </div>
+        </div>
         <el-radio-group
             v-if="question['question_detail']['type'] === 'judge'"
             :model-value="getStudentAnswer(question['question_id'])"
@@ -50,11 +60,12 @@
 import { ref, watch} from "vue";
 import { Paper } from "../api";
 import { ElMessage } from "element-plus";
-import { Check, X } from "lucide-vue-next";
+import { Check, X, Heart } from "lucide-vue-next";
 
 const props = defineProps({
   paperInfo: { type: Object, required: true, default: () => ({}) },
-  examResultAnswers: { type: Array, required: true }
+  examResultAnswers: { type: Array, required: true },
+  isCollect: { type: Boolean, required: true },
 })
 
 const paperModuleQuestion = ref([])
@@ -92,6 +103,11 @@ const getIsTrue = (q_id: string) => {
 // 获取参考答案
 const getReferenceAnswer = (q_id: string) => {
   return props.examResultAnswers?.find(item => item['question_id'] === q_id).reference_answer
+}
+
+// 获取试题是否已经被收藏错题
+const getCollectBtn = (q_id: string) => {
+  return props.examResultAnswers?.find(item => item['question_id'] === q_id).is_error_archive
 }
 
 watch(() => props.paperInfo, (newValue) => {

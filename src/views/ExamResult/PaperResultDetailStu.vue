@@ -6,17 +6,21 @@
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
-    <common-result-view :paper-info="paperInfo" :exam-result-answers="examResultAnswers"/>
+    <common-result-view :paper-info="paperInfo" :exam-result-answers="examResultAnswers" :is-collect="true"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import router from "../../router";
-import {onBeforeUnmount, onMounted, ref} from "vue";
-import {ChevronLeft} from "lucide-vue-next";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { ChevronLeft } from "lucide-vue-next";
+import { getCookie } from "../../utils/cookie.ts";
 import CommonResultView from "../../components/CommonResultView.vue";
-import {ExamResult, Paper} from "../../api";
-import {ElMessage} from "element-plus";
+import { ExamResult, Paper } from "../../api";
+import { ElMessage } from "element-plus";
+
+// 获取用户ID
+const studentId = JSON.parse(getCookie('UserInfo')).userId
 
 // 试卷信息
 const paperInfo = ref({})
@@ -50,7 +54,7 @@ const getExamResultInfo = () => {
 const examResultAnswers = ref([])
 // 获取考试结果试题详情
 const getExamResultQuestionsInfo = () => {
-  ExamResult.getExamResultDetailApi(examResultId).then((response: any) => {
+  ExamResult.getExamResultDetailApi(examResultId, studentId).then((response: any) => {
     if (response.code !== 200) {
       ElMessage.error(response.message)
       return
