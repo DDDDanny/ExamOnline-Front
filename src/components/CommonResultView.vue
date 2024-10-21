@@ -22,7 +22,7 @@
               <el-button type="danger" :icon="Heart" circle size="small" />
             </el-tooltip>
             <el-tooltip class="box-item" effect="dark" content="收藏至错题集" placement="bottom" v-else>
-              <el-button :icon="Heart" circle size="small" />
+              <el-button :icon="Heart" circle size="small" @click="handleOpenDialog(question['question_id'])" />
             </el-tooltip>
           </div>
         </div>
@@ -54,19 +54,52 @@
       <span>----- 我是底线 -----</span>
     </div>
   </div>
+  <el-dialog
+      width="800"
+      title="收藏错题"
+      draggable
+      destroy-on-close
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handleCloseDialog(formRef)"
+  >
+    <el-form :model="formData" ref="formRef">
+      <el-form-item label="错题解析" :label-width="formLabelWidth" prop="explanation" required>
+        <el-input v-model="formData.explanation" placeholder="请输入错题解析" clearable/>
+      </el-form-item>
+      <el-form-item label="难度" :label-width="formLabelWidth" prop="difficulty" required>
+        <el-select v-model="formData.difficulty" placeholder="请选择难度">
+          <el-option label="简单" value="E" key="E"/>
+          <el-option label="中等" value="M" key="M"/>
+          <el-option label="困难" value="H" key="H"/>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="handleCloseDialog(formRef)" :icon="Ban">取 消</el-button>
+        <el-button type="primary" @click="handleSubmitCollect(formRef)" :icon="Send">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch} from "vue";
-import { Paper } from "../api";
+import {Questions, Paper} from "../api";
 import { ElMessage } from "element-plus";
-import { Check, X, Heart } from "lucide-vue-next";
+import type {FormInstance} from 'element-plus'
+import {Check, X, Heart, Ban, Send} from "lucide-vue-next";
+import { getCookie } from "../utils/cookie.ts";
 
 const props = defineProps({
   paperInfo: { type: Object, required: true, default: () => ({}) },
   examResultAnswers: { type: Array, required: true },
   isCollect: { type: Boolean, required: true },
 })
+
+const emits = defineEmits(['updateData'])
 
 const paperModuleQuestion = ref([])
 
@@ -115,6 +148,59 @@ watch(() => props.paperInfo, (newValue) => {
     getExamResultInfo()
   }
 }, { immediate: true })
+
+// 控制收藏错题Dialog是否可见
+const dialogVisible = ref(false)
+// Dialog中Form Label的通用宽度
+const formLabelWidth = '100px'
+// 新增试题表单的Ref
+const formRef = ref<FormInstance>()
+// 获取用户ID
+const studentId = JSON.parse(getCookie('UserInfo')).userId
+// FormData 初始化
+const initFormData = {
+  explanation: '',
+  difficulty: 'M',
+  collector: studentId
+}
+// 试题 FormData
+const formData = ref(initFormData)
+
+// 处理关闭收藏错题Dialog
+const handleCloseDialog = (formEl: any) => {
+  formData.value = initFormData
+  formEl.resetFields()
+  dialogVisible.value = false
+}
+
+// 处理打开收藏错题Dialog
+const handleOpenDialog = (q_id: string) => {
+  dialogVisible.value = true
+  formData.value['question_id'] = q_id
+  console.log(formData.value)
+}
+// 提交错题收藏
+const handleSubmitCollect = (formEl: any) => {
+  formEl.validate(async (result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入完整的信息！')
+      return
+    }
+    try {
+      Questions.createErrorArchiveApi(formData.value).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.message)
+          return
+        }
+        emits('updateData')
+        ElMessage.success('错题收藏成功！')
+        dialogVisible.value = false
+      })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  })
+}
 </script>
 
 
