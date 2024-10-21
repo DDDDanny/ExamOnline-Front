@@ -25,13 +25,13 @@
         </el-calendar>
       </div>
     </div>
-    <div class="homepage-right-box" v-if="role === 'Student'">
-      <div class="homepage-card-title">
-        <el-icon color="#66b1ff"><Notebook /></el-icon>
-        <span>错题信息</span>
-      </div>
-      <el-divider style="margin-top: 8px" />
-    </div>
+<!--    <div class="homepage-right-box" v-if="role === 'Student'">-->
+<!--      <div class="homepage-card-title">-->
+<!--        <el-icon color="#66b1ff"><Notebook /></el-icon>-->
+<!--        <span>错题信息</span>-->
+<!--      </div>-->
+<!--      <el-divider style="margin-top: 8px" />-->
+<!--    </div>-->
   </div>
 </template>
 

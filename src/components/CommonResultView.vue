@@ -177,7 +177,6 @@ const handleCloseDialog = (formEl: any) => {
 const handleOpenDialog = (q_id: string) => {
   dialogVisible.value = true
   formData.value['question_id'] = q_id
-  console.log(formData.value)
 }
 // 提交错题收藏
 const handleSubmitCollect = (formEl: any) => {
