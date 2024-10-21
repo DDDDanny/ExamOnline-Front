@@ -49,6 +49,12 @@ export class Question {
     return data
   }
 
+  // 创建错题收藏关系
+  async createErrorArchiveApi(questionInfo: any): Promise<Result> {
+    const { data } = await axios.post('/errorArchive', { ...questionInfo })
+    return data
+  }
+
   // 根据收藏者ID获取错题集列表
   async getErrorArchiveApi(collector: string, querySet: object, currentPage: number, pageSize:number): Promise<Result> {
     const { data } = await axios.get('/errorArchive/' + collector, {
