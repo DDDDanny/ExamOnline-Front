@@ -129,8 +129,8 @@ const calculateTimeLeft = () => {
   if (diff < 0) {
     console.log('------👉 倒计时结束 👈------')
     clearInterval(timer)
-    // 倒计时结束，跳转到在线考试引导页
-    router.replace('/examOnline')
+    // 倒计时结束，自动提交并跳转到在线考试引导页
+    handleSubmitData()
     return
   }
   const hours = Math.floor(diff / 1000 / 60 / 60);  // 小时
@@ -173,7 +173,42 @@ const { changeDialogVisible } = examEndCallback
 // 记录是否是点击提交按钮切换页面（用于限制在答题时误触）
 const is_submit_btn = ref(false)
 
-// 处理交卷
+// 提交数据
+const handleSubmitData = () => {
+  const endTime = moment().format('YYYY-MM-DD HH:mm:ss')
+  // 组装&提交数据
+  const submitData = { exam_result_id: route.params.id, answers: { ...answers.value } }
+  ExamResult.createExamResultDetailApi(submitData).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+      return
+    }
+    // 更新考试结果数据（考试结束时间）
+    ExamResult.updateExamResultApi(
+        route.params.id, { end_time: endTime, result_mark: res.data.result_total_mark, ending_status: true}
+    ).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.msg)
+        return
+      }
+      ElMessage.success('提交成功！')
+      // 构建考试结果相关数据，作为回调数据
+      scoreInfo.value = {
+        score: res.data.result_total_mark,
+        actual_total: res.data.sum_marks,
+        pass_mark: res.data.pass_mark,
+        percentage: res.data.percentage,
+        start_time: response.data.start_time,
+        end_time: response.data.end_time
+      }
+      is_submit_btn.value = true
+      router.replace('/examOnline')
+      changeDialogVisible()
+    })
+  })
+}
+
+// 处理交卷逻辑
 const handleSubmit = () => {
   ElMessageBox.confirm(
       '您确定要交卷吗？',
@@ -185,37 +220,7 @@ const handleSubmit = () => {
         center: true
       }
   ).then(() => {
-    const endTime = moment().format('YYYY-MM-DD HH:mm:ss')
-    // 组装&提交数据
-    const submitData = { exam_result_id: route.params.id, answers: { ...answers.value } }
-    ExamResult.createExamResultDetailApi(submitData).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg)
-        return
-      }
-      // 更新考试结果数据（考试结束时间）
-      ExamResult.updateExamResultApi(
-          route.params.id, { end_time: endTime, result_mark: res.data.result_total_mark, ending_status: true}
-      ).then(response => {
-        if (response.code !== 200) {
-          ElMessage.error(response.msg)
-          return
-        }
-        ElMessage.success('提交成功！')
-        // 构建考试结果相关数据，作为回调数据
-        scoreInfo.value = {
-          score: res.data.result_total_mark,
-          actual_total: res.data.sum_marks,
-          pass_mark: res.data.pass_mark,
-          percentage: res.data.percentage,
-          start_time: response.data.start_time,
-          end_time: response.data.end_time
-        }
-        is_submit_btn.value = true
-        router.replace('/examOnline')
-        changeDialogVisible()
-      })
-    })
+    handleSubmitData()
   }).catch(() => {
     ElMessage.info('取消交卷')
   })
