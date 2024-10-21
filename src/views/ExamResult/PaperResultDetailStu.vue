@@ -6,7 +6,12 @@
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
-    <common-result-view :paper-info="paperInfo" :exam-result-answers="examResultAnswers" :is-collect="true"/>
+    <common-result-view
+        :paper-info="paperInfo"
+        :exam-result-answers="examResultAnswers"
+        :is-collect="true"
+        @update-data="getExamResultQuestionsInfo"
+    />
   </div>
 </template>
 
