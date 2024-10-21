@@ -19,7 +19,7 @@
           <span>{{ index + 1 }}. {{ question['question_detail']['topic'] }}（ {{ question['marks'] }}分 ）</span>
           <div v-if="props.isCollect">
             <el-tooltip class="box-item" effect="dark" content="取消收藏至错题集" placement="bottom" v-if="getCollectBtn(question['question_id'])">
-              <el-button type="danger" :icon="Heart" circle size="small" />
+              <el-button type="danger" :icon="Heart" circle size="small" @click="handleCancelCollect(question['question_id'])"/>
             </el-tooltip>
             <el-tooltip class="box-item" effect="dark" content="收藏至错题集" placement="bottom" v-else>
               <el-button :icon="Heart" circle size="small" @click="handleOpenDialog(question['question_id'])" />
@@ -87,10 +87,10 @@
 
 <script setup lang="ts">
 import { ref, watch} from "vue";
-import {Questions, Paper} from "../api";
+import { Questions, Paper } from "../api";
 import { ElMessage } from "element-plus";
-import type {FormInstance} from 'element-plus'
-import {Check, X, Heart, Ban, Send} from "lucide-vue-next";
+import type { FormInstance } from 'element-plus'
+import { Check, X, Heart, Ban, Send } from "lucide-vue-next";
 import { getCookie } from "../utils/cookie.ts";
 
 const props = defineProps({
@@ -201,8 +201,32 @@ const handleSubmitCollect = (formEl: any) => {
     }
   })
 }
-</script>
 
+// 处理取消收藏错题
+const handleCancelCollect = (q_id: string) => {
+  ElMessageBox.confirm(
+      '您确定要取消收藏吗？',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }
+  ).then(() => {
+    Questions.delErrorArchiveQuestionApi(studentId, q_id).then(response => {
+      if (response.code !== 200) {
+        ElMessage.error(response.message)
+        return
+      }
+      emits('updateData')
+      ElMessage.success('错题取消收藏成功！')
+    })
+  }).catch(() => {
+    ElMessage.info('取消交卷')
+  })
+}
+</script>
 
 <style scoped lang="scss">
 .common-result-view-main-main {
