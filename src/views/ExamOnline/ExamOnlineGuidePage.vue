@@ -84,7 +84,7 @@
       <span class="score-progress-wording" style="margin-bottom: 20px;color: #afafaf">提示：得分详情可以到「成绩查询」模块查看</span>
       <div class="exam-result-view-btn-box">
         <el-button :icon="X" @click="changeDialogVisible">关 闭</el-button>
-        <el-button :icon="ListCollapse">详情查询</el-button>
+        <el-button :icon="ListCollapse" @click="goToResultList">详情查询</el-button>
       </div>
     </div>
   </el-dialog>
@@ -240,6 +240,11 @@ const calcScoreColor = computed(() => {
 const calcDescWording = computed(() => {
   return scoreInfo.value.score > scoreInfo.value.pass_mark ? '不错不错！继续努力！' : '还需要继续加油哦～'
 })
+
+const goToResultList = () => {
+  changeDialogVisible()
+  router.replace('/examResultStu')
+}
 </script>
 
 <style scoped lang="scss">
