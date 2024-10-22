@@ -49,7 +49,7 @@
                   </template>
                 </el-input>
               </el-form-item>
-              <el-form-item>
+              <el-form-item v-if="!isAdministrator">
                 <el-checkbox v-model="formLogin.rememberPass">记住密码</el-checkbox>
               </el-form-item>
             </el-form>
