@@ -7,6 +7,11 @@ export class Common {
   async downloadFileApi(filename: string): Promise<Result> {
     return await axios.get('/download/' + filename, {responseType: 'blob'})
   }
+
+  // 下载成绩单接口
+  async downloadResultFileApi(filename: string): Promise<Result> {
+    return await axios.get('/downloadResult/' + filename, {responseType: 'blob'})
+  }
 }
 
 export default new Common()
