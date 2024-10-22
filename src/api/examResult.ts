@@ -49,6 +49,12 @@ export class ExamResult {
     const { data } = await axios.get(`/examResultDetail/${id}`, { params: { student_id } })
     return data
   }
+
+  // 生成成绩单接口
+  async generateExamResultExcelApi(id: string): Promise<Result> {
+    const { data } = await axios.post(`/generateExamResultExcel`, { exam_id: id })
+    return data
+  }
 }
 
 export default new ExamResult()
