@@ -35,7 +35,7 @@
           <template #default="scope">
             <el-button link size="small" type="primary" :icon="FileSymlink" @click="goViewDetail(scope['row'])">查看成绩单</el-button>
             <el-divider direction="vertical"/>
-            <el-button link size="small" type="success" :icon="CloudDownload">下载成绩单</el-button>
+            <el-button link size="small" type="success" :icon="CloudDownload" @click="openDownloadDialog(scope['row'])">下载成绩单</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -56,6 +56,21 @@
       </div>
     </div>
   </div>
+  <el-dialog
+      width="300"
+      :show-close="false"
+      destroy-on-close
+      v-model="downloadDialogVisible"
+      style="border-radius: 10px"
+  >
+    <div style="width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+      <el-progress type="dashboard" :percentage="percentage" :status="percentageStatus" />
+      <span style="font-size: 14px;margin-top: 8px;" v-if="percentage === 100">成绩单生成成功</span>
+      <span style="font-size: 12px;margin-top: 8px;color: #ababab" v-if="percentage === 100">
+        即将开始下载（ {{ countdownNumber }} ）
+      </span>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -63,9 +78,9 @@ import { reactive, ref, onMounted } from "vue";
 import { useExamResultDetailStore } from "../../stores/ExamResultDetailStore.ts";
 import { getCookie } from "../../utils/cookie.ts";
 import { ElMessage } from "element-plus";
-import { Exam } from "../../api"
+import { Exam, ExamResult, Common } from "../../api"
 import router from "../../router";
-import {SearchCheck, Search, CloudDownload, FileSymlink} from "lucide-vue-next";
+import { SearchCheck, Search, CloudDownload, FileSymlink } from "lucide-vue-next";
 import moment from "moment";
 
 // 获取登录用户ID
@@ -120,6 +135,66 @@ const { setExamInfo } = examResultDetail
 const goViewDetail = (item: any) => {
   setExamInfo(item, '/examResult')
   router.replace('/examResultDetail')
+}
+
+// 下载百分比
+const percentage = ref(0)
+// 下载状态
+const percentageStatus = ref(null)
+// 倒计时最大时长
+const countdownNumber = ref(0)
+// 控制下载Dialog是否可见
+const downloadDialogVisible = ref(false)
+
+// 下载倒计时计数器
+const startCountdown = (duration) => {
+  return new Promise(resolve => {
+    countdownNumber.value = duration;
+
+    const timer = setInterval(() => {
+      countdownNumber.value -= 1;
+
+      if (countdownNumber.value <= 0) {
+        clearInterval(timer);
+        downloadDialogVisible.value = false;
+        resolve();
+      }
+    }, 1000);
+  })
+};
+
+// 处理成绩单下载
+const handleDownload = async (id: string) => {
+  try {
+    const response = await Common.downloadResultFileApi(`${id}.xlsx`)
+    // 处理下载的文件
+    const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/xlsx"}))
+    const link = document.createElement('a')
+    link.href = url
+    // 设置下载文件的文件名
+    link.setAttribute('download', '成绩单.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('下载文件失败！', error)
+  }
+}
+
+// 打开下载Dialog
+const openDownloadDialog = (rowInfo: any) => {
+  downloadDialogVisible.value = true
+  ExamResult.generateExamResultExcelApi(rowInfo['id']).then(response => {
+    if (response.code !== 200) {
+      ElMessage.error(response.msg)
+      return
+    }
+    percentage.value = 100
+    percentageStatus.value = 'success'
+    startCountdown(3).then(() => {
+      handleDownload(rowInfo['id'])
+    })
+  })
 }
 </script>
 
