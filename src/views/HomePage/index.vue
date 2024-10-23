@@ -18,7 +18,16 @@
             <div style="display: flex;align-items: center;">
               <span>{{ data.day.split('-')[2] }}</span>
               <el-icon v-if="examDates.includes(data.day)" style="margin-left: 10px;" color="#ff4d36">
-                  <Star />
+                <el-popover placement="top-start" title="考试列表" :width="250" trigger="hover">
+                  <template #reference><Star /></template>
+                  <div v-if="examInfo[data.day] && Object.keys(examInfo[data.day]).length !== 0">
+                    <div v-for="(item, index) in examInfo[data.day]" :key="index" class="calendar-popover-content">
+                      <span style="margin-bottom: 3px;">考试名称: {{ item.title }}</span>
+                      <span>{{ item.start_time.split(' ')[1] }} - {{ item.end_time.split(' ')[1] }}</span>
+                      <el-divider v-if="index + 1 !== examInfo[data.day].length" style="margin: 8px 0"/>
+                    </div>
+                  </div>
+                </el-popover>
               </el-icon>
             </div>
           </template>
@@ -57,6 +66,9 @@ const homePageLoginWording = ref('')
 // 存储存在考试安排的日期
 const examDates: any = ref([])
 
+// 存储每天具体考试内容
+const examInfo: any = ref({})
+
 // 获取考试信息
 const getExamInfo = () => {
   HomePage.getExamStatisticsApi(role, userInfo.userId).then(response => {
@@ -70,6 +82,7 @@ const getExamInfo = () => {
         homePageLoginWording.value = `欢迎 ${userInfo.username} 登录！今天是 ${currentDate}，您安排了 ${response.data.count} 场考试！`
       }
       examDates.value = response.data.exam_dates
+      examInfo.value = response.data.exam_info
     }
   })
 }
@@ -131,6 +144,12 @@ onMounted(() => {
     margin-left: 8px;
     color: #3E3E3E
   }
+}
+
+.calendar-popover-content {
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
 }
 
 :deep(.calendar-style .el-calendar-table .el-calendar-day) {
