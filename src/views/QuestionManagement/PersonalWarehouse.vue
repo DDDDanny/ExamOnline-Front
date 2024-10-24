@@ -247,7 +247,7 @@
     >
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" :icon="Download">下载模版</el-button>
+          <el-button type="primary" :icon="Download" @click="handleDownload">下载模版</el-button>
         </div>
       </template>
     </el-dialog>
@@ -256,11 +256,11 @@
 
 <script setup lang="ts">
 import './common.scss';
-import {onMounted, reactive, ref, watch} from 'vue';
-import {Questions} from "../../api";
-import {getCookie} from "../../utils/cookie.ts";
-import type {FormInstance} from 'element-plus'
-import {ElMessage, ElMessageBox} from "element-plus";
+import { onMounted, reactive, ref, watch } from 'vue';
+import { Questions, Common } from "../../api";
+import { getCookie } from "../../utils/cookie.ts";
+import type { FormInstance } from 'element-plus'
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   Ban, BookHeart, Check, Info, Plus, Search, Minus,
   Send, SquarePen, Bookmark, Trash2, X, Tag, Upload, Download,
@@ -477,6 +477,24 @@ const handleOpenDetailDialog = (itemData: any) => {
 
 // 控制批量上传试题Dialog是否显示
 const uploadDialogVisible = ref(false)
+
+// 处理下载批量上传试题模版
+const handleDownload = async () => {
+  try {
+    const response = await Common.downloadFileApi('UploadQuestionsTemplates.xlsx')
+    // 处理下载的文件
+    const url = window.URL.createObjectURL(new Blob([response.data], {type: "application/xlsx"}))
+    const link = document.createElement('a')
+    link.href = url
+    // 设置下载文件的文件名
+    link.setAttribute('download', '上传模版-试题.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('下载文件失败！', error)
+  }
+}
 </script>
 
 <style scoped lang="scss">
