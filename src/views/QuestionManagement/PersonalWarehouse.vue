@@ -140,8 +140,15 @@
             <el-option label="判断题" value="judge"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="试题选项" :label-width="formLabelWidth" prop="options" required v-if="formData.type === 'select'">
-          <el-input v-model="formData.options" placeholder="请输入试题选项" clearable/>
+        <el-form-item label="试题选项" :label-width="formLabelWidth" required v-if="formData.type === 'select'" :validate-event="false">
+          <div class="question-options-box" v-for="(item, index) in Object.keys(questionOptions)">
+            <span class="option-key">{{ item }}</span>
+            <el-input style="width: 520px;" v-model="questionOptions[item]" placeholder="请输入试题选项" clearable/>
+            <div style="margin-left: 20px" v-if="index === 0">
+              <el-button link type="success" :icon="Plus" style="font-size: 18px;" @click="handleAddOption"/>
+              <el-button link type="danger" :icon="Minus" style="font-size: 18px" @click="handleDelOption"/>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="参考答案" :label-width="formLabelWidth" prop="answer" required>
           <el-input v-if="formData.type == 'select'" v-model="formData.answer" placeholder="请输入参考答案" clearable/>
@@ -237,8 +244,8 @@ import {getCookie} from "../../utils/cookie.ts";
 import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {
-  Ban, BookHeart, Check, Info, Plus, Search,
-  Send, SquarePen, Bookmark, Trash2, X, Tag
+  Ban, BookHeart, Check, Info, Plus, Search, Minus,
+  Send, SquarePen, Bookmark, Trash2, X, Tag,
 } from "lucide-vue-next";
 import CommonPagination from "../../components/CommonPagination.vue";
 
@@ -326,6 +333,29 @@ onMounted(() => {
   getPersonalWarehouseData()
 })
 
+// 试题选项
+const questionOptions = ref({ 'A': '', 'B': '', 'C': '', 'D': '' })
+
+// 处理新增选项
+const handleAddOption = () => {
+  if (Object.keys(questionOptions.value).length < 8) {
+    const lastOptionKey = Object.keys(questionOptions.value).slice(-1)[0]
+    const nextOptionKey = String.fromCharCode(lastOptionKey.charCodeAt(0) + 1);
+    questionOptions.value[nextOptionKey] = ''
+  } else {
+    ElMessage.warning('无法新增！最多提供8个选项！')
+  }
+}
+// 处理删除选项
+const handleDelOption = () => {
+  if (Object.keys(questionOptions.value).length > 1) {
+    const lastOptionKey = Object.keys(questionOptions.value).slice(-1)[0]
+    delete questionOptions.value[lastOptionKey]
+  } else {
+    ElMessage.warning('无法删除！至少保留1个选项！')
+  }
+}
+
 // Dialog中Form Label的通用宽度
 const formLabelWidth = '100px'
 // 控制Dialog是否显示
@@ -358,6 +388,8 @@ const optType = ref('C')
 const handleOpenDialog = (opt: string, itemData?: any) => {
   if (opt === 'E') {
     formData.value = itemData
+    // 回写选项
+    questionOptions.value = JSON.parse(itemData.options)
   }
   optType.value = opt
   dialogVisible.value = true
@@ -367,6 +399,8 @@ const handleClose = (createFormEl: any) => {
   formData.value = initFormData
   createFormEl.resetFields()
   dialogVisible.value = false
+  // 初始化选项
+  questionOptions.value = { 'A': '', 'B': '', 'C': '', 'D': '' }
 }
 // 处理提交试题信息
 const handleSubmit = async (createFormEl: any) => {
@@ -380,6 +414,17 @@ const handleSubmit = async (createFormEl: any) => {
       ElMessage.warning('请输入完整的试题信息后重新提交！')
       return
     }
+    // 选项校验
+    const optionsData = questionOptions.value
+    for (const item in optionsData) {
+      if (!optionsData[item]) {
+        ElMessage.warning('请输入完整的试题选项后重新提交！')
+        return
+      }
+    }
+    // 将处理完成的选项数据回写到formData
+    formData.value.options = JSON.stringify(optionsData)
+
     try {
       const response = optType.value === 'C'
           ? await Questions.createQuestionApi(formData.value)
@@ -389,6 +434,8 @@ const handleSubmit = async (createFormEl: any) => {
         return
       }
       dialogVisible.value = false
+      // 初始化选项
+      questionOptions.value = { 'A': '', 'B': '', 'C': '', 'D': '' }
       ElMessage.success(optType.value === 'C' ? '新增试题成功！' : '编辑试题成功！')
       getPersonalWarehouseData()
     } catch (error) {
@@ -426,5 +473,18 @@ const handleOpenDetailDialog = (itemData: any) => {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 380px);
+}
+
+.question-options-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .option-key {
+    width: 50px;
+    display: flex;
+    justify-content: center
+  }
 }
 </style>
