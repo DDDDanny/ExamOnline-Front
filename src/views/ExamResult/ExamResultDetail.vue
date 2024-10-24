@@ -2,7 +2,7 @@
   <div class="exam-result-detail-main">
     <el-page-header class="page-header-wording" @back="goBack" :icon="ChevronLeft">
       <template #content>
-        <span class="page-header-wording">{{ examInfo['title'] }} -- 考试成绩单</span>
+        <span class="page-header-wording">{{ examInfo['title'] }} - 考试成绩单</span>
       </template>
     </el-page-header>
     <el-divider style="margin: 15px 0"/>
