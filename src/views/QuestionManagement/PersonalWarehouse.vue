@@ -37,6 +37,10 @@
         <Plus class="common-btn-icon-style"/>
         新 增
       </el-button>
+      <el-button color="#42b883" style="color: #fff" @click="uploadDialogVisible = true">
+        <Upload class="common-btn-icon-style"/>
+        批量上传
+      </el-button>
     </div>
     <div class="questions-main-table-box">
       <el-table
@@ -233,6 +237,20 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog
+        width="600"
+        title="批量上传"
+        draggable
+        destroy-on-close
+        v-model="uploadDialogVisible"
+        :close-on-click-modal="false"
+    >
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" :icon="Download">下载模版</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -245,7 +263,7 @@ import type {FormInstance} from 'element-plus'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {
   Ban, BookHeart, Check, Info, Plus, Search, Minus,
-  Send, SquarePen, Bookmark, Trash2, X, Tag,
+  Send, SquarePen, Bookmark, Trash2, X, Tag, Upload, Download,
 } from "lucide-vue-next";
 import CommonPagination from "../../components/CommonPagination.vue";
 
@@ -456,6 +474,9 @@ const handleOpenDetailDialog = (itemData: any) => {
   detailData.value = itemData
   detailDialogVisible.value = true
 }
+
+// 控制批量上传试题Dialog是否显示
+const uploadDialogVisible = ref(false)
 </script>
 
 <style scoped lang="scss">
