@@ -245,6 +245,27 @@
         v-model="uploadDialogVisible"
         :close-on-click-modal="false"
     >
+      <el-upload
+          drag
+          accept=".xlsx"
+          :action="`${baseUrl}/uploadFileForQuestions`"
+          name="QuestionsTemplateFile"
+          :on-success="handleUploadSuccess"
+          :on-progress="handleUploadProgress"
+          :before-upload="beforeUploadFile"
+          v-model:file-list="fileList"
+          :data="{ userId }"
+      >
+        <el-icon class="el-icon--upload"><Upload /></el-icon>
+        <div class="el-upload__text">
+          将文件拖放到此处或<em>单击上传</em>
+        </div>
+        <template #tip>
+          <div class="el-upload__tip">
+            文件限制：小于 1MB 的 xlsx 文件
+          </div>
+        </template>
+      </el-upload>
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" :icon="Download" @click="handleDownload">下载模版</el-button>
@@ -266,6 +287,9 @@ import {
   Send, SquarePen, Bookmark, Trash2, X, Tag, Upload, Download,
 } from "lucide-vue-next";
 import CommonPagination from "../../components/CommonPagination.vue";
+
+// 接口基础地址（用于上传文件）
+const baseUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 获取UserID
 const userId = JSON.parse(getCookie('UserInfo')).userId
@@ -477,6 +501,10 @@ const handleOpenDetailDialog = (itemData: any) => {
 
 // 控制批量上传试题Dialog是否显示
 const uploadDialogVisible = ref(false)
+// 存储上传文件列表信息
+const fileList = ref([])
+// 控制上传按钮的Loading状态
+const uploadStatus = ref(false)
 
 // 处理下载批量上传试题模版
 const handleDownload = async () => {
@@ -494,6 +522,53 @@ const handleDownload = async () => {
   } catch (error) {
     console.error('下载文件失败！', error)
   }
+}
+
+// 上传成功时的回调
+const handleUploadSuccess = (response: any) => {
+  let msg: string
+  let noticeType: any
+
+  if (response.code === 200) {
+    noticeType = 'success'
+    const failList = response.data['fail_list']
+    const rowNumber = []
+    for (const item of failList) {
+      rowNumber.push(item['row_number'] + 2)
+    }
+    if (failList.length === 0) {
+      msg = '全部新增成功！'
+    } else {
+      msg = `部分新增成功！有${failList.length}条数据新增失败！行号为：【${rowNumber.toString()}】`
+    }
+  } else if (response.code === 400) {
+    noticeType = 'warning'
+    msg = '全部新增失败！'
+  } else {
+    noticeType = 'error'
+    msg = response.msg
+  }
+
+  fileList.value = []
+  ElNotification({ title: '上传结果', message: msg, type: noticeType })
+  uploadStatus.value = false
+  getPersonalWarehouseData()
+}
+
+// 上传中的回调逻辑
+const handleUploadProgress = () => {
+  ElMessage.info('数据处理中……')
+  uploadDialogVisible.value = false
+  uploadStatus.value = true
+}
+
+// 上传前进行文件大小校验
+const beforeUploadFile = (rawFile: any) => {
+  if (rawFile.size / 1024 / 1024 > 1) {
+    ElMessage.warning('上传文件过大，必须小于1MB！请调整后重新上传！')
+    return false
+  }
+  return true
 }
 </script>
 
