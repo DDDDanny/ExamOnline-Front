@@ -431,7 +431,7 @@ const handleOpenDialog = (opt: string, itemData?: any) => {
   if (opt === 'E') {
     formData.value = itemData
     // 回写选项
-    questionOptions.value = JSON.parse(itemData.options)
+    questionOptions.value = itemData.type === 'select' ? JSON.parse(itemData.options) : itemData.options
   }
   optType.value = opt
   dialogVisible.value = true
