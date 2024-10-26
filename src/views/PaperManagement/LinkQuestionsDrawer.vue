@@ -89,7 +89,12 @@
             </template>
             <div class="module-link-pane-main">
               <div class="link-btn" v-if="!props.paperInfo['is_published']">
-                <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">关 联 试 题</el-button>
+                <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">
+                  关 联 试 题
+                </el-button>
+                <el-button type="primary" size="small" :icon="CircuitBoard">
+                  随 机 选 题
+                </el-button>
               </div>
               <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
               <draggable
@@ -246,7 +251,7 @@ import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
 import {
   Repeat, Link, Package, PackagePlus, Smile, X, Ban,
-  Send, AlignJustify, Trash2, PencilLine, Box, Unlink
+  Send, AlignJustify, Trash2, PencilLine, Box, Unlink, CircuitBoard
 } from "lucide-vue-next";
 import {useQuestionsWarehouseStore, useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 import QuestionsWarehouseDrawer from "./QuestionsWarehouseDrawer.vue";
