@@ -97,6 +97,7 @@
       title="随机选题条件"
       draggable
       destroy-on-close
+      append-to-body
       v-model="randomSelectDialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -272,7 +273,6 @@ const openRandomSelectDialog = () => {
     randomNumber: ''
   }
   randomSelectDialogVisible.value = true
-  changeDrawerVisible()
 }
 // 处理关闭随机选题组卷Dialog
 const closeRandomSelectDialog = (formEl: any) => {
