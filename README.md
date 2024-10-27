@@ -55,4 +55,4 @@ Node16、Vue3，Lucide Icons、ElementUI PLUS，Pinia，Vue-Router
 - [x] 新增&编辑试题时，选项调整为可动态伸缩 -- `p1`
 - [x] 重构管理员端 -- `p2`
 - [x] 试题导入 -- `p2`
-- [ ] 实现随机试题组卷 -- `p2`
+- [x] 实现随机试题组卷 -- `p2`
