@@ -248,7 +248,7 @@ import type {FormInstance} from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
 import {
   Repeat, Link, Package, PackagePlus, Smile, X, Ban,
-  Send, AlignJustify, Trash2, PencilLine, Box, Unlink, CircuitBoard
+  Send, AlignJustify, Trash2, PencilLine, Box, Unlink
 } from "lucide-vue-next";
 import {useQuestionsWarehouseStore, useLinkQuestionStore} from "../../stores/DrawerCommonStore.ts";
 import QuestionsWarehouseDrawer from "./QuestionsWarehouseDrawer.vue";
