@@ -92,9 +92,6 @@
                 <el-button type="primary" size="small" :icon="Link" @click="handleOpenQuestionWarehouseDialog(item)">
                   关 联 试 题
                 </el-button>
-                <el-button type="primary" size="small" :icon="CircuitBoard" @click="openRandomSelectDialog(item)">
-                  随 机 选 题
-                </el-button>
               </div>
               <el-image v-if="paperQuestionsByModule.length === 0" style="width: 250px;opacity: 0.8" src="/src/images/noData.png" fit="cover"/>
               <draggable
@@ -236,23 +233,6 @@
       <div class="dialog-footer">
         <el-button @click="editQuestionDialogVisible = false" :icon="Ban">取 消</el-button>
         <el-button type="primary" @click="handleSubmitEditQuestion(editQuestionFormRef)" :icon="Send">提 交</el-button>
-      </div>
-    </template>
-  </el-dialog>
-  <el-dialog
-      width="600"
-      title="随机选题条件"
-      draggable
-      destroy-on-close
-      v-model="randomSelectDialogVisible"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      @close="randomSelectDialogVisible = false"
-  >
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="randomSelectDialogVisible = false" :icon="Ban">取 消</el-button>
-        <el-button type="primary" :icon="Send">提 交</el-button>
       </div>
     </template>
   </el-dialog>
@@ -579,15 +559,6 @@ const handleSubmitEditQuestion = (formEl: any) => {
     })
   })
 }
-
-// 控制随机组卷Dialog显示
-const randomSelectDialogVisible = ref(false)
-// 处理打开随机选题组卷Dialog
-const openRandomSelectDialog = (item: any) => {
-  console.log(item)
-  randomSelectDialogVisible.value = true
-}
-
 </script>
 
 <style scoped lang="scss">
