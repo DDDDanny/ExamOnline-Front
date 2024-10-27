@@ -80,6 +80,12 @@ export class Question {
     const { data } = await axios.get('/questionWarehouse', { params: { user_id } })
     return data
   }
+
+  // 获取随机选题组卷试题
+  async getRandomSelectApi(randomParams: {}): Promise<Result> {
+    const { data } = await axios.get('/randomSelectQuestions', { params: { ...randomParams } })
+    return data
+  }
 }
 
 export default new Question()
