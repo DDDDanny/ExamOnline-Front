@@ -40,6 +40,7 @@
       <div style="flex: auto">
         <el-button :icon="Ban" @click="changeDrawerVisible">取 消</el-button>
         <el-button type="primary" :icon="Link" @click="handleClickQuestionsLink">关 联</el-button>
+        <el-button type="primary" :icon="CircuitBoard" @click="openRandomSelectDialog">随 机 关 联</el-button>
       </div>
     </template>
   </el-drawer>
@@ -91,21 +92,50 @@
       </div>
     </template>
   </el-dialog>
+  <el-dialog
+      width="600"
+      title="随机选题条件"
+      draggable
+      destroy-on-close
+      v-model="randomSelectDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeRandomSelectDialog(randomFormRef)"
+  >
+    <el-form :model="randomFormData" ref="randomFormRef">
+      <el-form-item required label="试题类型" prop="randomQuestionType" >
+        <el-select v-model="randomFormData.randomQuestionType" placeholder="请选择随机类型">
+          <el-option label="随机" value="random"/>
+          <el-option label="选择题" value="select"/>
+          <el-option label="判断题" value="judge"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item required label="随机数量" prop="randomNumber">
+        <el-input v-model="randomFormData.randomNumber" placeholder="请输入随机数量" clearable/>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="closeRandomSelectDialog(randomFormRef)" :icon="Ban">取 消</el-button>
+        <el-button type="primary" :icon="Send" @click="handleSubmitRandom(randomFormRef)">提 交</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { watch, ref } from "vue";
-import {storeToRefs} from "pinia";
-import {Questions, Paper} from '../../api';
-import {ElMessage, ElTable} from "element-plus";
-import type {FormInstance} from 'element-plus'
+import { storeToRefs } from "pinia";
+import { Questions, Paper } from '../../api';
+import { ElMessage, ElTable } from "element-plus";
+import type { FormInstance } from 'element-plus'
 import { getCookie } from "../../utils/cookie.ts";
-import {Ban, Bookmark, Link, Send, Tag, RefreshCcw} from "lucide-vue-next";
-import {useQuestionsWarehouseStore} from "../../stores/DrawerCommonStore.ts";
+import { Ban, Bookmark, Link, Send, Tag, RefreshCcw, CircuitBoard } from "lucide-vue-next";
+import { useQuestionsWarehouseStore } from "../../stores/DrawerCommonStore.ts";
 
 // 从Store中获取，控制关联试题-题库Drawer是否显示
 const questionWarehouseStore = useQuestionsWarehouseStore()
-const {drawerVisibleQW} = storeToRefs(questionWarehouseStore)
+const { drawerVisibleQW } = storeToRefs(questionWarehouseStore)
 const { changeDrawerVisible } = questionWarehouseStore
 
 const props = defineProps({
@@ -230,6 +260,56 @@ const handleSubmitLink = (formEl: any) => {
         changeDrawerVisible()
       }
     })
+  })
+}
+
+// 控制随机组卷Dialog显示
+const randomSelectDialogVisible = ref(false)
+// 处理打开随机选题组卷Dialog
+const openRandomSelectDialog = () => {
+  randomFormData.value = {
+    randomQuestionType: 'random',
+    randomNumber: ''
+  }
+  randomSelectDialogVisible.value = true
+  changeDrawerVisible()
+}
+// 处理关闭随机选题组卷Dialog
+const closeRandomSelectDialog = (formEl: any) => {
+  formEl.resetFields()
+  randomSelectDialogVisible.value = false
+}
+// 新增随机试题表单的Ref
+const randomFormRef = ref<FormInstance>()
+// 随机关联试题 FormData
+const randomFormData: any = ref({})
+// 提交随机组卷参数
+const handleSubmitRandom = (formEl: any) => {
+  formEl.validate((result: boolean) => {
+    if (!result) {
+      ElMessage.warning('请输入信息后重新提交！')
+      return
+    }
+    try {
+      Questions.getRandomSelectApi({ userId, ...randomFormData.value }).then(response => {
+        if (response.code !== 200) {
+          ElMessage.error(response.msg)
+          return
+        }
+        closeRandomSelectDialog(formEl)
+        // 打开关联试题Dialog，填写分数
+        linkQuestionsDialogVisible.value = true
+        selectedQuestionsRef.value = response.data
+        // 初始化表单数据
+        const tempData: any = {}
+        for (const selectedQuestion of response.data) {
+          tempData[selectedQuestion['id']] = 0
+        }
+        formData.value = tempData
+      })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   })
 }
 </script>
