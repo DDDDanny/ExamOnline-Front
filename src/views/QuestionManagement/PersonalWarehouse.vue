@@ -423,6 +423,8 @@ watch(() => formData.value.type, (newQuestion) => {
   if (newQuestion !== 'judge') {
     formData.value.answer = '';
     formData.value.options = '';
+    // 初始化选项，不初始化会导致编辑时显示选项异常
+    questionOptions.value = { 'A': '', 'B': '', 'C': '', 'D': '' }
   }
 })
 
