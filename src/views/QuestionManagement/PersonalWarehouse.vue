@@ -456,17 +456,19 @@ const handleSubmit = async (createFormEl: any) => {
       ElMessage.warning('请输入完整的试题信息后重新提交！')
       return
     }
-    // 选项校验
-    const optionsData = questionOptions.value
-    for (const item in optionsData) {
-      if (!optionsData[item]) {
-        ElMessage.warning('请输入完整的试题选项后重新提交！')
-        return
+    // 选择题时，对questionOptions进行处理
+    if (formData.value.type === 'select') {
+      // 选项校验
+      const optionsData = questionOptions.value
+      for (const item in optionsData) {
+        if (!optionsData[item]) {
+          ElMessage.warning('请输入完整的试题选项后重新提交！')
+          return
+        }
       }
+      // 将处理完成的选项数据回写到formData
+      formData.value.options = JSON.stringify(optionsData)
     }
-    // 将处理完成的选项数据回写到formData
-    formData.value.options = JSON.stringify(optionsData)
-
     try {
       const response = optType.value === 'C'
           ? await Questions.createQuestionApi(formData.value)
