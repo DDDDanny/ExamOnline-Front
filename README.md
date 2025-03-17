@@ -57,16 +57,4 @@ Node16、Vue3，Lucide Icons、ElementUI PLUS，Pinia，Vue-Router
 
 ![ExamOnlineImage6](docs_images/006.png)
 
-#### TODO
 
-- [x] 学生成绩单详情页面 -- `p1`
-- [x] 在线考试功能 -- `p0`
-- [x] 错题收藏 -- `p1`
-- [x] 学生-成绩管理 -- `p1`
-- [x] 学生-试卷查看 -- `p1`
-- [x] 下载成绩单 -- `p2`
-- [x] 首页日历交互优化 -- `p2`
-- [x] 新增&编辑试题时，选项调整为可动态伸缩 -- `p1`
-- [x] 重构管理员端 -- `p2`
-- [x] 试题导入 -- `p2`
-- [x] 实现随机试题组卷 -- `p2`
